@@ -11,6 +11,7 @@ class Client extends Model
 
     protected $fillable = [
         'id',
+        'code',
         'nom',
         'status',
         'adresse',
@@ -21,12 +22,12 @@ class Client extends Model
         'RC',
         'debut_activite',
         'activite',
-        'users_id',
+        'collaborateur',
     ];
 
-    public function users(){
-        return $this->belongsTo(related: User::class);
-    }
+    // public function users(){
+    //     return $this->belongsTo(related: User::class);
+    // }
 
     public function tvam(){
         return $this->hasMany(related: Tvam::class);

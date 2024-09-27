@@ -13,17 +13,19 @@ return new class extends Migration
     {
         Schema::create('clients', function (Blueprint $table) {
             $table->id();
+            $table->string('code');
             $table->string('nom');
-            $table->enum('status' , ["PP" , "PM"]);
-            $table->string('adresse');
-            $table->integer('IF');
-            $table->integer('TP');
-            $table->bigInteger('ICE');
-            $table->integer('CNSS');
-            $table->integer('RC');
-            $table->date('debut_activite');
-            $table->text('activite');
-            $table->foreignId('users_id')->constrained('users');
+            $table->string('status')->nullable();
+            $table->string('adresse')->nullable();
+            $table->string('IF')->nullable();
+            $table->string('TP')->nullable();
+            $table->string('ICE')->nullable();
+            $table->string('CNSS')->nullable();
+            $table->string('RC')->nullable();
+            $table->date('debut_activite')->nullable();
+            $table->text('activite')->nullable();
+            $table->string('collaborateur');
+            // $table->foreignId('users_id')->constrained('users');
             $table->timestamps();
         });
     }

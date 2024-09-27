@@ -14,8 +14,18 @@ return new class extends Migration
         Schema::create('cnss', function (Blueprint $table) {
             $table->id();
             $table->foreignId('clients_id')->constrained('clients');
-            $table->string('mois');
-            $table->date('date_depot');
+            $table->date('date_depot_1')->nullable();
+            $table->date('date_depot_2')->nullable();
+            $table->date('date_depot_3')->nullable();
+            $table->date('date_depot_4')->nullable();
+            $table->date('date_depot_5')->nullable();
+            $table->date('date_depot_6')->nullable();
+            $table->date('date_depot_7')->nullable();
+            $table->date('date_depot_8')->nullable();
+            $table->date('date_depot_9')->nullable();
+            $table->date('date_depot_10')->nullable();
+            $table->date('date_depot_11')->nullable();
+            $table->date('date_depot_12')->nullable();
             $table->timestamps();
         });
     }
