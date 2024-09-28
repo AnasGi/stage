@@ -14,9 +14,14 @@ return new class extends Migration
         Schema::create('tvat', function (Blueprint $table) {
             $table->id();
             $table->foreignId('clients_id')->constrained('clients');
-            $table->enum('trimestre' , [1,2,3,4]);
-            $table->date('date_depot');
-            $table->integer('num_depot');
+            $table->date('date_depot_1')->nullable();
+            $table->string('num_depot_1')->nullable();
+            $table->date('date_depot_2')->nullable();
+            $table->string('num_depot_2')->nullable();
+            $table->date('date_depot_3')->nullable();
+            $table->string('num_depot_3')->nullable();
+            $table->date('date_depot_4')->nullable();
+            $table->string('num_depot_4')->nullable();
             $table->timestamps();
         });
     }

@@ -21,7 +21,7 @@ class ClientController extends Controller
         else{
             $clients = Client::all();
         }
-        return view('welcome', compact('clients'));
+        return view('clients', compact('clients'));
     }
 
     /**

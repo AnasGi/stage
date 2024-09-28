@@ -7,10 +7,11 @@
     <link rel="stylesheet" href="{{ asset( 'css/bootstrap.min.css' ) }}">
     <title>Cnss</title>
 </head>
-<body>
+<body class="p-2">
     @if(session('success'))
         <p class="alert alert-success">{{ session('success') }}</p>
     @endif
+    <x-menu></x-menu>
     <form action="{{ route('cnss.import') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div>
@@ -53,61 +54,19 @@
             <th>code client</th>
             <th>entreprise</th>
             <th>collaborateur</th>
-            <th>date de depot</th>
-            <th>date de depot</th>
-            <th>date de depot</th>
-            <th>date de depot</th>
-            <th>date de depot</th>
-            <th>date de depot</th>
-            <th>date de depot</th>
-            <th>date de depot</th>
-            <th>date de depot</th>
-            <th>date de depot</th>
-            <th>date de depot</th>
-            <th>date de depot</th>
+            @for($i = 0 ; $i < 12 ; $i++)
+                <th>date de depot</th>
+            @endfor
+            
         </tr>
         @foreach ($cnssData as $cnss)
         <tr>
             <td>{{$cnss->clients->code}}</td>
             <td>{{$cnss->clients->nom}}</td>
             <td>{{$cnss->clients->collaborateur}}</td>
-            <td>{{ $cnss->date_depot_1 }}</td>
-            <td>{{ $cnss->date_depot_2 }}</td>
-            <td>{{ $cnss->date_depot_3 }}</td>
-            <td>{{ $cnss->date_depot_4 }}</td>
-            <td>{{ $cnss->date_depot_5 }}</td>
-            <td>{{ $cnss->date_depot_6 }}</td>
-            <td>{{ $cnss->date_depot_7 }}</td>
-            <td>{{ $cnss->date_depot_8 }}</td>
-            <td>{{ $cnss->date_depot_9 }}</td>
-            <td>{{ $cnss->date_depot_10 }}</td>
-            <td>{{ $cnss->date_depot_11 }}</td>
-            <td>{{ $cnss->date_depot_12 }}</td>
+            <x-monthcheck :cnss="$cnss"></x-monthcheck>
         </tr>
         @endforeach
     </table>
-
-    {{-- @for($i = 1 ; $i <13 ; $i++)
-        <details>
-            <summary>Mois {{$i}}</summary>
-            <table class="table">
-                <tr>
-                    <th>code client</th>
-                    <th>entreprise</th>
-                    <th>collaborateur</th>
-                    <th>date de depot</th>
-                </tr>
-                    @foreach ($cnssData as $cnss)
-                    <tr>
-                        <td>{{$cnss->clients->code}}</td>
-                        <td>{{$cnss->clients->nom}}</td>
-                        <td>{{$cnss->clients->collaborateur}}</td>
-                        <td>{{ $cnss->{'date_depot_' . $i} }}</td>
-                    </tr>
-                    @endforeach
-            </table>
-        </details>
-    @endfor --}}
-
 </body>
 </html>

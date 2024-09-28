@@ -5,12 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="{{ asset( 'css/bootstrap.min.css' ) }}">
-    <title>Accueil</title>
+    <title>Liste des clients</title>
 </head>
-<body>
+<body class="p-2">
     @if(session('success'))
         <p class="alert alert-success">{{ session('success') }}</p>
     @endif
+    <x-menu></x-menu>
     <form action="{{ route('clients.import') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div>
@@ -23,7 +24,7 @@
     </form>
 
     
-    <form action="{{route('acueil.index')}}">
+    <form action="{{route('clients.index')}}">
         <label for="">Rechercher par code de client</label>
         <input list="clients-list" name="code" id="code" value="{{old('code')}}">
         <datalist id="clients-list">

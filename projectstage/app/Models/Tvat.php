@@ -9,12 +9,19 @@ class Tvat extends Model
 {
     use HasFactory;
 
+    protected $table = 'tvat';
+
     protected $fillable =[
         'id',
         'clients_id',
-        'trimestre',
-        'date_depot',
-        'num_depot',
+        'date_depot_1',
+        'num_depot_1',
+        'date_depot_2',
+        'num_depot_2',
+        'date_depot_3',
+        'num_depot_3',
+        'date_depot_4',
+        'num_depot_4'
     ];
 
     public function clients(){

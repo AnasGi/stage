@@ -96,7 +96,7 @@ class CnssController extends Controller
                 if (!empty($row[$i])) {
                     try {
                         // Convert the date (adjust the format according to your CSV)
-                        $row[$i] = Carbon::createFromFormat('d/m/Y', $row[$i])->format('Y-m-d');
+                        $row[$i] = Carbon::createFromFormat('m/d/Y', $row[$i])->format('Y-m-d');
                     } catch (\Exception $e) {
                         // Handle invalid date format
                         $row[$i] = null; // Set it to null or handle the error as needed
@@ -111,21 +111,25 @@ class CnssController extends Controller
 
             // Create a client record for each row
 
-            Cnss::create([
-                    "clients_id"=> $clientId,
-                    'date_depot_1' => $row[3],
-                    'date_depot_2' => $row[4],
-                    'date_depot_3' => $row[5],
-                    'date_depot_4' => $row[6],
-                    'date_depot_5' => $row[7],
-                    'date_depot_6' => $row[8],
-                    'date_depot_7' => $row[9],
-                    'date_depot_8' => $row[10],
-                    'date_depot_9' => $row[11],
-                    'date_depot_10' => $row[12],
-                    'date_depot_11' => $row[13],
-                    'date_depot_12' => $row[14],
-            ]);
+            if(!is_null($clientId)){
+
+                Cnss::create([
+                        "clients_id"=> $clientId,
+                        'date_depot_1' => $row[3],
+                        'date_depot_2' => $row[4],
+                        'date_depot_3' => $row[5],
+                        'date_depot_4' => $row[6],
+                        'date_depot_5' => $row[7],
+                        'date_depot_6' => $row[8],
+                        'date_depot_7' => $row[9],
+                        'date_depot_8' => $row[10],
+                        'date_depot_9' => $row[11],
+                        'date_depot_10' => $row[12],
+                        'date_depot_11' => $row[13],
+                        'date_depot_12' => $row[14],
+                ]);
+            }
+
             
         }
 
