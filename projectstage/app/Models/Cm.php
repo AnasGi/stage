@@ -9,6 +9,8 @@ class Cm extends Model
 {
     use HasFactory;
 
+    protected $table='cm';
+
     protected $fillable =[
         'id',
         'clients_id',

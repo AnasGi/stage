@@ -96,7 +96,7 @@ class CnssController extends Controller
                 if (!empty($row[$i])) {
                     try {
                         // Convert the date (adjust the format according to your CSV)
-                        $row[$i] = Carbon::createFromFormat('m/d/Y', $row[$i])->format('Y-m-d');
+                        $row[$i] = Carbon::createFromFormat('d/m/Y', $row[$i])->format('Y-m-d');
                     } catch (\Exception $e) {
                         // Handle invalid date format
                         $row[$i] = null; // Set it to null or handle the error as needed

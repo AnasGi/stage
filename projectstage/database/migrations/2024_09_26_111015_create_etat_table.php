@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('etat', function (Blueprint $table) {
             $table->id();
             $table->foreignId('clients_id')->constrained('clients');
-            $table->date('date_depot');
-            $table->integer('num_depot');
+            $table->date('date_depot')->nullable();
+            $table->string('num_depot')->nullable();
             $table->timestamps();
         });
     }

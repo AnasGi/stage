@@ -9,6 +9,8 @@ class Bilan extends Model
 {
     use HasFactory;
 
+    protected $table = 'bilan';
+
     protected $fillable =[
         'id',
         'clients_id',

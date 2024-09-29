@@ -29,7 +29,7 @@
         <input list="clients-list" name="code" id="code" value="{{old('code')}}">
         <datalist id="clients-list">
             @foreach ($clients as $client)
-                <option value="{{$client->code}}">{{$client->code . $client->nom}}</option>
+                <option value="{{$client->code}}">{{$client->nom}}</option>
             @endforeach
         </datalist>
         <button class="btn btn-primary">Cherche</button>

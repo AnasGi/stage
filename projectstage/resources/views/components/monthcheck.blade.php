@@ -1,13 +1,18 @@
-@props(['cnss' => null, 'tvam' => null , 'tvat' => null , 'ir' => null])
+@props(['cnss' => null, 'tvam' => null , 'tvat' => null , 'ir' => null , 'droittimber' => null , 'acompte'=>null])
 
 @php
-    $activeData = $cnss ?? $tvam ?? $tvat ?? $ir;
+    $activeData = $cnss ?? $tvam ?? $tvat ?? $ir ?? $droittimber ?? $acompte;
     $nbreCells = 0;
 @endphp
 
 @if($activeData == $tvat)
     {{-- for trimestrielle --}}
     @php $nbreCells = 5; @endphp 
+
+@elseif($activeData == $acompte)
+    {{-- for acompte --}}
+    @php $nbreCells = 6; @endphp
+
 @else
     {{-- for mensuelle --}}
     @php $nbreCells = 13; @endphp

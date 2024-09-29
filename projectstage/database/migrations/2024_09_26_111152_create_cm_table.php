@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('cm', function (Blueprint $table) {
             $table->id();
             $table->foreignId('clients_id')->constrained('clients');
-            $table->date('date_depot');
-            $table->integer('num_depot');
-            $table->integer('montant');
+            $table->date('date_depot')->nullable();
+            $table->string('num_depot')->nullable();
+            $table->string('montant')->nullable();
             $table->timestamps();
         });
     }

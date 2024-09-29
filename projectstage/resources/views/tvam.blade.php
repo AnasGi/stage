@@ -28,7 +28,7 @@
         <input list="clients-list" name="code" id="code" value="{{old('code')}}">
         <datalist id="clients-list">
             @foreach ($tvamData as $tvam)
-                <option value="{{$tvam->clients->code}}">{{$tvam->clients->code . $tvam->clients->nom}}</option>
+                <option value="{{$tvam->clients->code}}">{{$tvam->clients->nom}}</option>
             @endforeach
         </datalist>
         <button class="btn btn-primary">Cherche</button>

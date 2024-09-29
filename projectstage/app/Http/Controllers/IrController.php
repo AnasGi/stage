@@ -150,6 +150,6 @@ class IrController extends Controller
         // Close the file handler
         fclose($handle);
 
-        return back()->with('success', 'Tvam data imported successfully!');
+        return back()->with('success', 'Ir data imported successfully!');
     }
 }

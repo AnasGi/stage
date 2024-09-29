@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Acompte;
 use App\Models\Client;
+use App\Models\Droittimber;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
-class AcompteController extends Controller
+class DroittimberController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,12 +17,12 @@ class AcompteController extends Controller
         $code = Client::where('code' , $request->input('code'))->value('id');
 
         if($code){
-            $acompteData = Acompte::where('clients_id' , $code)->get();
+            $droittimberData = Droittimber::where('clients_id' , $code)->get();
         }
         else{
-            $acompteData = Acompte::all();
+            $droittimberData = Droittimber::all();
         }
-        return view('acompte' , compact('acompteData'));
+        return view('droittimber' , compact('droittimberData'));
     }
 
     /**
@@ -44,7 +44,7 @@ class AcompteController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Acompte $acompte)
+    public function show(Droittimber $Droittimber)
     {
         //
     }
@@ -52,7 +52,7 @@ class AcompteController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Acompte $acompte)
+    public function edit(Droittimber $Droittimber)
     {
         //
     }
@@ -60,7 +60,7 @@ class AcompteController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Acompte $acompte)
+    public function update(Request $request, Droittimber $Droittimber)
     {
         //
     }
@@ -68,7 +68,7 @@ class AcompteController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Acompte $acompte)
+    public function destroy(Droittimber $Droittimber)
     {
         //
     }
@@ -92,7 +92,7 @@ class AcompteController extends Controller
         // Loop through each row of the CSV
         while (($row = fgetcsv($handle, 1000, ',')) !== false) {
 
-            for($i = 3 ; $i< 14 ; $i++){
+            for($i = 3 ; $i< 27 ; $i++){
                 if($i % 2 !== 0){
                     if (!empty($row[$i])) {
                         try {
@@ -114,19 +114,34 @@ class AcompteController extends Controller
             // Create a client record for each row
 
             if(!is_null($clientId)){
-                Acompte::create([
+                Droittimber::create([
                         "clients_id"=> $clientId,
-                        'date_depot_0' => $row[3],
-                        'num_depot_0' => $row[4],
-                        'date_depot_1' => $row[5],
-                        'num_depot_1' => $row[6],
-                        'date_depot_2' => $row[7],
-                        'num_depot_2' => $row[8],
-                        'date_depot_3' => $row[9],
-                        'num_depot_3' => $row[10],
-                        'date_depot_4' => $row[11],
-                        'num_depot_4' => $row[12],
+                        'date_depot_1' => $row[3],
+                        'num_depot_1' => $row[4],
+                        'date_depot_2' => $row[5],
+                        'num_depot_2' => $row[6],
+                        'date_depot_3' => $row[7],
+                        'num_depot_3' => $row[8],
+                        'date_depot_4' => $row[9],
+                        'num_depot_4' => $row[10],
+                        'date_depot_5' => $row[11],
+                        'num_depot_5' => $row[12],
+                        'date_depot_6' => $row[13],
+                        'num_depot_6' => $row[14],
+                        'date_depot_7' => $row[15],
+                        'num_depot_7' => $row[16],
+                        'date_depot_8' => $row[17],
+                        'num_depot_8' => $row[18],
+                        'date_depot_9' => $row[19],
+                        'num_depot_9' => $row[20],
+                        'date_depot_10' => $row[21],
+                        'num_depot_10' => $row[22],
+                        'date_depot_11' => $row[23],
+                        'num_depot_11' => $row[24],
+                        'date_depot_12' => $row[25],
+                        'num_depot_12' => $row[26],
                 ]);
+
             }
 
             
@@ -135,6 +150,6 @@ class AcompteController extends Controller
         // Close the file handler
         fclose($handle);
 
-        return back()->with('success', 'Acompte data imported successfully!');
+        return back()->with('success', 'Droit de timber data imported successfully!');
     }
 }

@@ -28,7 +28,7 @@
         <input list="clients-list" name="code" id="code" value="{{old('code')}}">
         <datalist id="clients-list">
             @foreach ($cnssData as $cnss)
-                <option value="{{$cnss->clients->code}}">{{$cnss->clients->code . $cnss->clients->nom}}</option>
+                <option value="{{$cnss->clients->code}}">{{$cnss->clients->nom}}</option>
             @endforeach
         </datalist>
         <button class="btn btn-primary">Cherche</button>
