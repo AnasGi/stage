@@ -12,31 +12,20 @@
         <p class="alert alert-success">{{ session('success') }}</p>
     @endif
     <x-menu></x-menu>
-    <form action="{{ route('acompte.import') }}" method="POST" enctype="multipart/form-data">
-        @csrf
-        <div>
-            <label for="file">Upload CSV File:</label>
-            <input type="file" name="file" id="file" accept=".csv">
-        </div>
-        <div>
-            <button type="submit">Import acompte data</button>
-        </div>
-    </form>
+    @php
+        $empty = false;
+    @endphp
 
-    <form action="{{route('acompte.index')}}">
-        <label for="">Rechercher par code de client</label>
-        <input list="clients-list" name="code" id="code" value="{{old('code')}}">
-        <datalist id="clients-list">
-            @foreach ($acompteData as $acompte)
-                <option value="{{$acompte->clients->code}}">{{$acompte->clients->nom}}</option>
-            @endforeach
-        </datalist>
-        <button class="btn btn-primary">Cherche</button>
-    </form>
+    <x-tools page='acompte' :activeData="$acompteData" :users="$users"></x-tools>
+
 
     <table class="table table-hover text-center overflow-scroll" style="width :150%">
         <tr>
-            <td colspan="3"></td>
+            @if(auth()->user()->role == 'Admin')
+                <td colspan="3"></td>
+            @else
+                <td colspan="2"></td>
+            @endif
             <td colspan="2" class="fw-bold fs-3">Regularisation </td>
             <td colspan="2" class="fw-bold fs-3">1ere trimestre </td>
             <td colspan="2" class="fw-bold fs-3">2ere trimestre </td>
@@ -46,21 +35,32 @@
         <tr>
             <th>code client</th>
             <th style="width: 200px">entreprise</th>
-            <th>collaborateur</th>
+            @if(auth()->user()->role == 'Admin')
+                <th>collaborateur</th>
+            @endif
             @for($i = 0 ; $i < 5 ; $i++)
                 <th>date de depot</th>
                 <th>numero de depot</th>
             @endfor
             
         </tr>
-        @foreach ($acompteData as $acompte)
+        @forelse ($acompteData as $acompte)
         <tr>
             <td>{{$acompte->clients->code}}</td>
             <td>{{$acompte->clients->nom}}</td>
-            <td>{{$acompte->clients->collaborateur}}</td>
-            <x-monthcheck :acompte="$acompte"></x-monthcheck>
+            @if(auth()->user()->role == 'Admin')
+                <td>{{$acompte->clients->users->name}}</td>
+            @endif
+            <x-monthcheck :activeData="$acompte" page="acompte"></x-monthcheck>
         </tr>
-        @endforeach
+        @empty
+            @php
+                $empty=true;
+            @endphp
+        @endforelse
     </table>
+    @if ($empty)
+        <p class="text-center">Aucun resultat</p>
+    @endif
 </body>
 </html>

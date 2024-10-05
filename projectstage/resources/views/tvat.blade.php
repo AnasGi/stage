@@ -12,31 +12,18 @@
         <p class="alert alert-success">{{ session('success') }}</p>
     @endif
     <x-menu></x-menu>
-    <form action="{{ route('tvat.import') }}" method="POST" enctype="multipart/form-data">
-        @csrf
-        <div>
-            <label for="file">Upload CSV File:</label>
-            <input type="file" name="file" id="file" accept=".csv">
-        </div>
-        <div>
-            <button type="submit">Import tvat data</button>
-        </div>
-    </form>
-
-    <form action="{{route('tvat.index')}}">
-        <label for="">Rechercher par code de client</label>
-        <input list="clients-list" name="code" id="code" value="{{old('code')}}">
-        <datalist id="clients-list">
-            @foreach ($tvatData as $tvat)
-                <option value="{{$tvat->clients->code}}">{{$tvat->clients->nom}}</option>
-            @endforeach
-        </datalist>
-        <button class="btn btn-primary">Cherche</button>
-    </form>
+    @php
+        $empty = false;
+    @endphp
+    <x-tools page='tvat' :activeData="$tvatData" :users="$users"></x-tools>
 
     <table class="table table-hover text-center overflow-scroll" style="width :150%">
         <tr>
-            <td colspan="3"></td>
+            @if(auth()->user()->role == 'Admin')
+                <td colspan="3"></td>
+            @else
+                <td colspan="2"></td>
+            @endif
             <td colspan="2" class="fw-bold fs-3">1ere trimestre </td>
             <td colspan="2" class="fw-bold fs-3">2ere trimestre </td>
             <td colspan="2" class="fw-bold fs-3">3ere trimestre </td>
@@ -45,21 +32,32 @@
         <tr>
             <th>code client</th>
             <th style="width: 200px">entreprise</th>
-            <th>collaborateur</th>
+            @if(auth()->user()->role == 'Admin')
+                <th>collaborateur</th>
+            @endif
             @for($i = 0 ; $i < 4 ; $i++)
                 <th>date de depot</th>
                 <th>numero de depot</th>
             @endfor
             
         </tr>
-        @foreach ($tvatData as $tvat)
+        @forelse ($tvatData as $tvat)
         <tr>
             <td>{{$tvat->clients->code}}</td>
             <td>{{$tvat->clients->nom}}</td>
-            <td>{{$tvat->clients->collaborateur}}</td>
-            <x-monthcheck :tvat="$tvat"></x-monthcheck>
+            @if(auth()->user()->role == 'Admin')
+                <td>{{$tvat->clients->users->name}}</td>
+            @endif
+            <x-monthcheck :activeData="$tvat"  page="tvat"></x-monthcheck>
         </tr>
-        @endforeach
+        @empty
+            @php
+                $empty=true;
+            @endphp
+        @endforelse
     </table>
+    @if ($empty)
+        <p class="text-center">Aucun resultat</p>
+    @endif
 </body>
 </html>

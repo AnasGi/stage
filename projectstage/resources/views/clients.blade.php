@@ -12,28 +12,10 @@
         <p class="alert alert-success">{{ session('success') }}</p>
     @endif
     <x-menu></x-menu>
-    <form action="{{ route('clients.import') }}" method="POST" enctype="multipart/form-data">
-        @csrf
-        <div>
-            <label for="file">Upload CSV File:</label>
-            <input type="file" name="file" id="file" accept=".csv">
-        </div>
-        <div>
-            <button type="submit">Import Clients</button>
-        </div>
-    </form>
-
-    
-    <form action="{{route('clients.index')}}">
-        <label for="">Rechercher par code de client</label>
-        <input list="clients-list" name="code" id="code" value="{{old('code')}}">
-        <datalist id="clients-list">
-            @foreach ($clients as $client)
-                <option value="{{$client->code}}">{{$client->nom}}</option>
-            @endforeach
-        </datalist>
-        <button class="btn btn-primary">Cherche</button>
-    </form>
+    @php
+        $empty = false;
+    @endphp
+    <x-tools page='clients' :activeData="$clients" :users="$users"></x-tools>
 
 
     <table class="table table-hover text-center overflow-scroll" style="width :200%">
@@ -49,9 +31,13 @@
             <th>RC</th>
             <th style="width: 200px">date debut d'activite</th>
             <th>activite</th>
-            <th>collaborateur</th>
+            @if(auth()->user()->role == 'Admin')
+                @if(auth()->user()->role == 'Admin')
+                <th>collaborateur</th>
+            @endif
+            @endif
         </tr>
-            @foreach ($clients as $client)
+            @forelse ($clients as $client)
             <tr>
                 <td>{{$client->code}}</td>
                 <td>{{$client->nom}}</td>
@@ -64,10 +50,18 @@
                 <td>{{$client->RC}}</td>
                 <td>{{$client->debut_activite}}</td>
                 <td>{{$client->activite}}</td>
-                <td>{{$client->collaborateur}}</td>
+                @if(auth()->user()->role == 'Admin')
+                    <td>{{$client->users->name}}</td>
+                @endif
             </tr>
-            @endforeach
+            @empty
+                @php
+                    $empty = true;
+                @endphp
+            @endforelse
     </table>
-    
+    @if ($empty)
+    <p class="text-center">Aucun resultat</p>
+    @endif
 </body>
 </html>

@@ -38,6 +38,7 @@ class Ir extends Model
         'num_depot_11',
         'date_depot_12',
         'num_depot_12',
+    'annee',
     ];
 
     public function clients(){

@@ -23,7 +23,8 @@ class Acompte extends Model
         'date_depot_3',
         'num_depot_3',
         'date_depot_4',
-        'num_depot_4'
+        'num_depot_4',
+        'annee',
     ];
 
     public function clients(){

@@ -12,46 +12,41 @@
         <p class="alert alert-success">{{ session('success') }}</p>
     @endif
     <x-menu></x-menu>
-    <form action="{{ route('etat.import') }}" method="POST" enctype="multipart/form-data">
-        @csrf
-        <div>
-            <label for="file">Upload CSV File:</label>
-            <input type="file" name="file" id="file" accept=".csv">
-        </div>
-        <div>
-            <button type="submit">Import etat data</button>
-        </div>
-    </form>
+    @php
+        $empty = false;
+    @endphp
+    <x-tools page='etat' :activeData="$etatData" :users="$users"></x-tools>
 
-    <form action="{{route('etat.index')}}">
-        <label for="">Rechercher par code de client</label>
-        <input list="clients-list" name="code" id="code" value="{{old('code')}}">
-        <datalist id="clients-list">
-            @foreach ($etatData as $etat)
-                <option value="{{$etat->clients->code}}">{{$etat->clients->nom}}</option>
-            @endforeach
-        </datalist>
-        <button class="btn btn-primary">Cherche</button>
-    </form>
 
     <table class="table table-hover text-center overflow-scroll">
         <tr>
             <th>code client</th>
             <th style="width: 200px">entreprise</th>
-            <th>collaborateur</th>
+            @if(auth()->user()->role == 'Admin')
+                <th>collaborateur</th>
+            @endif
             <th>date de depot</th>
             <th>numero de depot</th>
             
         </tr>
-        @foreach ($etatData as $etat)
+        @forelse ($etatData as $etat)
         <tr>
             <td>{{$etat->clients->code}}</td>
             <td>{{$etat->clients->nom}}</td>
-            <td>{{$etat->clients->collaborateur}}</td>
+            @if(auth()->user()->role == 'Admin')
+                <td>{{$etat->clients->users->name}}</td>
+            @endif
             <td>{{$etat->date_depot}}</td>
             <td>{{$etat->num_depot}}</td>
         </tr>
-        @endforeach
+        @empty
+            @php
+                $empty=true;
+            @endphp
+        @endforelse
     </table>
+    @if ($empty)
+        <p class="text-center">Aucun resultat</p>
+    @endif
 </body>
 </html>

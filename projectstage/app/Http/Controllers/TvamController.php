@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Client;
 use App\Models\Tvam;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Auth;
 
 class TvamController extends Controller
 {
@@ -14,15 +16,39 @@ class TvamController extends Controller
      */
     public function index(Request $request)
     {
-        $code = Client::where('code' , $request->input('code'))->value('id');
+        $tvamData = Tvam::query();
 
-        if($code){
-            $tvamData = Tvam::where('clients_id' , $code)->get();
+        if(Auth::user()->role == 'Admin'){
+
+            $users = User::where('role' , 'responsable')->get();
+            if ($request->input('name')) {
+                $userId = $request->input('name');
+                $tvamData->whereHas('clients', function ($query) use ($userId) {
+                    $query->where('users_id', '=', $userId);
+                })->get();
+            }
         }
         else{
-            $tvamData = Tvam::all();
+            $tvamData->whereHas('clients', function ($query) {
+                $query->where('users_id', '=', Auth::user()->id);
+            })->get();
         }
-        return view('tvam' , compact('tvamData'));
+
+        if ($request->input('code')) {
+            $clientId = Client::where('code', $request->input('code'))->value('id');
+            if ($clientId) {
+                $tvamData->where('clients_id', $clientId);
+            }
+        }
+        if ($request->input('annee')) {
+            $tvamData->where('annee', $request->input('annee'));
+        } else {
+            $tvamData->where('annee', Date('Y'));
+        }
+
+        $tvamData = $tvamData->get();
+
+        return view('tvam' , compact('tvamData')  + ['users' => $users ?? null]);
     }
 
     /**
@@ -89,6 +115,22 @@ class TvamController extends Controller
             fgetcsv($handle, 1000, ',');
         }
 
+        $dateDepot = [];
+        while (($row = fgetcsv($handle, 1000, ',')) !== false) {
+            if(!empty($row[3])){
+                try{
+                    array_push($dateDepot, Carbon::createFromFormat('d/m/Y', $row[3])->format('Y'));
+                }
+                catch(\Exception $e){
+                    continue;
+                }
+            }
+
+        }  
+        $minYear = min($dateDepot);
+
+        rewind($handle);
+        
         // Loop through each row of the CSV
         while (($row = fgetcsv($handle, 1000, ',')) !== false) {
 
@@ -140,6 +182,7 @@ class TvamController extends Controller
                         'num_depot_11' => $row[24],
                         'date_depot_12' => $row[25],
                         'num_depot_12' => $row[26],
+                'annee' => $minYear
                 ]);
 
             }

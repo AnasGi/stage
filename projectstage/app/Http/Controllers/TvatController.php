@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Client;
 use App\Models\Tvat;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Auth;
 
 class TvatController extends Controller
 {
@@ -13,17 +15,51 @@ class TvatController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
-    {
-        $code = Client::where('code' , $request->input('code'))->value('id');
+{
+    // Initialize the query builder for Tvat
+    $tvatData = Tvat::query(); // Start with a query builder instance
+    
+    // Admin filtering logic
+    if (Auth::user()->role == 'Admin') {
+        // Apply year filter
+        $users = User::where('role', 'responsable')->get(); // Get users once at the start
 
-        if($code){
-            $tvatData = Tvat::where('clients_id' , $code)->get();
+        // Apply user filter if specified
+        if ($request->input('name')) {
+            $userId = $request->input('name');
+            $tvatData->whereHas('clients', function ($query) use ($userId) {
+                $query->where('users_id', '=', $userId);
+            });
         }
-        else{
-            $tvatData = Tvat::all();
-        }
-        return view('tvat' , compact('tvatData'));
+    } else {
+        // Non-Admin filtering logic
+        $tvatData->whereHas('clients', function ($query) {
+            $query->where('users_id', '=', Auth::user()->id);
+        });
     }
+
+    if ($request->input('code')) {
+        $clientId = Client::where('code', $request->input('code'))->value('id');
+        if ($clientId) {
+            $tvatData->where('clients_id', $clientId);
+        }
+    }
+
+    // Filter by year (if provided)
+    if ($request->input('annee')) {
+        $tvatData->where('annee', $request->input('annee'));
+    } else {
+        // If no year is provided, default to the current year
+        $tvatData->where('annee', Date('Y'));
+    }
+
+    // Finally, get the filtered data (only call `get()` once)
+    $tvatData = $tvatData->get();
+
+    // Return the view with filtered data
+    return view('tvat', compact('tvatData') + ['users' => $users ?? null]);
+}
+
 
     /**
      * Show the form for creating a new resource.
@@ -89,6 +125,22 @@ class TvatController extends Controller
             fgetcsv($handle, 1000, ',');
         }
 
+        $dateDepot = [];
+        while (($row = fgetcsv($handle, 1000, ',')) !== false) {
+            if(!empty($row[3])){
+                try{
+                    array_push($dateDepot, Carbon::createFromFormat('d/m/Y', $row[3])->format('Y'));
+                }
+                catch(\Exception $e){
+                    continue;
+                }
+            }
+
+        }  
+        $minYear = min($dateDepot);
+
+        rewind($handle);
+        
         // Loop through each row of the CSV
         while (($row = fgetcsv($handle, 1000, ',')) !== false) {
 
@@ -124,6 +176,7 @@ class TvatController extends Controller
                         'num_depot_3' => $row[8],
                         'date_depot_4' => $row[9],
                         'num_depot_4' => $row[10],
+                        'annee' => $minYear
                 ]);
             }
 

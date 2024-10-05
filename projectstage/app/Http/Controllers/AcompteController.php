@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Acompte;
 use App\Models\Client;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Auth;
 
 class AcompteController extends Controller
 {
@@ -13,17 +15,51 @@ class AcompteController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
-    {
-        $code = Client::where('code' , $request->input('code'))->value('id');
+{
+    // Initialize the query builder
+    $acompteData = Acompte::query(); // Start with a query builder instance
 
-        if($code){
-            $acompteData = Acompte::where('clients_id' , $code)->get();
+    // For the Admin role
+    if (Auth::user()->role == 'Admin') {
+        $users = User::where('role', 'responsable')->get();
+
+        // Filter by selected user if provided
+        if ($request->input('name')) {
+            $userId = $request->input('name');
+            $acompteData->whereHas('clients', function ($query) use ($userId) {
+                $query->where('users_id', '=', $userId);
+            });
         }
-        else{
-            $acompteData = Acompte::all();
-        }
-        return view('acompte' , compact('acompteData'));
+    } else {
+        // For non-Admin users, restrict the query by logged-in user's ID
+        $acompteData->whereHas('clients', function ($query) {
+            $query->where('users_id', '=', Auth::user()->id);
+        });
     }
+
+    // Filter by client code (if provided)
+    if ($request->input('code')) {
+        $clientId = Client::where('code', $request->input('code'))->value('id');
+        if ($clientId) {
+            $acompteData->where('clients_id', $clientId);
+        }
+    }
+
+    // Filter by year (if provided)
+    if ($request->input('annee')) {
+        $acompteData->where('annee', $request->input('annee'));
+    } else {
+        // If no year is provided, default to the current year
+        $acompteData->where('annee', Date('Y'));
+    }
+
+    // Finally, get the filtered data (only call `get()` once)
+    $acompteData = $acompteData->get();
+
+    // Return the view with filtered data
+    return view('acompte', compact('acompteData') + ['users' => $users ?? null]);
+}
+
 
     /**
      * Show the form for creating a new resource.
@@ -89,6 +125,22 @@ class AcompteController extends Controller
             fgetcsv($handle, 1000, ',');
         }
 
+        $dateDepot = [];
+        while (($row = fgetcsv($handle, 1000, ',')) !== false) {
+            if(!empty($row[3])){
+                try{
+                    array_push($dateDepot, Carbon::createFromFormat('d/m/Y', $row[3])->format('Y'));
+                }
+                catch(\Exception $e){
+                    continue;
+                }
+            }
+
+        }  
+        $minYear = min($dateDepot);
+
+        rewind($handle);
+        
         // Loop through each row of the CSV
         while (($row = fgetcsv($handle, 1000, ',')) !== false) {
 
@@ -126,6 +178,7 @@ class AcompteController extends Controller
                         'num_depot_3' => $row[10],
                         'date_depot_4' => $row[11],
                         'num_depot_4' => $row[12],
+                        'annee'=>$minYear
                 ]);
             }
 

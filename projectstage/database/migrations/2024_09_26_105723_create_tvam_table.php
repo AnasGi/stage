@@ -38,6 +38,7 @@ return new class extends Migration
             $table->string('num_depot_11')->nullable();
             $table->date('date_depot_12')->nullable();
             $table->string('num_depot_12')->nullable();
+            $table->string('annee');
             $table->timestamps();
         });
     }

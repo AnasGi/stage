@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Client;
 use App\Models\Ir;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Auth;
 
 class IrController extends Controller
 {
@@ -13,17 +15,46 @@ class IrController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
-    {
-        $code = Client::where('code' , $request->input('code'))->value('id');
+{
+    $irData = Ir::query();
 
-        if($code){
-            $irData = Ir::where('clients_id' , $code)->get();
+    // Start building the query based on role
+    if (Auth::user()->role == 'Admin') {
+        $users = User::where('role', 'responsable')->get();
+
+        // Filter by responsible user if 'name' parameter is provided
+        if ($request->input('name')) {
+            $userId = $request->input('name');
+            $irData->whereHas('clients', function ($query) use ($userId) {
+                $query->where('users_id', '=', $userId);
+            });
         }
-        else{
-            $irData = Ir::all();
-        }
-        return view('ir' , compact('irData'));
+    } else {
+        $irData = Ir::whereHas('clients', function ($query) {
+            $query->where('users_id', '=', Auth::user()->id);
+        });
     }
+
+    // Apply the client code filter if available
+    if ($request->input('code')) {
+        $clientId = Client::where('code', $request->input('code'))->value('id');
+        if ($clientId) {
+            $irData->where('clients_id', $clientId);
+        }
+    }
+    if ($request->input('annee')) {
+        $irData->where('annee', $request->input('annee'));
+    } else {
+        $irData->where('annee', Date('Y'));
+    }
+    
+    // Execute the query and get the results
+    $irData = $irData->get();
+
+    // Return the view with the data
+    return view('ir', compact('irData') + ['users' => $users ?? null]);
+}
+
 
     /**
      * Show the form for creating a new resource.
@@ -89,6 +120,22 @@ class IrController extends Controller
             fgetcsv($handle, 1000, ',');
         }
 
+        $dateDepot = [];
+        while (($row = fgetcsv($handle, 1000, ',')) !== false) {
+            if(!empty($row[3])){
+                try{
+                    array_push($dateDepot, Carbon::createFromFormat('d/m/Y', $row[3])->format('Y'));
+                }
+                catch(\Exception $e){
+                    continue;
+                }
+            }
+
+        }  
+        $minYear = min($dateDepot);
+
+        rewind($handle);
+        
         // Loop through each row of the CSV
         while (($row = fgetcsv($handle, 1000, ',')) !== false) {
 
@@ -140,6 +187,7 @@ class IrController extends Controller
                         'num_depot_11' => $row[24],
                         'date_depot_12' => $row[25],
                         'num_depot_12' => $row[26],
+                'annee' => $minYear
                 ]);
 
             }

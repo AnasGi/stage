@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Client;
 use App\Models\Cnss;
+use App\Models\User;
+use Auth;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -13,17 +15,56 @@ class CnssController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
-    {
-        $code = Client::where('code' , $request->input('code'))->value('id');
+{
+    // Start building the query
+    $cnssData = Cnss::query(); // Initialize a query builder instance
 
-        if($code){
-            $cnssData = Cnss::where('clients_id' , $code)->get();
+    // For the Admin role
+    if (Auth::user()->role == 'Admin') {
+        $users = User::where('role', 'responsable')->get();
+
+        // Filter by selected user if provided
+        if ($request->input('name')) {
+            $userId = $request->input('name');
+            $cnssData->whereHas('clients', function ($query) use ($userId) {
+                $query->where('users_id', '=', $userId);
+            });
         }
-        else{
-            $cnssData = Cnss::all();
-        }
-        return view('cnss' , compact('cnssData'));
+    } else {
+        // For non-Admin users, restrict the query by logged-in user's ID
+        $cnssData->whereHas('clients', function ($query) {
+            $query->where('users_id', '=', Auth::user()->id);
+        });
     }
+
+    // Filter by client code (if provided)
+    if ($request->input('code')) {
+        $clientId = Client::where('code', $request->input('code'))->value('id');
+        if ($clientId) {
+            $cnssData->where('clients_id', $clientId);
+        }
+    }
+
+    // Filter by date (if provided)
+    if ($request->input('date')) {
+        $cnssData->where('date_depot', $request->input('date'));
+    }
+
+    // Filter by year (if provided)
+    if ($request->input('annee')) {
+        $cnssData->where('annee', $request->input('annee'));
+    } else {
+        // If no year is provided, default to the current year
+        $cnssData->where('annee', Date('Y'));
+    }
+
+    // Finally, get the filtered data (only call `get()` once)
+    $cnssData = $cnssData->get();
+
+    // Return the view with filtered data
+    return view('cnss', compact('cnssData') + ['users' => $users ?? null]);
+}
+
 
     /**
      * Show the form for creating a new resource.
@@ -89,6 +130,20 @@ class CnssController extends Controller
             fgetcsv($handle, 1000, ',');
         }
 
+        $dateDepot = [];
+        while (($row = fgetcsv($handle, 1000, ',')) !== false) {
+            try{
+                array_push($dateDepot, Carbon::createFromFormat('d/m/Y', $row[4])->format('Y'));
+            }
+            catch(\Exception $e){
+                continue;
+            }
+
+        }  
+        $minYear = min($dateDepot);
+
+        rewind($handle);
+        
         // Loop through each row of the CSV
         while (($row = fgetcsv($handle, 1000, ',')) !== false) {
 
@@ -127,6 +182,7 @@ class CnssController extends Controller
                         'date_depot_10' => $row[12],
                         'date_depot_11' => $row[13],
                         'date_depot_12' => $row[14],
+                        'annee' => $minYear
                 ]);
             }
 

@@ -1,0 +1,1 @@
+$ip = (Get-NetIPAddress -AddressFamily IPv4 | Where-Object {$_.IPAddress -like '192.*'}).IPAddress; php artisan serve --host=$ip --port=8000

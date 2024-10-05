@@ -1,15 +1,14 @@
-@props(['cnss' => null, 'tvam' => null , 'tvat' => null , 'ir' => null , 'droittimber' => null , 'acompte'=>null])
+@props(['activeData' , 'page'])
 
 @php
-    $activeData = $cnss ?? $tvam ?? $tvat ?? $ir ?? $droittimber ?? $acompte;
     $nbreCells = 0;
 @endphp
 
-@if($activeData == $tvat)
-    {{-- for trimestrielle --}}
+@if($page == 'tvat')
+    {{-- for tvat --}}
     @php $nbreCells = 5; @endphp 
 
-@elseif($activeData == $acompte)
+@elseif($page == 'acompte')
     {{-- for acompte --}}
     @php $nbreCells = 6; @endphp
 
@@ -22,7 +21,7 @@
     @if($activeData->{'date_depot_' . $i} != null)
         @php 
             $DateDepot = new DateTime($activeData->{'date_depot_' . $i});
-            if($activeData == $cnss){
+            if($page == 'cnss'){
                 if($i == 12){
                     $comparisonDate = DateTime::createFromFormat('Y-m-d', $DateDepot->format('Y')+1 . '-1-7');
                 }
@@ -34,7 +33,7 @@
                 $comparisonDate = null;
             }
             
-            // if($activeData == $tvm){
+            // if($page == 'tvam'){
             //     if($i == 12){
             //         $comparisonDate = DateTime::createFromFormat('Y-m-d', $DateDepot->format('Y')+1 . '-1-7');
             //     }
@@ -50,12 +49,12 @@
         @else
             @if($DateDepot > $comparisonDate)
                 <td class="bg-danger">{{ $activeData->{'date_depot_' . $i} }}</td>
-                @if($activeData != $cnss)
+                @if($page != 'cnss')
                     <td>{{ $activeData->{'num_depot_' . $i} }}</td>
                 @endif
             @else
                 <td>{{ $activeData->{'date_depot_' . $i} }}</td>
-                @if($activeData != $cnss)
+                @if($page != 'cnss')
                     <td>{{ $activeData->{'num_depot_' . $i} }}</td>
                 @endif
             @endif
@@ -63,7 +62,7 @@
 
     @else
         <td></td>
-        @if($activeData != $cnss && $activeData->{'num_depot_' . $i} == null)
+        @if($page != 'cnss' && $activeData->{'num_depot_' . $i} == null)
             <td></td>
         @endif
     @endif

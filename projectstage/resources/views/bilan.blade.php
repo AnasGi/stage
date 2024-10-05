@@ -12,48 +12,42 @@
         <p class="alert alert-success">{{ session('success') }}</p>
     @endif
     <x-menu></x-menu>
-    <form action="{{ route('bilan.import') }}" method="POST" enctype="multipart/form-data">
-        @csrf
-        <div>
-            <label for="file">Upload CSV File:</label>
-            <input type="file" name="file" id="file" accept=".csv">
-        </div>
-        <div>
-            <button type="submit">Import bilan data</button>
-        </div>
-    </form>
-
-    <form action="{{route('bilan.index')}}">
-        <label for="">Rechercher par code de client</label>
-        <input list="clients-list" name="code" id="code" value="{{old('code')}}">
-        <datalist id="clients-list">
-            @foreach ($bilanData as $bilan)
-                <option value="{{$bilan->clients->code}}">{{$bilan->clients->nom}}</option>
-            @endforeach
-        </datalist>
-        <button class="btn btn-primary">Cherche</button>
-    </form>
+    @php
+        $empty = false;
+    @endphp
+    <x-tools page='bilan' :activeData="$bilanData" :users="$users"></x-tools>
 
     <table class="table table-hover text-center overflow-scroll">
         <tr>
             <th>code client</th>
             <th style="width: 200px">entreprise</th>
-            <th>collaborateur</th>
+            @if(auth()->user()->role == 'Admin')
+                <th>collaborateur</th>
+            @endif
             <th>PP/PM</th>
             <th>date de depot</th>
             <th>numero de depot</th>
             
         </tr>
-        @foreach ($bilanData as $bilan)
+        @forelse ($bilanData as $bilan)
         <tr>
             <td>{{$bilan->clients->code}}</td>
             <td>{{$bilan->clients->nom}}</td>
-            <td>{{$bilan->clients->collaborateur}}</td>
+            @if(auth()->user()->role == 'Admin')
+                <td>{{$bilan->clients->users->name}}</td>
+            @endif
             <td>{{$bilan->clients->status}}</td>
             <td>{{$bilan->date_depot}}</td>
             <td>{{$bilan->num_depot}}</td>
         </tr>
-        @endforeach
+        @empty
+            @php
+                $empty=true;
+            @endphp
+        @endforelse
     </table>
+    @if ($empty)
+        <p class="text-center">Aucun resultat</p>
+    @endif
 </body>
 </html>

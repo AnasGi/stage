@@ -12,31 +12,19 @@
         <p class="alert alert-success">{{ session('success') }}</p>
     @endif
     <x-menu></x-menu>
-    <form action="{{ route('ir.import') }}" method="POST" enctype="multipart/form-data">
-        @csrf
-        <div>
-            <label for="file">Upload CSV File:</label>
-            <input type="file" name="file" id="file" accept=".csv">
-        </div>
-        <div>
-            <button type="submit">Import ir data</button>
-        </div>
-    </form>
+    @php
+        $empty = false;
+    @endphp
+    <x-tools page='ir' :activeData="$irData" :users="$users"></x-tools>
 
-    <form action="{{route('ir.index')}}">
-        <label for="">Rechercher par code de client</label>
-        <input list="clients-list" name="code" id="code" value="{{old('code')}}">
-        <datalist id="clients-list">
-            @foreach ($irData as $ir)
-                <option value="{{$ir->clients->code}}">{{$ir->clients->nom}}</option>
-            @endforeach
-        </datalist>
-        <button class="btn btn-primary">Cherche</button>
-    </form>
 
     <table class="table table-hover text-center overflow-scroll" style="width :300%">
         <tr>
-            <td colspan="3"></td>
+            @if(auth()->user()->role == 'Admin')
+                <td colspan="3"></td>
+            @else
+                <td colspan="2"></td>
+            @endif
             <td colspan="2" class="fw-bold fs-3">Janvier</td>
             <td colspan="2" class="fw-bold fs-3">Fevrier</td>
             <td colspan="2" class="fw-bold fs-3">Mars</td>
@@ -53,21 +41,32 @@
         <tr>
             <th>code client</th>
             <th style="width: 200px">entreprise</th>
-            <th>collaborateur</th>
+            @if(auth()->user()->role == 'Admin')
+                <th>collaborateur</th>
+            @endif
             @for($i = 0 ; $i < 12 ; $i++)
                 <th>date de depot</th>
                 <th>numero de depot</th>
             @endfor
             
         </tr>
-        @foreach ($irData as $ir)
+        @forelse ($irData as $ir)
         <tr>
             <td>{{$ir->clients->code}}</td>
             <td>{{$ir->clients->nom}}</td>
-            <td>{{$ir->clients->collaborateur}}</td>
-            <x-monthcheck :ir="$ir"></x-monthcheck>
+            @if(auth()->user()->role == 'Admin')
+                <td>{{$ir->clients->users->name}}</td>
+            @endif
+            <x-monthcheck :activeData="$ir" page="ir"></x-monthcheck>
         </tr>
-        @endforeach
+        @empty
+            @php
+                $empty=true;
+            @endphp
+        @endforelse
     </table>
+    @if ($empty)
+        <p class="text-center">Aucun resultat</p>
+    @endif
 </body>
 </html>

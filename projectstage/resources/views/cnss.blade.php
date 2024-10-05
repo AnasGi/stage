@@ -12,31 +12,19 @@
         <p class="alert alert-success">{{ session('success') }}</p>
     @endif
     <x-menu></x-menu>
-    <form action="{{ route('cnss.import') }}" method="POST" enctype="multipart/form-data">
-        @csrf
-        <div>
-            <label for="file">Upload CSV File:</label>
-            <input type="file" name="file" id="file" accept=".csv">
-        </div>
-        <div>
-            <button type="submit">Import cnss data</button>
-        </div>
-    </form>
+    @php
+        $empty = false;
+    @endphp
 
-    <form action="{{route('cnss.index')}}">
-        <label for="">Rechercher par code de client</label>
-        <input list="clients-list" name="code" id="code" value="{{old('code')}}">
-        <datalist id="clients-list">
-            @foreach ($cnssData as $cnss)
-                <option value="{{$cnss->clients->code}}">{{$cnss->clients->nom}}</option>
-            @endforeach
-        </datalist>
-        <button class="btn btn-primary">Cherche</button>
-    </form>
+    <x-tools page='cnss' :activeData="$cnssData" :users="$users"></x-tools>
 
     <table class="table table-hover text-center overflow-scroll" style="width :200%">
         <tr>
-            <td colspan="3"></td>
+            @if(auth()->user()->role == 'Admin')
+                <td colspan="3"></td>
+            @else
+                <td colspan="2"></td>
+            @endif
             <td class="fw-bold fs-3">Janvier</td>
             <td class="fw-bold fs-3">Fevrier</td>
             <td class="fw-bold fs-3">Mars</td>
@@ -53,20 +41,31 @@
         <tr>
             <th>code client</th>
             <th>entreprise</th>
-            <th>collaborateur</th>
+            @if(auth()->user()->role == 'Admin')
+                <th>collaborateur</th>
+            @endif
             @for($i = 0 ; $i < 12 ; $i++)
                 <th>date de depot</th>
             @endfor
             
         </tr>
-        @foreach ($cnssData as $cnss)
+        @forelse ($cnssData as $cnss)
         <tr>
             <td>{{$cnss->clients->code}}</td>
             <td>{{$cnss->clients->nom}}</td>
-            <td>{{$cnss->clients->collaborateur}}</td>
-            <x-monthcheck :cnss="$cnss"></x-monthcheck>
+            @if(auth()->user()->role == 'Admin')
+                <td>{{$cnss->clients->users->name}}</td>
+            @endif
+            <x-monthcheck :activeData="$cnss" page='cnss'></x-monthcheck>
         </tr>
-        @endforeach
+        @empty
+            @php
+                $empty = true;
+            @endphp
+        @endforelse
     </table>
+    @if ($empty)
+        <p class="text-center">Aucun resultat</p>
+    @endif
 </body>
 </html>

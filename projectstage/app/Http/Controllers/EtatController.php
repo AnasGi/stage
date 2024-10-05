@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Client;
 use App\Models\Etat;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Auth;
 
 class EtatController extends Controller
 {
@@ -13,17 +15,56 @@ class EtatController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
-    {
-        $code = Client::where('code' , $request->input('code'))->value('id');
+{
+    // Initialize the query builder
+    $etatData = Etat::query(); // Start with a query builder instance
 
-        if($code){
-            $etatData = Etat::where('clients_id' , $code)->get();
+    // For the Admin role
+    if (Auth::user()->role == 'Admin') {
+        $users = User::where('role', 'responsable')->get();
+
+        // Filter by selected user if provided
+        if ($request->input('name')) {
+            $userId = $request->input('name');
+            $etatData->whereHas('clients', function ($query) use ($userId) {
+                $query->where('users_id', '=', $userId);
+            });
         }
-        else{
-            $etatData = Etat::all();
-        }
-        return view('etat' , compact('etatData'));
+    } else {
+        // For non-Admin users, restrict the query by logged-in user's ID
+        $etatData->whereHas('clients', function ($query) {
+            $query->where('users_id', '=', Auth::user()->id);
+        });
     }
+
+    // Filter by client code (if provided)
+    if ($request->input('code')) {
+        $clientId = Client::where('code', $request->input('code'))->value('id');
+        if ($clientId) {
+            $etatData->where('clients_id', $clientId);
+        }
+    }
+
+    // Filter by date (if provided)
+    if ($request->input('date')) {
+        $etatData->where('date_depot', $request->input('date'));
+    }
+
+    // Filter by year (if provided)
+    if ($request->input('annee')) {
+        $etatData->where('annee', $request->input('annee'));
+    } else {
+        // If no year is provided, default to the current year
+        $etatData->where('annee', Date('Y'));
+    }
+
+    // Finally, get the filtered data (only call `get()` once)
+    $etatData = $etatData->get();
+
+    // Return the view with filtered data
+    return view('etat', compact('etatData') + ['users' => $users ?? null]);
+}
+
 
     /**
      * Show the form for creating a new resource.
@@ -89,6 +130,20 @@ class EtatController extends Controller
             fgetcsv($handle, 1000, ',');
         }
 
+        $dateDepot = [];
+        while (($row = fgetcsv($handle, 1000, ',')) !== false) {
+            try{
+                array_push($dateDepot, Carbon::createFromFormat('d/m/Y', $row[3])->format('Y'))-1;
+            }
+            catch(\Exception $e){
+                continue;
+            }
+
+        }  
+        $minYear = min($dateDepot);
+
+        rewind($handle);
+        
         // Loop through each row of the CSV
         while (($row = fgetcsv($handle, 1000, ',')) !== false) {
 
@@ -113,6 +168,7 @@ class EtatController extends Controller
                         "clients_id"=> $clientId,
                         'date_depot' => $row[3],
                         'num_depot' => $row[4],
+                'annee' => $minYear
                 ]);
 
             }

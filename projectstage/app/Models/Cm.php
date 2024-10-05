@@ -17,6 +17,7 @@ class Cm extends Model
         'date_depot',
         'num_depot',
         'montant',
+    'annee',
     ];
 
     public function clients(){

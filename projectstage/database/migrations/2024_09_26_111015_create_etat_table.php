@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('clients_id')->constrained('clients');
             $table->date('date_depot')->nullable();
             $table->string('num_depot')->nullable();
+            $table->string('annee');
             $table->timestamps();
         });
     }

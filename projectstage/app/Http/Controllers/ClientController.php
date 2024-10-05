@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Client;
+use App\Models\User;
+use Auth;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -15,13 +17,26 @@ class ClientController extends Controller
     public function index(Request $request)
     {
         $code = $request->input('code');
+
+        if(Auth::user()->role == 'Admin'){
+            $clients = Client::all();
+
+            $userId = $request->input('name');
+            $users = User::where('role' , 'responsable')->get();
+            if ($request->input('name')) {
+            
+                $clients = Client::where('users_id', '=', $userId)->get();
+            }
+        }
+        else{
+            $clients = Client::where('users_id' , Auth::user()->id)->get();
+        }
+        
         if($code){
             $clients = Client::where('code' , $code)->get();
         }
-        else{
-            $clients = Client::all();
-        }
-        return view('clients', compact('clients'));
+        
+        return view('clients', compact('clients' )  + ['users' => $users ?? null]);
     }
 
     /**
@@ -103,6 +118,8 @@ class ClientController extends Controller
                 $dateActivite = null; // If the date field is empty, set it to null
             }
 
+            $collabId = User::where('name' , $row[11])->value('id');
+
             // Create a client record for each row
             Client::create([
                 'code' => $row[0],
@@ -116,7 +133,7 @@ class ClientController extends Controller
                 'RC' => $row[8],
                 'debut_activite' => $dateActivite,
                 'activite' => $row[10],
-                'collaborateur' => $row[11],
+                'users_id' => $collabId,
             ]);
         }
 

@@ -22,12 +22,12 @@ class Client extends Model
         'RC',
         'debut_activite',
         'activite',
-        'collaborateur',
+        'users_id',
     ];
 
-    // public function users(){
-    //     return $this->belongsTo(related: User::class);
-    // }
+    public function users(){
+        return $this->belongsTo(related: User::class);
+    }
 
     public function tvam(){
         return $this->hasMany(related: Tvam::class);
@@ -52,6 +52,10 @@ class Client extends Model
     public function etats(){
         return $this->hasMany(related: Etat::class);
     }
+
+    public function tps(){
+        return $this->hasMany(related: Tp::class);
+    }
     
     public function bilans(){
         return $this->hasMany(related: Bilan::class);
@@ -62,6 +66,14 @@ class Client extends Model
     }
     
     public function cm(){
+        return $this->hasMany(related: Cm::class);
+    }
+    
+    public function pv(){
+        return $this->hasMany(related: Cm::class);
+    }
+    
+    public function irprof(){
         return $this->hasMany(related: Cm::class);
     }
 }

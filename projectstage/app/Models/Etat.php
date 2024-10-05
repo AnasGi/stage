@@ -16,6 +16,7 @@ class Etat extends Model
         'clients_id',
         'date_depot',
         'num_depot',
+    'annee',
     ];
 
     public function clients(){

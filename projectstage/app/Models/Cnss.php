@@ -26,6 +26,7 @@ class Cnss extends Model
         'date_depot_10',
         'date_depot_11',
         'date_depot_12',
+    'annee',
     ];
 
     public function clients(){
