@@ -30,11 +30,18 @@ class IrprofController extends Controller
                 $query->where('users_id', '=', $userId);
             });
         }
+        //for the addform component
+        $clients = Client::all();
+
+        
     } else {
         // For non-Admin users, restrict the query by logged-in user's ID
         $irprofData->whereHas('clients', function ($query) {
             $query->where('users_id', '=', Auth::user()->id);
         });
+
+        //for the addform component
+        $clients = Client::where('users_id' , Auth::user()->id)->get();
     }
 
     // Filter by client code (if provided)
@@ -62,7 +69,7 @@ class IrprofController extends Controller
     $irprofData = $irprofData->get();
 
     // Return the view with filtered data
-    return view('irprof', compact('irprofData') + ['users' => $users ?? null]);
+    return view('irprof', compact('clients' , 'irprofData') + ['users' => $users ?? null]);
 }
 
 
@@ -79,6 +86,18 @@ class IrprofController extends Controller
      */
     public function store(Request $request)
     {
+
+        $clientId = Client::where('code' , $request->input('code'))->value('id');
+
+
+        Irprof::create([
+            "clients_id"=> $clientId,
+            'date_depot' => $request->input('date_depot'),
+            'num_depot' => $request->input('num_depot'),
+            'annee' => Date('Y')
+        ]);
+
+        return back()->with('add' , "Nouvelles données a été inserser!");
         //
     }
 

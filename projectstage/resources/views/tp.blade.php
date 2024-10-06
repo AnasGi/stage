@@ -16,6 +16,7 @@
         $empty = false;
     @endphp
     <x-tools page='tp' :activeData="$tpData" :users="$users"></x-tools>
+    <x-addform page='tp' :activeData="$tpData" :users="$users" :clients="$clients"></x-addform>
 
 
     <table class="table table-hover text-center overflow-scroll">

@@ -16,6 +16,7 @@
         $empty = false;
     @endphp
     <x-tools page='irprof' :activeData="$irprofData" :users="$users"></x-tools>
+    <x-addform page='irprof' :activeData="$irprofData" :users="$users" :clients="$clients"></x-addform>
 
 
     <table class="table table-hover text-center overflow-scroll">

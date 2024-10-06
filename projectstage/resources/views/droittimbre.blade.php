@@ -16,6 +16,7 @@
         $empty = false;
     @endphp
     <x-tools page='droittimbre' :activeData="$droittimberData" :users="$users"></x-tools>
+    <x-addform page='droittimbre' :activeData="$droittimberData" :users="$users" :clients="$clients"></x-addform>
 
     <table class="table table-hover text-center overflow-scroll" style="width :300%">
         <tr>

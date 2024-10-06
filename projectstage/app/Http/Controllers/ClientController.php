@@ -52,7 +52,23 @@ class ClientController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Create a client record for each row
+        Client::create([
+            'code' => $request->input('code'),
+            'nom' => $request->input('nom'),
+            'status' => $request->input('status'),
+            'adresse' => $request->input('adresse'),
+            'IF' => $request->input('IF'),
+            'TP' => $request->input('TP'),
+            'ICE' => $request->input('ICE'),
+            'CNSS' => $request->input('CNSS'),
+            'RC' => $request->input('RC'),
+            'debut_activite' => $request->input('debut_activite'),
+            'activite' => $request->input('activite'),
+            'users_id' => $request->input('users_id'),
+        ]);
+
+        return back()->with('add' , "Nouvel client a été inserer!");
     }
 
     /**

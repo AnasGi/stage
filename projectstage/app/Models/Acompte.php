@@ -14,8 +14,6 @@ class Acompte extends Model
     protected $fillable =[
         'id',
         'clients_id',
-        'date_depot_0',
-        'num_depot_0',
         'date_depot_1',
         'num_depot_1',
         'date_depot_2',
@@ -24,6 +22,8 @@ class Acompte extends Model
         'num_depot_3',
         'date_depot_4',
         'num_depot_4',
+        'date_depot_5',
+        'num_depot_5',
         'annee',
     ];
 

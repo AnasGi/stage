@@ -30,11 +30,18 @@ class EtatController extends Controller
                 $query->where('users_id', '=', $userId);
             });
         }
+        //for the addform component
+        $clients = Client::all();
+
+        
     } else {
         // For non-Admin users, restrict the query by logged-in user's ID
         $etatData->whereHas('clients', function ($query) {
             $query->where('users_id', '=', Auth::user()->id);
         });
+
+        //for the addform component
+        $clients = Client::where('users_id' , Auth::user()->id)->get();
     }
 
     // Filter by client code (if provided)
@@ -62,7 +69,7 @@ class EtatController extends Controller
     $etatData = $etatData->get();
 
     // Return the view with filtered data
-    return view('etat', compact('etatData') + ['users' => $users ?? null]);
+    return view('etat', compact('clients' , 'etatData') + ['users' => $users ?? null]);
 }
 
 
@@ -79,6 +86,17 @@ class EtatController extends Controller
      */
     public function store(Request $request)
     {
+
+        $clientId = Client::where('code' , $request->input('code'))->value('id');
+
+        Etat::create([
+            "clients_id"=> $clientId,
+            'date_depot' => $request->input('date_depot'),
+            'num_depot' => $request->input('num_depot'),
+            'annee' => Date('Y')
+        ]);
+
+        return back()->with('add' , "Nouvelles données a été inserser!");
         //
     }
 
@@ -168,7 +186,7 @@ class EtatController extends Controller
                         "clients_id"=> $clientId,
                         'date_depot' => $row[3],
                         'num_depot' => $row[4],
-                'annee' => $minYear
+                        'annee' => $minYear
                 ]);
 
             }

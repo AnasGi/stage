@@ -17,6 +17,7 @@
     @endphp
 
     <x-tools page='acompte' :activeData="$acompteData" :users="$users"></x-tools>
+    <x-addform page='acompte' :activeData="$acompteData" :users="$users" :clients="$clients"></x-addform>
 
 
     <table class="table table-hover text-center overflow-scroll" style="width :150%">

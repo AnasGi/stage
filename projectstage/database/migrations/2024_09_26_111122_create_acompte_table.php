@@ -14,8 +14,6 @@ return new class extends Migration
         Schema::create('acompte', function (Blueprint $table) {
             $table->id();
             $table->foreignId('clients_id')->constrained('clients');
-            $table->date('date_depot_0')->nullable();
-            $table->string('num_depot_0')->nullable();
             $table->date('date_depot_1')->nullable();
             $table->string('num_depot_1')->nullable();
             $table->date('date_depot_2')->nullable();
@@ -24,6 +22,8 @@ return new class extends Migration
             $table->string('num_depot_3')->nullable();
             $table->date('date_depot_4')->nullable();
             $table->string('num_depot_4')->nullable();
+            $table->date('date_depot_5')->nullable();
+            $table->string('num_depot_5')->nullable();
             $table->string('annee');
             $table->timestamps();
         });

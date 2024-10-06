@@ -30,11 +30,18 @@ class CmController extends Controller
                 $query->where('users_id', '=', $userId);
             });
         }
+        //for the addform component
+        $clients = Client::all();
+
+        
     } else {
         // For non-Admin users, restrict the query by logged-in user's ID
         $cmData->whereHas('clients', function ($query) {
             $query->where('users_id', '=', Auth::user()->id);
         });
+
+        //for the addform component
+        $clients = Client::where('users_id' , Auth::user()->id)->get();
     }
 
     // Filter by client code (if provided)
@@ -62,7 +69,7 @@ class CmController extends Controller
     $cmData = $cmData->get();
 
     // Return the view with filtered data
-    return view('cm', compact('cmData') + ['users' => $users ?? null]);
+    return view('cm', compact('clients' , 'cmData') + ['users' => $users ?? null]);
 }
 
 
@@ -79,6 +86,18 @@ class CmController extends Controller
      */
     public function store(Request $request)
     {
+
+        $clientId = Client::where('code' , $request->input('code'))->value('id');
+
+        Cm::create([
+            "clients_id"=> $clientId,
+            'date_depot' => $request->input('date_depot'),
+            'num_depot' => $request->input('num_depot'),
+            'montant' => $request->input('montant'),
+            'annee' => Date('Y')
+        ]);
+
+        return back()->with('add' , "Nouvelles données a été inserser!");
         //
     }
 

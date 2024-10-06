@@ -17,6 +17,7 @@
     @endphp
 
     <x-tools page='cnss' :activeData="$cnssData" :users="$users"></x-tools>
+    <x-addform page='cnss' :activeData="$cnssData" :users="$users" :clients="$clients"></x-addform>
 
     <table class="table table-hover text-center overflow-scroll" style="width :200%">
         <tr>

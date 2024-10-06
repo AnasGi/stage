@@ -29,10 +29,17 @@ class IrController extends Controller
                 $query->where('users_id', '=', $userId);
             });
         }
+        //for the addform component
+        $clients = Client::all();
+
+        
     } else {
         $irData = Ir::whereHas('clients', function ($query) {
             $query->where('users_id', '=', Auth::user()->id);
         });
+
+        //for the addform component
+        $clients = Client::where('users_id' , Auth::user()->id)->get();
     }
 
     // Apply the client code filter if available
@@ -52,7 +59,7 @@ class IrController extends Controller
     $irData = $irData->get();
 
     // Return the view with the data
-    return view('ir', compact('irData') + ['users' => $users ?? null]);
+    return view('ir', compact('clients' , 'irData') + ['users' => $users ?? null]);
 }
 
 
@@ -69,6 +76,40 @@ class IrController extends Controller
      */
     public function store(Request $request)
     {
+
+        $clientId = Client::where('code' , $request->input('code'))->value('id');
+
+
+        Ir::create([
+            "clients_id"=> $clientId,
+            'date_depot_1' => $request->input('date_depot_1'),
+            'num_depot_1' => $request->input('num_depot_1'),
+            'date_depot_2' => $request->input('date_depot_2'),
+            'num_depot_2' => $request->input('num_depot_2'),
+            'date_depot_3' => $request->input('date_depot_3'),
+            'num_depot_3' => $request->input('num_depot_3'),
+            'date_depot_4' => $request->input('date_depot_4'),
+            'num_depot_4' => $request->input('num_depot_4'),
+            'date_depot_5' => $request->input('date_depot_5'),
+            'num_depot_5' => $request->input('num_depot_5'),
+            'date_depot_6' => $request->input('date_depot_6'),
+            'num_depot_6' => $request->input('num_depot_6'),
+            'date_depot_7' => $request->input('date_depot_7'),
+            'num_depot_7' => $request->input('num_depot_7'),
+            'date_depot_8' => $request->input('date_depot_8'),
+            'num_depot_8' => $request->input('num_depot_8'),
+            'date_depot_9' => $request->input('date_depot_9'),
+            'num_depot_9' => $request->input('num_depot_9'),
+            'date_depot_10' => $request->input('date_depot_10'),
+            'num_depot_10' => $request->input('num_depot_10'),
+            'date_depot_11' => $request->input('date_depot_11'),
+            'num_depot_11' => $request->input('num_depot_11'),
+            'date_depot_12' => $request->input('date_depot_12'),
+            'num_depot_12' => $request->input('num_depot_12'),
+            'annee' => Date('Y')
+        ]);
+
+        return back()->with('add' , "Nouvelles données a été inserser!");
         //
     }
 

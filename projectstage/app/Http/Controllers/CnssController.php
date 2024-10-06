@@ -16,6 +16,7 @@ class CnssController extends Controller
      */
     public function index(Request $request)
 {
+
     // Start building the query
     $cnssData = Cnss::query(); // Initialize a query builder instance
 
@@ -30,11 +31,19 @@ class CnssController extends Controller
                 $query->where('users_id', '=', $userId);
             });
         }
+        //for the addform component
+        $clients = Client::all();
+
+        
+
     } else {
         // For non-Admin users, restrict the query by logged-in user's ID
         $cnssData->whereHas('clients', function ($query) {
             $query->where('users_id', '=', Auth::user()->id);
         });
+
+        //for the addform component
+        $clients = Client::where('users_id' , Auth::user()->id)->get();
     }
 
     // Filter by client code (if provided)
@@ -62,7 +71,7 @@ class CnssController extends Controller
     $cnssData = $cnssData->get();
 
     // Return the view with filtered data
-    return view('cnss', compact('cnssData') + ['users' => $users ?? null]);
+    return view('cnss', compact('cnssData' , 'clients') + ['users' => $users ?? null]);
 }
 
 
@@ -79,7 +88,28 @@ class CnssController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        $clientId = Client::where('code' , $request->input('code'))->value('id');
+
+        Cnss::create([
+            "clients_id"=> $clientId,
+            'date_depot_1' => $request->input('date_depot_1'),
+            'date_depot_2' => $request->input('date_depot_2'),
+            'date_depot_3' => $request->input('date_depot_3'),
+            'date_depot_4' => $request->input('date_depot_4'),
+            'date_depot_5' => $request->input('date_depot_5'),
+            'date_depot_6' => $request->input('date_depot_6'),
+            'date_depot_7' => $request->input('date_depot_7'),
+            'date_depot_8' => $request->input('date_depot_8'),
+            'date_depot_9' => $request->input('date_depot_9'),
+            'date_depot_10' => $request->input('date_depot_10'),
+            'date_depot_11' => $request->input('date_depot_11'),
+            'date_depot_12' => $request->input('date_depot_12'),
+            'annee' => Date('Y')
+        ]);
+
+
+
     }
 
     /**

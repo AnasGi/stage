@@ -30,11 +30,18 @@ class AcompteController extends Controller
                 $query->where('users_id', '=', $userId);
             });
         }
+        //for the addform component
+        $clients = Client::all();
+
+        
     } else {
         // For non-Admin users, restrict the query by logged-in user's ID
         $acompteData->whereHas('clients', function ($query) {
             $query->where('users_id', '=', Auth::user()->id);
         });
+
+        //for the addform component
+        $clients = Client::where('users_id' , Auth::user()->id)->get();
     }
 
     // Filter by client code (if provided)
@@ -57,7 +64,7 @@ class AcompteController extends Controller
     $acompteData = $acompteData->get();
 
     // Return the view with filtered data
-    return view('acompte', compact('acompteData') + ['users' => $users ?? null]);
+    return view('acompte', compact('clients' , 'acompteData') + ['users' => $users ?? null]);
 }
 
 
@@ -74,6 +81,26 @@ class AcompteController extends Controller
      */
     public function store(Request $request)
     {
+
+        $clientId = Client::where('code' , $request->input('code'))->value('id');
+
+
+        Acompte::create([
+            "clients_id"=> $clientId,
+            'date_depot_1' => $request->input('date_depot_1'),
+            'num_depot_1' => $request->input('num_depot_1'),
+            'date_depot_2' => $request->input('date_depot_2'),
+            'num_depot_2' => $request->input('num_depot_2'),
+            'date_depot_3' => $request->input('date_depot_3'),
+            'num_depot_3' => $request->input('num_depot_3'),
+            'date_depot_4' => $request->input('date_depot_4'),
+            'num_depot_4' => $request->input('num_depot_4'), 
+            'date_depot_5' => $request->input('date_depot_5'),
+            'num_depot_5' => $request->input('num_depot_5'),
+            'annee' => Date('Y')
+        ]);
+
+        return back()->with('add' , "Nouvelles données a été inserser!");
         //
     }
 
@@ -168,16 +195,16 @@ class AcompteController extends Controller
             if(!is_null($clientId)){
                 Acompte::create([
                         "clients_id"=> $clientId,
-                        'date_depot_0' => $row[3],
-                        'num_depot_0' => $row[4],
-                        'date_depot_1' => $row[5],
-                        'num_depot_1' => $row[6],
-                        'date_depot_2' => $row[7],
-                        'num_depot_2' => $row[8],
-                        'date_depot_3' => $row[9],
-                        'num_depot_3' => $row[10],
-                        'date_depot_4' => $row[11],
-                        'num_depot_4' => $row[12],
+                        'date_depot_1' => $row[3],
+                        'num_depot_1' => $row[4],
+                        'date_depot_2' => $row[5],
+                        'num_depot_2' => $row[6],
+                        'date_depot_3' => $row[7],
+                        'num_depot_3' => $row[8],
+                        'date_depot_4' => $row[9],
+                        'num_depot_4' => $row[10],
+                        'date_depot_5' => $row[11],
+                        'num_depot_5' => $row[12],
                         'annee'=>$minYear
                 ]);
             }

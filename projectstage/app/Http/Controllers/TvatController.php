@@ -31,11 +31,18 @@ class TvatController extends Controller
                 $query->where('users_id', '=', $userId);
             });
         }
+        //for the addform component
+        $clients = Client::all();
+
+        
     } else {
         // Non-Admin filtering logic
         $tvatData->whereHas('clients', function ($query) {
             $query->where('users_id', '=', Auth::user()->id);
         });
+
+        //for the addform component
+        $clients = Client::where('users_id' , Auth::user()->id)->get();
     }
 
     if ($request->input('code')) {
@@ -57,7 +64,7 @@ class TvatController extends Controller
     $tvatData = $tvatData->get();
 
     // Return the view with filtered data
-    return view('tvat', compact('tvatData') + ['users' => $users ?? null]);
+    return view('tvat', compact('clients' , 'tvatData') + ['users' => $users ?? null]);
 }
 
 
@@ -74,6 +81,23 @@ class TvatController extends Controller
      */
     public function store(Request $request)
     {
+
+        $clientId = Client::where('code' , $request->input('code'))->value('id');
+
+        Tvat::create([
+            "clients_id"=> $clientId,
+            'date_depot_1' => $request->input('date_depot_1'),
+            'num_depot_1' => $request->input('num_depot_1'),
+            'date_depot_2' => $request->input('date_depot_2'),
+            'num_depot_2' => $request->input('num_depot_2'),
+            'date_depot_3' => $request->input('date_depot_3'),
+            'num_depot_3' => $request->input('num_depot_3'),
+            'date_depot_4' => $request->input('date_depot_4'),
+            'num_depot_4' => $request->input('num_depot_4'),
+            'annee' => Date('Y')
+        ]);
+
+        return back()->with('add' , "Nouvelles données a été inserser!");
         //
     }
 

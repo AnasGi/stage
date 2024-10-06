@@ -15,7 +15,10 @@
     @php
         $empty = false;
     @endphp
+
     <x-tools page='clients' :activeData="$clients" :users="$users"></x-tools>
+
+    <x-addform page='clients' :activeData="$clients" :users="$users"></x-addform>
 
 
     <table class="table table-hover text-center overflow-scroll" style="width :200%">
