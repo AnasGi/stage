@@ -113,7 +113,9 @@ class PvController extends Controller
      */
     public function edit(Pv $Pv)
     {
-        //
+        $activeData = $Pv;
+        $page = 'Pv';
+        return view('edit' , compact('activeData' , 'page'));
     }
 
     /**
@@ -121,7 +123,12 @@ class PvController extends Controller
      */
     public function update(Request $request, Pv $Pv)
     {
-        //
+        $Pv->update([
+            'date_depot' => $request->input('date_depot'),
+            'num_depot' => $request->input('num_depot'),
+        ]);
+
+        return back()->with('mod' , "Modification reussite!");
     }
 
     /**
@@ -129,7 +136,9 @@ class PvController extends Controller
      */
     public function destroy(Pv $Pv)
     {
-        //
+        $Pv->delete();
+
+        return back()->with('success' ,  'Supprission réussite!');
     }
 
     public function import(Request $request)

@@ -25,6 +25,6 @@ class RegisterController extends Controller
             'role'=>$request->input('role')
         ]);
 
-        return redirect('/')->with('newUser' , 'user created successfully');
+        return back()->with('newUser' , 'Le nouvel utilisateur a été creer avec succer');
     }
 }

@@ -9,7 +9,7 @@
 </head>
 <body class="p-2">
     @if(session('success'))
-        <p class="alert alert-success">{{ session('success') }}</p>
+        <p class="alert fw-bold fs-5 alert-success">{{ session('success') }}</p>
     @endif
     <x-menu></x-menu>
     @php
@@ -17,8 +17,9 @@
     @endphp
     <x-tools page='bilan' :activeData="$bilanData" :users="$users"></x-tools>
     <x-addform page='bilan' :activeData="$bilanData" :users="$users" :clients="$clients"></x-addform>
+    <x-alert :activeData="$bilanData" page='bilan'></x-alert>
 
-    <table class="table table-hover text-center overflow-scroll">
+    <table class="table table-bordered table-hover text-center overflow-scroll">
         <tr>
             <th>code client</th>
             <th style="width: 200px">entreprise</th>
@@ -40,6 +41,8 @@
             <td>{{$bilan->clients->status}}</td>
             <td>{{$bilan->date_depot}}</td>
             <td>{{$bilan->num_depot}}</td>
+            <td><a href="{{route('bilan.destroy' , $bilan)}}" class="btn btn-danger" onclick="confirm('Vous-etre sure de supprimer cette donnée?')">supprimer</a></td>
+            <td><a href="{{route('bilan.update' , $bilan)}}" class="btn btn-primary">modifier</a></td>
         </tr>
         @empty
             @php
@@ -48,7 +51,7 @@
         @endforelse
     </table>
     @if ($empty)
-        <p class="text-center">Aucun resultat</p>
+        <p class="text-center fw-bold fs-4 mt-5 text-danger">Aucune resultat !</p>
     @endif
 </body>
 </html>

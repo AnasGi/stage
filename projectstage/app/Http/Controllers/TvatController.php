@@ -114,7 +114,9 @@ class TvatController extends Controller
      */
     public function edit(Tvat $tvat)
     {
-        //
+        $activeData = $tvat;
+        $page = 'tvat';
+        return view('edit' , compact('activeData' , 'page'));
     }
 
     /**
@@ -122,7 +124,20 @@ class TvatController extends Controller
      */
     public function update(Request $request, Tvat $tvat)
     {
-        //
+        $tvat->update([
+            'date_depot_1' => $request->input('date_depot_1'),
+            'num_depot_1' => $request->input('num_depot_1'),
+            'date_depot_2' => $request->input('date_depot_2'),
+            'num_depot_2' => $request->input('num_depot_2'),
+            'date_depot_3' => $request->input('date_depot_3'),
+            'num_depot_3' => $request->input('num_depot_3'),
+            'date_depot_4' => $request->input('date_depot_4'),
+            'num_depot_4' => $request->input('num_depot_4'),
+            'date_depot_5' => $request->input('date_depot_5'),
+            'num_depot_5' => $request->input('num_depot_5'),
+        ]);
+
+        return back()->with('mod' , "Modification reussite!");
     }
 
     /**
@@ -130,7 +145,9 @@ class TvatController extends Controller
      */
     public function destroy(Tvat $tvat)
     {
-        //
+        $tvat->delete();
+
+        return back()->with('success' ,  'Supprission réussite!');
     }
 
     public function import(Request $request)

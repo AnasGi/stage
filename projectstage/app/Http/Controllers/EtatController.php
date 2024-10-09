@@ -113,7 +113,9 @@ class EtatController extends Controller
      */
     public function edit(Etat $etat)
     {
-        //
+        $activeData = $etat;
+        $page = 'etat';
+        return view('edit' , compact('activeData' , 'page'));
     }
 
     /**
@@ -121,7 +123,12 @@ class EtatController extends Controller
      */
     public function update(Request $request, Etat $etat)
     {
-        //
+        $etat->update([
+            'date_depot' => $request->input('date_depot'),
+            'num_depot' => $request->input('num_depot'),
+        ]);
+
+        return back()->with('mod' , "Modification reussite!");
     }
 
     /**
@@ -129,7 +136,9 @@ class EtatController extends Controller
      */
     public function destroy(Etat $etat)
     {
-        //
+        $etat->delete();
+
+        return back()->with('success' ,  'Supprission réussite!');
     }
 
     public function import(Request $request)
@@ -151,7 +160,7 @@ class EtatController extends Controller
         $dateDepot = [];
         while (($row = fgetcsv($handle, 1000, ',')) !== false) {
             try{
-                array_push($dateDepot, Carbon::createFromFormat('d/m/Y', $row[3])->format('Y'))-1;
+                array_push($dateDepot, Carbon::createFromFormat('d/m/Y', $row[3])->format('Y')-1);
             }
             catch(\Exception $e){
                 continue;

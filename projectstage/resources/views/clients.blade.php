@@ -9,7 +9,7 @@
 </head>
 <body class="p-2">
     @if(session('success'))
-        <p class="alert alert-success">{{ session('success') }}</p>
+        <p class="alert fw-bold fs-5 alert-success">{{ session('success') }}</p>
     @endif
     <x-menu></x-menu>
     @php
@@ -21,7 +21,7 @@
     <x-addform page='clients' :activeData="$clients" :users="$users"></x-addform>
 
 
-    <table class="table table-hover text-center overflow-scroll" style="width :200%">
+    <table class="table table-bordered table-hover text-center overflow-scroll" style="width :200%">
         <tr>
             <th style="width: 100px">code client</th>
             <th>entreprise</th>
@@ -55,6 +55,10 @@
                 <td>{{$client->activite}}</td>
                 @if(auth()->user()->role == 'Admin')
                     <td>{{$client->users->name}}</td>
+                @endif
+                <td><a href="{{route('clients.destroy' , $client)}}" class="btn btn-danger" onclick="confirm('Vous-etre sure de supprimer ce client, tous les données associées vont etre supprimer?')">supprimer</a></td>
+                @if (auth()->user()->role == "Admin")
+                    <td><a href="{{route('clients.update' , $client)}}" class="btn btn-primary">modifier</a></td>
                 @endif
             </tr>
             @empty

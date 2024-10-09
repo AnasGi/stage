@@ -20,7 +20,8 @@ class Cm extends Model
     'annee',
     ];
 
-    public function clients(){
-        return $this->belongsTo(related: Client::class);
+    public function clients()
+    {
+        return $this->belongsTo(Client::class, 'clients_id'); // Specify the correct foreign key
     }
 }

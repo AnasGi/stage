@@ -12,6 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('pv', function (Blueprint $table) {
+            $table->id();
             $table->foreignId('clients_id')->constrained('clients');
             $table->date('date_depot')->nullable();
             $table->string('num_depot')->nullable();

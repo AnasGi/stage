@@ -114,7 +114,9 @@ class IrprofController extends Controller
      */
     public function edit(Irprof $Irprof)
     {
-        //
+        $activeData = $Irprof;
+        $page = 'Irprof';
+        return view('edit' , compact('activeData' , 'page'));
     }
 
     /**
@@ -122,7 +124,12 @@ class IrprofController extends Controller
      */
     public function update(Request $request, Irprof $Irprof)
     {
-        //
+        $Irprof->update([
+            'date_depot' => $request->input('date_depot'),
+            'num_depot' => $request->input('num_depot'),
+        ]);
+
+        return back()->with('mod' , "Modification reussite!");
     }
 
     /**
@@ -130,7 +137,9 @@ class IrprofController extends Controller
      */
     public function destroy(Irprof $Irprof)
     {
-        //
+        $Irprof->delete();
+
+        return back()->with('success' ,  'Supprission réussite!');
     }
 
     public function import(Request $request)

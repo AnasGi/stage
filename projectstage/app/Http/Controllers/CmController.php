@@ -114,7 +114,9 @@ class CmController extends Controller
      */
     public function edit(Cm $Cm)
     {
-        //
+        $activeData = $Cm;
+        $page = 'cm';
+        return view('edit' , compact('activeData' , 'page'));
     }
 
     /**
@@ -122,7 +124,13 @@ class CmController extends Controller
      */
     public function update(Request $request, Cm $Cm)
     {
-        //
+        $Cm->update([
+            'date_depot' => $request->input('date_depot'),
+            'num_depot' => $request->input('num_depot'),
+            'montant' => $request->input('montant'),
+        ]);
+
+        return back()->with('mod' , "Modification reussite!");
     }
 
     /**
@@ -130,7 +138,9 @@ class CmController extends Controller
      */
     public function destroy(Cm $Cm)
     {
-        //
+        $Cm->delete();
+
+        return back()->with('success' ,  'Supprission réussite!');
     }
 
     public function import(Request $request)

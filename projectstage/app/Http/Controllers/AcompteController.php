@@ -117,7 +117,9 @@ class AcompteController extends Controller
      */
     public function edit(Acompte $acompte)
     {
-        //
+        $activeData = $acompte;
+        $page = 'acompte';
+        return view('edit' , compact('activeData' , 'page'));
     }
 
     /**
@@ -125,7 +127,20 @@ class AcompteController extends Controller
      */
     public function update(Request $request, Acompte $acompte)
     {
-        //
+        $acompte->update([
+            'date_depot_1' => $request->input('date_depot_1'),
+            'num_depot_1' => $request->input('num_depot_1'),
+            'date_depot_2' => $request->input('date_depot_2'),
+            'num_depot_2' => $request->input('num_depot_2'),
+            'date_depot_3' => $request->input('date_depot_3'),
+            'num_depot_3' => $request->input('num_depot_3'),
+            'date_depot_4' => $request->input('date_depot_4'),
+            'num_depot_4' => $request->input('num_depot_4'),
+            'date_depot_5' => $request->input('date_depot_5'),
+            'num_depot_5' => $request->input('num_depot_5'),
+        ]);
+
+        return back()->with('mod' , "Modification reussite!");
     }
 
     /**
@@ -133,7 +148,9 @@ class AcompteController extends Controller
      */
     public function destroy(Acompte $acompte)
     {
-        //
+        $acompte->delete();
+
+        return back()->with('success' ,  'Supprission réussite!');
     }
 
     public function import(Request $request)

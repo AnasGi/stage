@@ -25,55 +25,89 @@ class Client extends Model
         'users_id',
     ];
 
-    public function users(){
-        return $this->belongsTo(related: User::class);
+    public function users()
+    {
+        return $this->belongsTo(User::class); 
     }
 
-    public function tvam(){
-        return $this->hasMany(related: Tvam::class);
-    }
-    
-    public function tvat(){
-        return $this->hasMany(related: Tvat::class);
-    }
-    
-    public function cnss(){
-        return $this->hasMany(related: Cnss::class);
-    }
-    
-    public function ir(){
-        return $this->hasMany(related: Ir::class);
-    }
-    
-    public function droittimbers(){
-        return $this->hasMany(related: Droittimber::class);
-    }
-    
-    public function etats(){
-        return $this->hasMany(related: Etat::class);
+    public function tvam()
+    {
+        return $this->hasMany(Tvam::class, 'clients_id'); 
     }
 
-    public function tps(){
-        return $this->hasMany(related: Tp::class);
+    public function tvat()
+    {
+        return $this->hasMany(Tvat::class, 'clients_id'); 
     }
-    
-    public function bilans(){
-        return $this->hasMany(related: Bilan::class);
+
+    public function cnss()
+    {
+        return $this->hasMany(Cnss::class, 'clients_id'); 
     }
-    
-    public function acomptes(){
-        return $this->hasMany(related: Acompte::class);
+
+    public function ir()
+    {
+        return $this->hasMany(Ir::class, 'clients_id'); 
     }
-    
-    public function cm(){
-        return $this->hasMany(related: Cm::class);
+
+    public function droittimbers()
+    {
+        return $this->hasMany(Droittimber::class, 'clients_id'); 
     }
-    
-    public function pv(){
-        return $this->hasMany(related: Cm::class);
+
+    public function etats()
+    {
+        return $this->hasMany(Etat::class, 'clients_id'); 
     }
-    
-    public function irprof(){
-        return $this->hasMany(related: Cm::class);
+
+    public function tps()
+    {
+        return $this->hasMany(Tp::class, 'clients_id'); 
+    }
+
+    public function bilans()
+    {
+        return $this->hasMany(Bilan::class, 'clients_id'); 
+    }
+
+    public function acomptes()
+    {
+        return $this->hasMany(Acompte::class, 'clients_id'); 
+    }
+
+    public function cm()
+    {
+        return $this->hasMany(Cm::class, 'clients_id'); 
+    }
+
+    public function pv()
+    {
+        return $this->hasMany(Cm::class, 'clients_id'); 
+    }
+
+    public function irprof()
+    {
+        return $this->hasMany(Irprof::class, 'clients_id'); 
+    }
+
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($client) {
+            $client->cnss()->delete();
+            $client->tvat()->delete();
+            $client->tvam()->delete();
+            $client->bilans()->delete();
+            $client->cm()->delete();
+            $client->ir()->delete();
+            $client->acomptes()->delete();
+            $client->irprof()->delete();
+            $client->pv()->delete();
+            $client->droittimbers()->delete();
+            $client->etats()->delete();
+            $client->tps()->delete();
+        });
     }
 }

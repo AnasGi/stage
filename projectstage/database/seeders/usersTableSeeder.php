@@ -77,8 +77,8 @@ class usersTableSeeder extends Seeder
             'role' => 'responsable'
         ],
         [
-            'name' => 'Anas',
-            'password' => bcrypt('Anas123'),
+            'name' => 'Admin',
+            'password' => bcrypt('Admin123'),
             'role' => 'Admin'
         ]
     ]);

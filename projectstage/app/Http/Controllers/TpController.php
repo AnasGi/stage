@@ -113,7 +113,9 @@ class TpController extends Controller
      */
     public function edit(Tp $Tp)
     {
-        //
+        $activeData = $Tp;
+        $page = 'Tp';
+        return view('edit' , compact('activeData' , 'page'));
     }
 
     /**
@@ -121,7 +123,12 @@ class TpController extends Controller
      */
     public function update(Request $request, Tp $Tp)
     {
-        //
+        $Tp->update([
+            'date_depot' => $request->input('date_depot'),
+            'num_depot' => $request->input('num_depot'),
+        ]);
+
+        return back()->with('mod' , "Modification reussite!");
     }
 
     /**
@@ -129,7 +136,9 @@ class TpController extends Controller
      */
     public function destroy(Tp $Tp)
     {
-        //
+        $Tp->delete();
+
+        return back()->with('success' ,  'Supprission réussite!');
     }
 
     public function import(Request $request)

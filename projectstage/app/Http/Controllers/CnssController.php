@@ -108,6 +108,7 @@ class CnssController extends Controller
             'annee' => Date('Y')
         ]);
 
+        return back()->with('add' , "Nouvelles données a été inserser!");
 
 
     }
@@ -125,7 +126,9 @@ class CnssController extends Controller
      */
     public function edit(Cnss $cnss)
     {
-        //
+        $activeData = $cnss;
+        $page = 'cnss';
+        return view('edit' , compact('activeData' , 'page'));
     }
 
     /**
@@ -133,7 +136,22 @@ class CnssController extends Controller
      */
     public function update(Request $request, Cnss $cnss)
     {
-        //
+        $cnss->update([
+            'date_depot_1' => $request->input('date_depot_1'),
+            'date_depot_2' => $request->input('date_depot_2'),
+            'date_depot_3' => $request->input('date_depot_3'),
+            'date_depot_4' => $request->input('date_depot_4'),
+            'date_depot_5' => $request->input('date_depot_5'),
+            'date_depot_6' => $request->input('date_depot_6'),
+            'date_depot_7' => $request->input('date_depot_7'),
+            'date_depot_8' => $request->input('date_depot_8'),
+            'date_depot_9' => $request->input('date_depot_9'),
+            'date_depot_10' => $request->input('date_depot_10'),
+            'date_depot_11' => $request->input('date_depot_11'),
+            'date_depot_12' => $request->input('date_depot_12'),
+        ]);
+
+        return back()->with('mod' , "Modification reussite!");
     }
 
     /**
@@ -141,7 +159,9 @@ class CnssController extends Controller
      */
     public function destroy(Cnss $cnss)
     {
-        //
+        $cnss->delete();
+
+        return back()->with('success' ,  'Supprission réussite!');
     }
 
     public function import(Request $request)

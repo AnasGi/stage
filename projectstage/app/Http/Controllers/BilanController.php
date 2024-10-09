@@ -117,7 +117,9 @@ class BilanController extends Controller
      */
     public function edit(Bilan $Bilan)
     {
-        //
+        $activeData = $Bilan;
+        $page = 'bilan';
+        return view('edit' , compact('activeData' , 'page'));
     }
 
     /**
@@ -125,7 +127,12 @@ class BilanController extends Controller
      */
     public function update(Request $request, Bilan $Bilan)
     {
-        //
+        $Bilan->update([
+            'date_depot' => $request->input('date_depot'),
+            'num_depot' => $request->input('num_depot'),
+        ]);
+
+        return back()->with('mod' , "Modification reussite!");
     }
 
     /**
@@ -133,7 +140,9 @@ class BilanController extends Controller
      */
     public function destroy(Bilan $Bilan)
     {
-        //
+        $Bilan->delete();
+
+        return back()->with('success' ,  'Supprission réussite!');
     }
 
     public function import(Request $request)

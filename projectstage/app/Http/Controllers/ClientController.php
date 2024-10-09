@@ -52,6 +52,11 @@ class ClientController extends Controller
      */
     public function store(Request $request)
     {
+
+        $valid = $request->validate([
+            'code' => 'unique:clients'
+        ]);
+
         // Create a client record for each row
         Client::create([
             'code' => $request->input('code'),
@@ -84,7 +89,10 @@ class ClientController extends Controller
      */
     public function edit(Client $client)
     {
-        //
+        $users = User::all();
+        $activeData = $client;
+        $page = 'clients';
+        return view('edit' , compact('activeData' , 'page' , 'users'));
     }
 
     /**
@@ -92,7 +100,31 @@ class ClientController extends Controller
      */
     public function update(Request $request, Client $client)
     {
-        //
+
+        $codeClient = Client::where('code' , $client->code)->value('code');
+        
+        if($request->input('code') != $codeClient){
+            $valid = $request->validate([
+                'code' => 'unique:clients'
+            ]);
+        }
+        
+        $client->update([
+            'code' => $request->input('code'),
+            'nom' => $request->input('nom'),
+            'status' => $request->input('status'),
+            'adresse' => $request->input('adresse'),
+            'IF' => $request->input('IF'),
+            'TP' => $request->input('TP'),
+            'ICE' => $request->input('ICE'),
+            'CNSS' => $request->input('CNSS'),
+            'RC' => $request->input('RC'),
+            'debut_activite' => $request->input('debut_activite'),
+            'activite' => $request->input('activite'),
+            'users_id' => $request->input('users_id'),
+        ]);
+
+        return back()->with('mod' , "Modification reussite!");
     }
 
     /**
@@ -100,7 +132,9 @@ class ClientController extends Controller
      */
     public function destroy(Client $client)
     {
-        //
+        $client->delete();
+
+        return back()->with('success' ,  'Supprission réussite!');
     }
 
     public function import(Request $request)
