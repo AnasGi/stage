@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="{{ asset( 'css/bootstrap.min.css' ) }}">
+    <link rel="stylesheet" href="{{ asset( 'css/bootstrap.min.css' ) }}"> 
+    <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('js/apexcharts.min.js') }}"></script>
     <title>Accueil</title>
     <style>
         details {
@@ -15,7 +17,9 @@
 <body class="p-2">
 
     @if(session('newUser'))
-        <p class="alert fw-bold fs-5 alert-success">{{ session('newUser') }}</p>
+        <p class="alert fw-bold fs-5 alert-success alert-dismissible fade show" role="alert">{{ session('newUser') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </p>
     @endif
 
     <x-menu></x-menu>
@@ -238,7 +242,7 @@
         </details>  
     @endif
 
-        
+
 </body>
 </html>
 

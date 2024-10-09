@@ -7,11 +7,12 @@
 
     }
 
-</style>
+    #codeClient {
+        outline: 1px solid black;
+        outline-offset: 2px;
+    }
 
-@if(session('mod'))
-    <p class="alert fw-bold fs-5 alert-success">{{ session('mod') }}</p>
-@endif
+</style>
 
 <div class="d-flex justify-content-center mt-3 mb-3">
     <form id="modForm" class="w-50" action="{{ route($page.'.update', $activeData) }}" method="POST">
@@ -21,10 +22,15 @@
         <div class="container">
             <div class="row">
                 <div class="col-12">
+                    @if(session('mod'))
+                        <p class="alert fw-bold fs-5 alert-success alert-dismissible fade show" role="alert">{{ session('mod') }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </p>
+                    @endif
                     @if ($page != 'clients')
-                        <div class="form-group mb-3">
-                            <h2>{{ $activeData->clients->nom }}</h2>
-                            <h3>{{ $activeData->clients->code }}</h3>
+                        <div class="d-flex gap-3 mb-3">
+                            <h3 id="codeClient" class="btn btn-dark fw-bold">{{ $activeData->clients->code }}</h3>
+                            <h2 class="fw-bold">{{ $activeData->clients->nom }}</h2>
                         </div>
     
                         @if ($page == 'acompte')
@@ -160,7 +166,7 @@
                 </div>
             </div>
     
-            <div class="d-flex justify-content-between">
+            <div class="d-flex gap-2">
                 <button type="submit" class="btn btn-success mt-2">Sauvegarder</button>
                 <a href="{{ route($page.'.index') }}" class="btn btn-danger mt-2">Fermer</a>
             </div>

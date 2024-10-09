@@ -18,7 +18,9 @@
 </style>
 
 @if(session('add'))
-    <p class="alert fw-bold fs-5 alert-success">{{ session('add') }}</p>
+    <p class="alert fw-bold fs-5 alert-success alert-dismissible fade show" role="alert">{{ session('add') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </p>
 @endif
 
 @error('code')

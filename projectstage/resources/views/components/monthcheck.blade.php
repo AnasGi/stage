@@ -47,7 +47,7 @@
                 $comparisonDate = (new DateTime("first day of {$annee}-{$month}"))->modify('+6 days');
             }
             elseif($page === 'tvam' || $page === 'ir' || $page === 'droittimbre'){
-                $comparisonDate = (new DateTime('last day of next month'))->modify('-3 days');
+                $comparisonDate = (new DateTime("last day of {$annee}-{$month}"))->modify('-3 days');
             }
             elseif ($page === 'acompte') {
                 if($tri <= 12){
@@ -161,7 +161,7 @@
         @else
             <td></td>
         @endif
-        
+
         @if($page != 'cnss' && $activeData->{'num_depot_' . $i} == null)
             <td></td>
         @endif

@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="{{ asset( 'css/bootstrap.min.css' ) }}">
+    <link rel="stylesheet" href="{{ asset( 'css/bootstrap.min.css' ) }}"> 
+    <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
     <title>Modifier votre coordonnées</title>
 </head>
 <body>
@@ -18,7 +19,9 @@
                         @method('put')
 
                         @if (session('userMod'))
-                            <p class="alert alert-success">{{session('userMod')}}</p>
+                            <p class="alert alert-success alert-dismissible fade show" role="alert">{{ session('userMod') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </p>
                         @endif
     
                         <div class="form-group mb-3">

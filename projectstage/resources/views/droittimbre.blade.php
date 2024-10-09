@@ -4,12 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="{{ asset( 'css/bootstrap.min.css' ) }}">
+    <link rel="stylesheet" href="{{ asset( 'css/bootstrap.min.css' ) }}"> 
+    <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
     <title>droit de timber</title>
 </head>
 <body class="p-2">
     @if(session('success'))
-        <p class="alert fw-bold fs-5 alert-success">{{ session('success') }}</p>
+        <p class="alert fw-bold fs-5 alert-success alert-dismissible fade show" role="alert">{{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </p>
     @endif
     <x-menu></x-menu>
     @php

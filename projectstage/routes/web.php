@@ -13,6 +13,7 @@ use App\Http\Controllers\IrprofController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\PvController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\StatsController;
 use App\Http\Controllers\TpController;
 use App\Http\Controllers\TvamController;
 use App\Http\Controllers\TvatController;
@@ -31,6 +32,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/modifier-user/{user}' , [UserController::class , 'edit'])->name('user.edit');
     Route::put('/modifier-user/{user}' , [UserController::class , 'update'])->name('user.update');
     
+    //show users
+    Route::get('/afficher-users' , [UserController::class , 'show'])->name('users.show');
+
+    //delet users
+    Route::get('/delete-users/{user}' , [UserController::class , 'delete'])->name('user.delete');
+
+
     // signup
     Route::get('/nouvel-responsable' , [RegisterController::class , 'index'])->name('register.form');
     Route::post('/nouvel-responsable' , [RegisterController::class , 'register'])->name('register');
@@ -141,6 +149,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/irprof/supprimer/{Irprof}', [IrprofController::class, 'destroy'])->name('irprof.destroy');
     Route::put('/irprof/modifier/{Irprof}', [IrprofController::class, 'update'])->name('irprof.update');
     Route::get('/irprof/modifier/{Irprof}', [IrprofController::class, 'edit'])->name('irprof.edit');
+
+    //charts
+    Route::get('/statistiques' , [StatsController::class , 'index'])->name('stats.index');
+
 
     // Logout
     Route::post('logging-out', [LogoutController::class, 'logout'])->name('logout');

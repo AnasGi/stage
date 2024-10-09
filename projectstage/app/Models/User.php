@@ -24,7 +24,29 @@ class User extends Authenticatable
 
 
     public function clients(){
-        return $this->hasMany(Client::class , 'clients_id');
+        return $this->hasMany(Client::class , 'users_id');
     }
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($user) {
+            foreach ($user->clients as $client) {
+                $client->cnss()->delete();
+                $client->tvat()->delete();
+                $client->tvam()->delete();
+                $client->bilans()->delete();
+                $client->cm()->delete();
+                $client->ir()->delete();
+                $client->acomptes()->delete();
+                $client->irprof()->delete();
+                $client->pv()->delete();
+                $client->droittimbers()->delete();
+                $client->etats()->delete();
+                $client->tps()->delete();
+            }
+            $user->clients()->delete(); // Delete all posts
+        });
+    }
 }

@@ -60,14 +60,18 @@
         @if (auth()->user()->role == 'Admin')
             <hr class="hr">
             <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <button style="font-size: 13px" class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                   Collaborateurs
                 </button>
                 <ul class="dropdown-menu">
                   <li><a class="dropdown-item" href="{{route('register.form')}}">Creer un Collaborateurs</a></li>
                   <li><hr class="dropdown-divider"></li>
                   <li>
-                    <a class="dropdown-item" href="">Votre Collaborateurs</a>
+                    <a class="dropdown-item" href="{{route('users.show')}}">Votre Collaborateurs</a>
+                  </li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li>
+                    <a class="dropdown-item" href="{{route('stats.index')}}">Statistiques</a>
                   </li>
                 </ul>
             </div>
@@ -76,5 +80,3 @@
         
     </div>
 </div>
-
-<script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
