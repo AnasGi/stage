@@ -19,13 +19,15 @@
     }
 </style>
 
-<div class="menu shadow ">
+<div class="menu shadow " style="z-index: 100">
     
     <div class="mb-3 d-flex justify-content-around align-items-center">
         <div>
             <div class="d-flex gap-3 align-items-center">
-                <h2>{{auth()->user()->name}}</h2>
-                <span class="bg-info p-1 fw-bold rounded" style="font-size: 12px">{{auth()->user()->role}}</span>
+                <div style="margin-right: 10px">
+                    <h2 class="m-0">{{auth()->user()->name}}</h2>
+                    <span class="bg-info p-1 fw-bold rounded" style="font-size: 12px">{{auth()->user()->role}}</span>
+                </div>
                 <a class="btn btn-primary" href="{{route('user.edit' , auth()->user())}}">Modifier votre coordonnées</a>
                 @auth
                 <form method="POST" action="{{ route('logout') }}">
@@ -36,7 +38,7 @@
             </div>
         </div>
         <div>
-            <span class="btn btn-warning">{{ (new Datetime(Date('Y-m-d')))->format('d/m/Y') }}</span>
+            <span class="btn btn-light border border-dark">{{ (new Datetime(Date('Y-m-d')))->format('d/m/Y') }}</span>
         </div>
     </div>
     <div class="links d-flex justify-content-between gap-1">
@@ -61,7 +63,7 @@
             <hr class="hr">
             <div class="dropdown">
                 <button style="font-size: 13px" class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Collaborateurs
+                  Autres options
                 </button>
                 <ul class="dropdown-menu">
                   <li><a class="dropdown-item" href="{{route('register.form')}}">Creer un Collaborateurs</a></li>

@@ -65,13 +65,12 @@
             }
             elseif($page === 'tvat'){
 
-                if ($tri>12) {
-                    $tri = 1;
-                    $annee+=1;
-                }
-
                 if ($i===2) {
                     $tri += 3;
+                    if ($tri >= 12) {
+                        $tri = 1;
+                        $annee+=1;
+                    }   
                 }
 
 

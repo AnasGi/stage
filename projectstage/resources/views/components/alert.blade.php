@@ -96,6 +96,7 @@
                     }
                     elseif ($page === 'bilan') {
                         $year +=1;
+                        $month = 0;
 
                         if (str_ends_with($activeData->clients->status , 'Morale')) {
                             $month = 3;    
@@ -142,11 +143,11 @@
     <p class="alert alert-warning fw-bold ">
 
         @if(!empty($mois))
-            Le delai final de saisir la date de depot du mois {{$mois}} est proche! 
+            If faut saisir la date de depot du mois {{$mois}}! 
         @elseif(!empty($trimestre))
-            Le delai final de saisir la date de depot du Trimestre actuelle est proche! 
+            If faut saisir la date de depot du Trimestre actuelle! 
         @else
-            Le delai final de saisir la date de depot est proche! 
+            If faut saisir la date de depot ! 
         @endif
 
         <span class="bg-secondary p-2 pt-0 pb-0 text-white rounded"> {{$alertsNumber}} </span>

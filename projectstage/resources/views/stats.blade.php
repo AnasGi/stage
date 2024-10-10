@@ -8,12 +8,6 @@
     <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('js/apexcharts.min.js') }}"></script>
     <title>Statistiques</title>
-    <style>
-        /* #chart {
-            width: 45%;
-            /* height: 400px; */
-        } */
-    </style>
 </head>
 <body class="p-2">
     <x-menu></x-menu>
@@ -25,62 +19,244 @@
         </form>
     </div>
 
-    <div class="d-flex justify-content-center align-items-center gap-3 mt-3">
+    <h3 class="text-center">Taux de respect de délais interne</h3>
 
-        <div style="width: 45%">
-            <h4>Taux de respect de délais interne de CNSS</h4>
-            <div id="chart1"></div>
-            <script>
-                var options = {
-                    chart: {
-                        type: 'bar'
-                    },
-                    series: [{
-                        name: 'Pourcentage %',
-                        data: {!! json_encode($Cnss) !!}
-                    }],
-                    xaxis: {
-                        categories: ['Janvier', 'Fevrier', 'Mars' , 'Avril' , 'May' , 'Juin' , 'Juillet' , 'Aout' ,'Septembre' , 'Octobre' , 'Nouvembre' , 'Decembre'] // Replace with dynamic labels if needed
-                    },
-                    yaxis: {
-                        min: 0,
-                        max: 100
-                    }
-                };
-
-                var chart = new ApexCharts(document.querySelector("#chart1"), options);
-                chart.render();
-            </script>
+    <details>
+        <summary class="fw-bold fs-3">
+           Déclarations mensuelle:
+        </summary>
+        <div class="d-flex justify-content-center align-items-center gap-3 mt-3 flex-wrap">
+    
+            <div style="width: 45%">
+                <h4>CNSS</h4>
+                <div id="chart1"></div>
+                <script>
+                    var options = {
+                        chart: {
+                            type: 'bar'
+                        },
+                        series: [{
+                            name: 'Pourcentage %',
+                            data: {!! json_encode($Cnss) !!}
+                        }],
+                        xaxis: {
+                            categories: ['Janvier', 'Fevrier', 'Mars' , 'Avril' , 'Mai' , 'Juin' , 'Juillet' , 'Aout' ,'Septembre' , 'Octobre' , 'Nouvembre' , 'Decembre'] // Replace with dynamic labels if needed
+                        },
+                        yaxis: {
+                            min: 0,
+                            max: 100
+                        }
+                    };
+    
+                    var chart = new ApexCharts(document.querySelector("#chart1"), options);
+                    chart.render();
+                </script>
+            </div>
+    
+            <div style="width: 45%">
+                <h4>Tva-M</h4>
+                <div id="chart2"></div>
+                <script>
+                    var options = {
+                        chart: {
+                            type: 'bar'
+                        },
+                        series: [{
+                            name: 'Pourcentage %',
+                            data: {!! json_encode($Tvam) !!}
+                        }],
+                        xaxis: {
+                            categories: ['Janvier', 'Fevrier', 'Mars' , 'Avril' , 'Mai' , 'Juin' , 'Juillet' , 'Aout' ,'Septembre' , 'Octobre' , 'Nouvembre' , 'Decembre'] // Replace with dynamic labels if needed
+                        },
+                        yaxis: {
+                            min: 0,
+                            max: 100
+                        }
+                    };
+    
+                    var chart = new ApexCharts(document.querySelector("#chart2"), options);
+                    chart.render();
+                </script>
+            </div>
+        
+            <div style="width: 45%">
+                <h4>IR</h4>
+                <div id="chart3"></div>
+                <script>
+                    var options = {
+                        chart: {
+                            type: 'bar'
+                        },
+                        series: [{
+                            name: 'Pourcentage %',
+                            data: {!! json_encode($Ir) !!}
+                        }],
+                        xaxis: {
+                            categories: ['Janvier', 'Fevrier', 'Mars' , 'Avril' , 'Mai' , 'Juin' , 'Juillet' , 'Aout' ,'Septembre' , 'Octobre' , 'Nouvembre' , 'Decembre'] // Replace with dynamic labels if needed
+                        },
+                        yaxis: {
+                            min: 0,
+                            max: 100
+                        }
+                    };
+    
+                    var chart = new ApexCharts(document.querySelector("#chart3"), options);
+                    chart.render();
+                </script>
+            </div>
+    
+            <div style="width: 45%">
+                <h4>Droit de timbre</h4>
+                <div id="chart4"></div>
+                <script>
+                    var options = {
+                        chart: {
+                            type: 'bar'
+                        },
+                        series: [{
+                            name: 'Pourcentage %',
+                            data: {!! json_encode($Droittimber) !!}
+                        }],
+                        xaxis: {
+                            categories: ['Janvier', 'Fevrier', 'Mars' , 'Avril' , 'Mi' , 'Juin' , 'Juillet' , 'Aout' ,'Septembre' , 'Octobre' , 'Nouvembre' , 'Decembre'] // Replace with dynamic labels if needed
+                        },
+                        yaxis: {
+                            min: 0,
+                            max: 100
+                        }
+                    };
+    
+                    var chart = new ApexCharts(document.querySelector("#chart4"), options);
+                    chart.render();
+                </script>
+            </div>
+    
         </div>
+    </details>
 
-        {{-- <div style="width: 45%">
-            <h4>Taux de respect de délais interne de CNSS</h4>
-            <div id="chart2"></div>
-            <script>
-                var options = {
-                    chart: {
-                        type: 'bar'
-                    },
-                    series: [{
-                        name: 'Pourcentage %',
-                        data: {!! json_encode($Cnss) !!}
-                    }],
-                    xaxis: {
-                        categories: ['Janvier', 'Fevrier', 'Mars' , 'Avril' , 'May' , 'Juin' , 'Juillet' , 'Aout' ,'Septembre' , 'Octobre' , 'Nouvembre' , 'Decembre'] // Replace with dynamic labels if needed
-                    },
-                    yaxis: {
-                        min: 0,
-                        max: 100
-                    }
-                };
+    <hr>
 
-                var chart = new ApexCharts(document.querySelector("#chart2"), options);
-                chart.render();
-            </script>
-        </div> --}}
+    <details>
+        <summary class="fw-bold fs-3">
+           Déclarations trimistrielle:
+        </summary>
+        <div class="d-flex justify-content-center align-items-center gap-3 mt-3 flex-wrap">
+    
+            <div style="width: 45%">
+                <h4>Acompte</h4>
+                <div id="chart5"></div>
+                <script>
+                    var options = {
+                        chart: {
+                            type: 'bar'
+                        },
+                        series: [{
+                            name: 'Pourcentage %',
+                            data: {!! json_encode($Acompte) !!}
+                        }],
+                        xaxis: {
+                            categories: ['Regularisation', 'Trimestre 1', 'Trimestre 2' , 'Trimestre 3' , 'Trimestre 4'] // Replace with dynamic labels if needed
+                        },
+                        yaxis: {
+                            min: 0,
+                            max: 100
+                        }
+                    };
+    
+                    var chart = new ApexCharts(document.querySelector("#chart5"), options);
+                    chart.render();
+                </script>
+            </div>
+    
+            <div style="width: 45%">
+                <h4>Tva-T</h4>
+                <div id="chart6"></div>
+                <script>
+                    var options = {
+                        chart: {
+                            type: 'bar'
+                        },
+                        series: [{
+                            name: 'Pourcentage %',
+                            data: {!! json_encode($Tvat) !!}
+                        }],
+                        xaxis: {
+                            categories: ['Trimestre 1', 'Trimestre 2' , 'Trimestre 3' , 'Trimestre 4'] // Replace with dynamic labels if needed
+                        },
+                        yaxis: {
+                            min: 0,
+                            max: 100
+                        }
+                    };
+    
+                    var chart = new ApexCharts(document.querySelector("#chart6"), options);
+                    chart.render();
+                </script>
+            </div>
+    
+        </div>
+    </details>
 
-    </div>
+    <hr>
 
+    <details>
+        <summary class="fw-bold fs-3">
+           Déclarations Annuelle:
+        </summary>
+        <div class="d-flex justify-content-center align-items-center gap-3 mt-3 flex-wrap">
+            
+            <div style="width: 45%">
+                <h4>Etat/IRPROF/CM/PV/TP</h4>
+                <div id="chart7"></div>
+                <script>
+                    var options = {
+                        chart: {
+                            type: 'bar'
+                        },
+                        series: [{
+                            name: 'Pourcentage %',
+                            data: {!! json_encode($others) !!}
+                        }],
+                        xaxis: {
+                            categories: ['Etat 9421', 'TP' , 'CM' , 'IrProf' , 'PV'] // Replace with dynamic labels if needed
+                        },
+                        yaxis: {
+                            min: 0,
+                            max: 100
+                        }
+                    };
+    
+                    var chart = new ApexCharts(document.querySelector("#chart7"), options);
+                    chart.render();
+                </script>
+            </div>
 
+            <div style="width: 45%">
+                <h4>Bilan</h4>
+                <div id="chart8"></div>
+                <script>
+                    var options = {
+                        chart: {
+                            type: 'bar'
+                        },
+                        series: [{
+                            name: 'Pourcentage %',
+                            data: {!! json_encode($Bilan) !!}
+                        }],
+                        xaxis: {
+                            categories: ['Persone physique', 'Persone morale'] // Replace with dynamic labels if needed
+                        },
+                        yaxis: {
+                            min: 0,
+                            max: 100
+                        }
+                    };
+    
+                    var chart = new ApexCharts(document.querySelector("#chart8"), options);
+                    chart.render();
+                </script>
+            </div>
+        </div>
+    </details>
 </body>
 </html>
