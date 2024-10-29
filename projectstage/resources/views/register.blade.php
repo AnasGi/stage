@@ -41,7 +41,7 @@
                         </div>
                         <div class="d-grid gap-2">
                             <button type="submit" class="btn btn-success">Créer</button>
-                            <a href="/" class="btn btn-danger">Fermer</a>
+                            <a href="{{route('users.show')}}" class="btn btn-danger">Fermer</a>
                         </div>
                     </form>
                 </div>

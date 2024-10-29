@@ -12,6 +12,10 @@
         outline-offset: 2px;
     }
 
+    #modForm label {
+        font-weight: bold;
+    }
+
 </style>
 
 <div class="d-flex justify-content-center mt-3 mb-3">
@@ -22,6 +26,9 @@
         <div class="container">
             <div class="row">
                 <div class="col-12">
+                    <div class="d-flex gap-2">
+                        <a href="{{ route($page.'.index') }}" class="btn btn-danger mb-2">Fermer</a>
+                    </div>
                     @if(session('mod'))
                         <p class="alert fw-bold fs-5 alert-success alert-dismissible fade show" role="alert">{{ session('mod') }}
                                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -40,6 +47,7 @@
                                     <div class="input-group">
                                         <input type="date" name="{{ 'date_depot_' . $i }}" class="form-control" placeholder="Date de dépôt" value="{{ $activeData->{'date_depot_'.$i} }}">
                                         <input type="text" name="{{ 'num_depot_' . $i }}" class="form-control" placeholder="Numéro de dépôt" value="{{ $activeData->{'num_depot_'.$i} }}">
+                                        <input type="text" name="{{ 'motif_' . $i }}" class="form-control" placeholder="Motif" value="{{ $activeData->{'motif_'.$i} }}">
                                     </div>
                                 </div>
                             @endfor
@@ -51,6 +59,7 @@
                                     <div class="input-group">
                                         <input type="date" name="{{ 'date_depot_' . $i }}" class="form-control" placeholder="Date de dépôt" value="{{ $activeData->{'date_depot_'.$i} }}">
                                         <input type="text" name="{{ 'num_depot_' . $i }}" class="form-control" placeholder="Numéro de dépôt" value="{{ $activeData->{'num_depot_'.$i} }}">
+                                        <input type="text" name="{{ 'motif_' . $i }}" class="form-control" placeholder="Motif" value="{{ $activeData->{'motif_'.$i} }}">
                                     </div>
                                 </div>
                             @endfor
@@ -72,6 +81,12 @@
                                     <input type="number" name="montant" class="form-control" placeholder="Montant" value="{{ $activeData->montant }}">
                                 </div>
                             @endif
+
+                            <div class="form-group mb-3">
+                                <label for="montant" class="form-label">Motif</label>
+                                <input type="text" name="motif" class="form-control" placeholder="Motif" value="{{ $activeData->motif }}">
+                            </div>
+
     
                         @else
                             @for ($i = 1; $i < 13; $i++)
@@ -82,6 +97,7 @@
                                         @if ($page != 'cnss')
                                             <input type="text" name="{{ 'num_depot_' . $i }}" class="form-control" placeholder="Numéro de dépôt" value="{{ $activeData->{'num_depot_'.$i} }}">
                                         @endif
+                                        <input type="text" name="{{ 'motif_' . $i }}" class="form-control" placeholder="Motif" value="{{ $activeData->{'motif_'.$i} }}">
                                     </div>
                                 </div>
                             @endfor
@@ -99,8 +115,16 @@
                         </div>
     
                         <div class="form-group mb-3">
-                            <label for="status" class="form-label">Statut (PM/PP)</label>
-                            <input type="text" name="status" class="form-control" placeholder="PM/PP" value="{{ $activeData->status }}">
+                            <label for="status" class="form-label">Forme juridique</label>
+                            <div class="d-flex">
+                                <input type="text" class="form-control w-25" style="border-radius:5px 0px 0px 5px" placeholder="PM/PP" readonly required value="{{ $activeData->status }}">
+                                <select name="status" id="" class="form-control" style="border-radius:0px 5px 5px 0px">
+                                    <option value="">Modifier la Forme juridique</option>
+                                    <option value="PM">PM</option>
+                                    <option value="PP">PP</option>
+                                    <option value="SARLAU">SARLAU</option>
+                                </select>
+                            </div>
                         </div>
     
                         <div class="form-group mb-3">
@@ -152,23 +176,25 @@
                             <label for="activite" class="form-label">Activité</label>
                             <textarea name="activite" cols="30" rows="5" class="form-control" placeholder="Activité">{{ $activeData->activite }}</textarea>
                         </div>
-    
-                        <div class="form-group mb-3">
-                            <label for="users_id" class="form-label">Responsable</label>
-                            <select name="users_id" id="users_id" class="form-select" required>
-                                <option value="">Attribuer ce client à un responsable</option>
-                                @foreach ($users as $user)
-                                    <option value="{{ $user->id }}" {{ $activeData->users_id == $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
+                        
+                        @if (auth()->user()->role == 'Admin')
+                            <div class="form-group mb-3">
+                                <label for="users_id" class="form-label">collaborateurs</label>
+                                <select name="users_id" id="users_id" class="form-select" required>
+                                    <option value="">Attribuer ce client à un collaborateur</option>
+                                    @foreach ($users as $user)
+                                        <option value="{{ $user->id }}" {{ $activeData->users_id == $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @endif
                     @endif
                 </div>
             </div>
     
             <div class="d-flex gap-2">
                 <button type="submit" class="btn btn-success mt-2">Sauvegarder</button>
-                <a href="{{ route($page.'.index') }}" class="btn btn-danger mt-2">Fermer</a>
+                {{-- <a href="{{ route($page.'.index') }}" class="btn btn-danger mt-2">Fermer</a> --}}
             </div>
         </div>
     </form>

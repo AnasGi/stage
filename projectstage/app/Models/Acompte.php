@@ -24,6 +24,11 @@ class Acompte extends Model
         'num_depot_4',
         'date_depot_5',
         'num_depot_5',
+        'motif_1',
+        'motif_2',
+        'motif_3',
+        'motif_4',
+        'motif_5',
         'annee',
     ];
 

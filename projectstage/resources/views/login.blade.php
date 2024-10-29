@@ -14,19 +14,21 @@
         <div class="col-md-4">
             <div class="card shadow-sm">
                 <div class="card-body">
-                    <h3 class="text-center mb-4">Authentification</h3>
+                    <div class="d-flex justify-content-center m-2 mb-3">
+                        <img src="{{asset('imgs/logo.png')}}" alt="logo"/>
+                    </div>
                     @error('error')
                         <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
                     <form action="{{route('login')}}" method="POST">
                         @csrf
                         <div class="form-group mb-3">
-                            <label for="collaborateur" class="form-label">Nom d'utilisateur</label>
-                            <input type="text" class="form-control" id="collaborateur" name="collaborateur" value="{{old('collaborateur')}}" placeholder="Enter your username" required>
+                            <label for="name" class="form-label">Nom d'utilisateur</label>
+                            <input type="text" class="form-control" id="name" name="name" value="{{old('name')}}" placeholder="Saisir votre username" required>
                         </div>
                         <div class="form-group mb-3">
                             <label for="password" class="form-label">Mot de passe</label>
-                            <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Saisir votre mot de pass" required>
                         </div>
                         
                         <div class="d-grid gap-2">

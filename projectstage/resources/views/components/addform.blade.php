@@ -4,41 +4,64 @@
     
 
     #addForm input , #addForm textarea , #addForm select{
-        margin: 10px 0px 10px 0px;
-        outline: 1px solid black
+        margin: 10px 0px;
+        outline: 1px solid black;
+        border-radius: 0%;
+    }
 
+    #addForm label {
+        font-weight: bold;
+        display: inline-block;
+        width: 250px
+    }
+
+    #addForm {
+        padding: 10px 20px;
     }
 
     .addFormDetail {
-        margin-bottom: 20px;
-        padding: 10px 8px;
-        background-color: rgba(228, 228, 228, 0.812);
-        width: 30%
+        padding: 10px ;
+        background-color: #D0ECE7;
+        width: 40%;
+        border-radius: 8px;
+    }
+
+    .addFormDetail summary {
+        font-weight: bold;
+        font-size: 18px
+    }
+
+    .form-group {
+        display: flex;
+        align-items: center
+    }
+
+    @media screen and (max-width: 1100px) {
+        .addFormDetail {
+            width:60% !important;
+        }
+
+        
     }
 </style>
 
-@if(session('add'))
-    <p class="alert fw-bold fs-5 alert-success alert-dismissible fade show" role="alert">{{ session('add') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </p>
-@endif
-
 @error('code')
-    <span class="text-danger fw-bold fs-5">Le code client doit etre unique!</span>
+    <span class="alert alert-danger fw-bold">Le code client doit etre unique!</span>
 @enderror
 
-<details class="addFormDetail shadow">
-    <summary>Ajouter nouvelles données {{$page}}</summary>
+<details class="addFormDetail mb-2 mt-2">
+    <summary>Ajouter nouveaux données {{$page}}</summary>
     <form id="addForm" action="{{route($page.'.store')}}" method="POST">
         @csrf    
         @if ($page != 'clients')
             <div class="form-group">
-                <select name="code" id="client_code" class="form-control" required>
-                    <option value="">Code client</option>
+                <label for="">Code client</label>
+                <input list="client-liste" name="code" class="form-control" placeholder="Choisir un client" required>
+                <datalist id="client-liste">
                     @foreach ($clients as $client)
                         <option value="{{$client->code}}">{{$client->nom}}</option>
                     @endforeach
-                </select>
+                </datalist> 
             </div>
     
             @if ($page == 'acompte')
@@ -94,51 +117,64 @@
             @endif
     
         @else
-            @if (auth()->user()->role == 'Admin')
             <div class="form-group">
-                <input type="text" name="code" class="form-control" placeholder="Code client" required>
+                <label for="">Code de client: </label>
+                <input type="text" name="code" class="form-control" placeholder="Saisir un code supérieur a {{count($activeData)}}" required>
             </div>
             <div class="form-group">
-                <input type="text" name="nom" class="form-control" placeholder="Nom de l'entreprise" required>
+                <label for="">Nom de l'entreprise: </label>
+                <input type="text" name="nom" class="form-control" required>
             </div>
             <div class="form-group">
-                <input type="text" name="status" class="form-control" placeholder="PM/PP">
+                <label for="">Adresse: </label>
+                <input type="text" name="adresse" class="form-control" required>
             </div>
             <div class="form-group">
-                <input type="text" name="adresse" class="form-control" placeholder="Adresse" required>
-            </div>
-            <div class="form-group">
+                <select name="status" id="" class="form-control">
+                    <option value="" required>Forme juridique</option>
+                    <option value="PM">PM</option>
+                    <option value="PP">PP</option>
+                    <option value="SARLAU}}">SARLAU</option>
+                </select>
                 <input type="text" name="IF" class="form-control" placeholder="IF">
             </div>
             <div class="form-group">
                 <input type="text" name="TP" class="form-control" placeholder="TP">
-            </div>
-            <div class="form-group">
                 <input type="text" name="ICE" class="form-control" placeholder="ICE">
             </div>
             <div class="form-group">
                 <input type="text" name="CNSS" class="form-control" placeholder="CNSS">
-            </div>
-            <div class="form-group">
                 <input type="text" name="RC" class="form-control" placeholder="RC">
             </div>
             <div class="form-group">
-                <input type="date" name="debut_activite" class="form-control" placeholder="Date début d'activité">
+                <label for="">Date début d'activité</label>
+                <input type="date" name="debut_activite" class="form-control">
             </div>
             <div class="form-group">
-                <textarea name="activite" cols="30" rows="5" class="form-control" placeholder="Activité"></textarea>
+                <textarea name="activite" cols="30" rows="2" class="form-control" placeholder="Activité"></textarea>
             </div>
-            <div class="form-group">
-                <select name="users_id" id="users_id" class="form-control" required>
-                    <option value="">Attribuer ce client à un responsable</option>
-                    @foreach ($users as $user)
-                        <option value="{{$user->id}}">{{$user->name}}</option>
-                    @endforeach
-                </select>
-            </div>            
+            @if (auth()->user()->role == 'Admin')
+                <div class="form-group">
+                    <select name="users_id" id="users_id" class="form-control" required>
+                        <option value="">Attribuer ce client à un collaborateur</option>
+                        @foreach ($users as $user)
+                            <option value="{{$user->id}}">{{$user->name}}</option>
+                        @endforeach
+                    </select>
+                </div>            
             @endif
         @endif
     
-        <button type="submit" class="btn btn-success mt-2">Ajouter</button>
+        <button type="submit" class="btn btn-success mt-2 w-100">Ajouter</button>
     </form>
 </details>
+
+@if(session('add'))
+    <p class="alert fw-bold fs-5 alert-success alert-dismissible fade show" role="alert">{{ session('add') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </p>
+@endif
+
+@if ($page != 'clients')
+    <p class="m-0 mt-4 fw-bold">Nombre des données: {{count($activeData)}}</p>
+@endif

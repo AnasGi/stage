@@ -17,58 +17,43 @@ class usersTableSeeder extends Seeder
     // Insert multiple records using create
     DB::table('users')->insert([
         [
-            'name' => 'DAOUD ISSKELA',
-            'password' => bcrypt('DAOUD ISSKELA'),
+            'name' => 'DAOUD',
+            'password' => bcrypt('DAOUD'),
             'role' => 'responsable'
         ],
         [
-            'name' => 'HALIMA OUIJANE',
-            'password' => bcrypt('HALIMA OUIJANE'),
-            'role' => 'responsable'
-        ],
-        [
-            'name' => 'ZINEB ELKHOUDARI',
-            'password' => bcrypt('ZINEB ELKHOUDARI'),
+            'name' => 'ZINEB',
+            'password' => bcrypt('ZINEB'),
             'role' => 'responsable'
         ], 
-        [
-            'name' => 'FATIMA EZZAHRA AIT AHMED',
-            'password' => bcrypt('FATIMA EZZAHRA AIT AHMED'),
-            'role' => 'responsable'
-        ],
-        [
-            'name' => 'NAJAT SAOUD',
-            'password' => bcrypt('NAJAT SAOUD'),
-            'role' => 'responsable'
-        ],
-        [
-            'name' => 'AMINA',
-            'password' => bcrypt('AMINA'),
-            'role' => 'responsable'
-        ],
         [
             'name' => 'BASMA',
             'password' => bcrypt('BASMA'),
             'role' => 'responsable'
         ],
         [
-            'name' => 'RACHID NAAIMI',
-            'password' => bcrypt('RACHID NAAIMI'),
+            'name' => 'SANAA',
+            'password' => bcrypt('SANAA'),
             'role' => 'responsable'
         ],
         [
-            'name' => 'MOHAMED ESSAID',
-            'password' => bcrypt('MOHAMED ESSAID'),
+            'name' => 'MOURAD',
+            'password' => bcrypt('MOURAD'),
             'role' => 'responsable'
         ],
         [
-            'name' => 'MED EGHIZ',
-            'password' => bcrypt('MED EGHIZ'),
+            'name' => 'HANAN',
+            'password' => bcrypt('HANAN'),
             'role' => 'responsable'
         ],
         [
-            'name' => 'KHAMISSA HDIMANE',
-            'password' => bcrypt('KHAMISSA HDIMANE'),
+            'name' => 'ISMAIL',
+            'password' => bcrypt('ISMAIL'),
+            'role' => 'responsable'
+        ],
+        [
+            'name' => 'KHAMISSA',
+            'password' => bcrypt('KHAMISSA'),
             'role' => 'responsable'
         ],
         [
@@ -77,7 +62,7 @@ class usersTableSeeder extends Seeder
             'role' => 'responsable'
         ],
         [
-            'name' => 'Admin',
+            'name' => 'NAJAT',
             'password' => bcrypt('Admin123'),
             'role' => 'Admin'
         ]

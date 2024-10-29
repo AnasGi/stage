@@ -1,8 +1,7 @@
+@props(['users'])
+
 <style>
     .menu {
-        position: sticky;
-        top: 0;
-        left: 0;
         background-color: rgb(238, 238, 238);
         padding: 10px 0px;
         z-index: 10;
@@ -10,66 +9,169 @@
 
     .links a{
         text-decoration: none;
-        font-size: 13px
+        font-size: 13px;
+        font-weight: bold;
     }
+
+    .active-link {
+        position: relative;
+        background-color: wheat;
+        color: black;
+        border-color: wheat;
+    }
+
+    .active-link::after {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 2px;
+        background-color: black;
+        border-radius: 10px;
+        bottom: 0;
+        left: 0;
+        transform: translateY(5px);
+    }
+
 
     .hr{
         width: 10px;
         color: black;
     }
+
+    .online , .offline {
+        width: 10px;
+        height: 10px;
+        background-color: lightgreen;
+        border-radius: 100%
+    }
+
+    .offline {
+        background-color: red;
+    }
+
+    @media screen and (max-width: 1100px) {
+        
+        .linksCont {
+            overflow-x: auto !important;
+            height: 70px;
+        }
+        .links {
+            width: 150%;
+        }
+    }
+
+
 </style>
 
 <div class="menu shadow " style="z-index: 100">
     
     <div class="mb-3 d-flex justify-content-around align-items-center">
         <div>
+            <img style="width: 150px; height:100px" src="{{asset('imgs/logo.png')}}" alt="logo"/>
+        </div>
+        <div>
             <div class="d-flex gap-3 align-items-center">
                 <div style="margin-right: 10px">
-                    <h2 class="m-0">{{auth()->user()->name}}</h2>
-                    <span class="bg-info p-1 fw-bold rounded" style="font-size: 12px">{{auth()->user()->role}}</span>
+                    <h2 class="fw-bold text-center">{{auth()->user()->name}}</h2>
+                    <div class="d-flex gap-3 align-items-center">
+                        <span class="bg-info p-1 fw-bold rounded" style="font-size: 14px">{{auth()->user()->role}}</span>
+                        <a class="btn btn-primary p-1 fw-bold" href="{{route('user.edit' , auth()->user())}}" style="font-size: 14px">Modifier profile</a>
+                        @auth
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="btn btn-danger p-1 fw-bold" style="font-size: 14px">Logout</button>
+                        </form>   
+                    </div>
                 </div>
-                <a class="btn btn-primary" href="{{route('user.edit' , auth()->user())}}">Modifier votre coordonnées</a>
-                @auth
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit" class="btn btn-danger">Logout</button>
-                </form>   
                 @endauth
             </div>
         </div>
-        <div>
-            <span class="btn btn-light border border-dark">{{ (new Datetime(Date('Y-m-d')))->format('d/m/Y') }}</span>
-        </div>
+        @if (auth()->user()->role == 'Admin')
+            <div class="dropdown">
+                <button class="btn btn-success dropdown-toggle fw-bold" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Status des Collaborateurs
+                </button>
+                <ul class="dropdown-menu" style="width:300px">
+                    @foreach ($users as $item)
+                        @if ($item->role != 'Admin')
+                            <li style="font-size: 13px ; padding:5px 10px" class="d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center gap-2">
+                                    @if ($item->active)
+                                        <span class="online"></span>
+                                    @else
+                                        <span class="offline"></span>
+                                    @endif
+                                    <span>{{$item->name}}</span>
+                                </div>
+                                @if ($item->loggedout_at)
+                                    @if ($item->active)
+                                        <span style="font-size: 12px">En ligne</span>
+                                    @else
+                                        <span style="font-size: 12px">{{$item->loggedout_at}}</span>
+                                    @endif
+                                @endif
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                        @endif
+                    @endforeach
+                  
+                </ul>
+            </div>
+        
+        @endif
+
     </div>
-    <div class="links d-flex justify-content-between gap-1">
-        <a class="btn btn-secondary" href="/">Acceuil</a>
-        <a class="btn btn-secondary" href="{{route('clients.index')}}">Liste des clients</a>
-        <hr class="hr">
-        <a class="btn btn-secondary" href="{{route('cnss.index')}}">CNSS</a>
-        <a class="btn btn-secondary" href="{{route('tvam.index')}}">Tva mensuelle</a>
-        <a class="btn btn-secondary" href="{{route('ir.index')}}">Ir</a>
-        <a class="btn btn-secondary" href="{{route('droittimbre.index')}}">Droit de timbre</a>
-        <hr class="hr">
-        <a class="btn btn-secondary" href="{{route('tvat.index')}}">Tva trimistrielle</a>
-        <a class="btn btn-secondary" href="{{route('acompte.index')}}">Acompte</a>
-        <hr class="hr">
-        <a class="btn btn-secondary" href="{{route('etat.index')}}">Etat 9421</a>
-        <a class="btn btn-secondary" href="{{route('bilan.index')}}">Bilan</a>
-        <a class="btn btn-secondary" href="{{route('cm.index')}}">Cm</a>
-        <a class="btn btn-secondary" href="{{route('tp.index')}}">Tp</a>
-        <a class="btn btn-secondary" href="{{route('irprof.index')}}">IR Prof globale</a>
-        <a class="btn btn-secondary" href="{{route('pv.index')}}">PV de l'AGO</a>
+
+    <div class="mt-2 d-flex justify-content-between gap-1" >
+        <div class="linksCont" style='width :{{auth()->user()->role == "Admin" ? "90%" : "100%"}}'>
+            <div class="links d-flex justify-content-between gap-1" >
+                <a class="btn btn-dark {{ Route::is('main.index') ? 'active-link' : '' }}" href="/">Acceuil</a>
+                <a class="btn btn-dark {{ Route::is('clients.index') ? 'active-link' : '' }}" href="{{ route('clients.index') }}">Liste des clients</a>
+                <hr class="hr">
+                <a class="btn btn-danger {{ Route::is('cnss.index') ? 'active-link' : '' }}" href="{{ route('cnss.index') }}">CNSS</a>
+                <a class="btn btn-danger {{ Route::is('tvam.index') ? 'active-link' : '' }}" href="{{ route('tvam.index') }}">Tva mensuelle</a>
+                <a class="btn btn-danger {{ Route::is('ir.index') ? 'active-link' : '' }}" href="{{ route('ir.index') }}">Ir</a>
+                <a class="btn btn-danger {{ Route::is('droittimbre.index') ? 'active-link' : '' }}" href="{{ route('droittimbre.index') }}">Droit de timbre</a>
+                <hr class="hr">
+                <a class="btn btn-primary {{ Route::is('tvat.index') ? 'active-link' : '' }}" href="{{ route('tvat.index') }}">Tva trimistrielle</a>
+                <a class="btn btn-primary {{ Route::is('acompte.index') ? 'active-link' : '' }}" href="{{ route('acompte.index') }}">Acompte</a>
+                <hr class="hr">
+                <a class="btn btn-success {{ Route::is('etat.index') ? 'active-link' : '' }}" href="{{ route('etat.index') }}">Etat 9421</a>
+                <a class="btn btn-success {{ Route::is('bilan.index') ? 'active-link' : '' }}" href="{{ route('bilan.index') }}">Bilan</a>
+                <a class="btn btn-success {{ Route::is('cm.index') ? 'active-link' : '' }}" href="{{ route('cm.index') }}">Cm</a>
+                <a class="btn btn-success {{ Route::is('tp.index') ? 'active-link' : '' }}" href="{{ route('tp.index') }}">Tp</a>
+                <a class="btn btn-success {{ Route::is('irprof.index') ? 'active-link' : '' }}" href="{{ route('irprof.index') }}">IR Prof globale</a>
+                <a class="btn btn-success {{ Route::is('pv.index') ? 'active-link' : '' }}" href="{{ route('pv.index') }}">PV de l'AGO</a>
+                @if (auth()->user()->role != 'Admin')
+                    <hr class="hr">
+                    <a href="{{ route('users.showTable') }}" class="btn btn-dark {{ Route::is('users.showTable') ? 'active-link' : '' }}">Liste des collaborateurs</a>
+                @endif
+                
+            </div>
+        </div>
         @if (auth()->user()->role == 'Admin')
             <hr class="hr">
             <div class="dropdown">
-                <button style="font-size: 13px" class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <button style="font-size: 13px" class="btn btn-dark fw-bold dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                   Autres options
                 </button>
-                <ul class="dropdown-menu">
+                <ul class="dropdown-menu" style="font-size: 13px">
                   <li><a class="dropdown-item" href="{{route('register.form')}}">Creer un Collaborateurs</a></li>
                   <li><hr class="dropdown-divider"></li>
                   <li>
-                    <a class="dropdown-item" href="{{route('users.show')}}">Votre Collaborateurs</a>
+                    <a class="dropdown-item" href="{{route('users.show')}}">Liste des Collaborateurs</a>
+                  </li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li>
+                    <a class="dropdown-item" href="{{route('clients.deleted')}}">Décharge et Liquidation</a>
+                  </li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li>
+                    <a class="dropdown-item" href="{{route('clients.history')}}">Historique</a>
+                  </li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li>
+                    <a class="dropdown-item" href="{{route('clients.new')}}">Nouveaux clients</a>
                   </li>
                   <li><hr class="dropdown-divider"></li>
                   <li>
@@ -79,6 +181,5 @@
             </div>
         
         @endif
-        
     </div>
 </div>

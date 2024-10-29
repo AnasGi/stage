@@ -24,8 +24,13 @@ return new class extends Migration
             $table->string('RC')->nullable();
             $table->date('debut_activite')->nullable();
             $table->text('activite')->nullable();
+            $table->string('ville')->nullable();
             $table->foreignId('users_id')->constrained('users');
+            $table->string('deletetype')->nullable();
+            $table->string('motif')->nullable();
+            $table->string('motifdoc')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

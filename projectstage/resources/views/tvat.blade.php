@@ -14,7 +14,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </p>
     @endif
-    <x-menu></x-menu>
+    <x-menu :users="$users"></x-menu>
     @php
         $empty = false;
     @endphp
@@ -22,49 +22,54 @@
     <x-addform page='tvat' :activeData="$tvatData" :users="$users" :clients="$clients"></x-addform>
     <x-alert :activeData="$tvatData" page='tvat'></x-alert>
 
-    <table class="table table-bordered table-hover text-center overflow-scroll" style="width :150%">
-        <tr>
-            @if(auth()->user()->role == 'Admin')
-                <td colspan="3"></td>
-            @else
-                <td colspan="2"></td>
-            @endif
-            <td colspan="2" class="fw-bold fs-3">1ere trimestre </td>
-            <td colspan="2" class="fw-bold fs-3">2ere trimestre </td>
-            <td colspan="2" class="fw-bold fs-3">3ere trimestre </td>
-            <td colspan="2" class="fw-bold fs-3">4ere trimestre </td>
-        </tr>
-        <tr>
-            <th>code client</th>
-            <th style="width: 200px">entreprise</th>
-            @if(auth()->user()->role == 'Admin')
-                <th>collaborateur</th>
-            @endif
-            @for($i = 0 ; $i < 4 ; $i++)
-                <th>date de depot</th>
-                <th>numero de depot</th>
-            @endfor
-            
-        </tr>
-        @forelse ($tvatData as $tvat)
-        <tr>
-            <td>{{$tvat->clients->code}}</td>
-            <td>{{$tvat->clients->nom}}</td>
-            @if(auth()->user()->role == 'Admin')
-                <td>{{$tvat->clients->users->name}}</td>
-            @endif
-            <x-monthcheck :activeData="$tvat"  page="tvat"></x-monthcheck>
-            <td><a href="{{route('tvat.destroy' , $tvat)}}" class="btn btn-danger" onclick="confirm('Vous-etre sure de supprimer cette donnée?')">supprimer</a></td>
-            <td><a href="{{route('tvat.update' , $tvat)}}" class="btn btn-primary">modifier</a></td>
-        </tr>
-        @empty
-            @php
-                $empty=true;
-            @endphp
-        @endforelse
-    </table>
+    <div class="overflow-x-scroll">
+        <table class="table table-bordered table-hover text-center border-dark" style="width :150%">
+            <tr>
+                @if(auth()->user()->role == 'Admin')
+                    <td colspan="3"></td>
+                @else
+                    <td colspan="2"></td>
+                @endif
+                <td colspan="2" class="fw-bold fs-3">1ere trimestre </td>
+                <td colspan="2" class="fw-bold fs-3">2ere trimestre </td>
+                <td colspan="2" class="fw-bold fs-3">3ere trimestre </td>
+                <td colspan="2" class="fw-bold fs-3">4ere trimestre </td>
+            </tr>
+            <tr>
+                <th>code client</th>
+                <th style="width: 200px">entreprise</th>
+                @if(auth()->user()->role == 'Admin')
+                    <th>collaborateur</th>
+                @endif
+                @for($i = 0 ; $i < 4 ; $i++)
+                    <th>date de depot</th>
+                    <th>numero de depot</th>
+                @endfor
+                
+            </tr>
+            @forelse ($tvatData as $tvat)
+            <tr>
+                <td>{{$tvat->clients->code}}</td>
+                <td>{{$tvat->clients->nom}}</td>
+                @if(auth()->user()->role == 'Admin')
+                    <td>{{$tvat->clients->users->name}}</td>
+                @endif
+                <x-monthcheck :activeData="$tvat"  page="tvat"></x-monthcheck>
+                <td style="vertical-align: middle"><a href="{{route('tvat.destroy' , $tvat)}}" class="btn btn-danger" onclick="return confirm('Vous-etre sure de supprimer cette donnée?')">supprimer</a></td>
+                <td style="vertical-align: middle"><a href="{{route('tvat.update' , $tvat)}}" class="btn btn-primary">modifier</a></td>
+            </tr>
+            @empty
+                @php
+                    $empty=true;
+                @endphp
+            @endforelse
+        </table>
+    </div>
     @if ($empty)
-        <p class="text-center fw-bold fs-4 mt-5 text-danger">Aucune resultat !</p>
+        <div class="d-flex justify-content-center align-items-center gap-3  mt-4">
+            <img src="{{ asset('imgs/motif.png') }}" style="width:60px; height:60px;" alt="motif">
+            <p class="text-center fw-bold fs-4 m-0 text-danger">Pas de données {{request('annee') ?? Date('Y')}}</p>
+        </div>
     @endif
 </body>
 </html>

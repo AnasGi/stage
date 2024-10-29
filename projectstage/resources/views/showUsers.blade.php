@@ -7,42 +7,78 @@
     <link rel="stylesheet" href="{{ asset( 'css/bootstrap.min.css' ) }}"> 
     <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
     <title>Votre Collaborateurs</title>
+    <style>
+        @media screen and (max-width: 1100px) {
+            .detailCont{
+                width: 100% !important;
+            }
+        }
+    </style>
 </head>
 <body  class="p-2">
-    <x-menu></x-menu>
+    <x-menu :users="$users"></x-menu>
 
     <div class="d-flex justify-content-center ">
-        <div class="w-75">
+        <div class="w-75 detailCont">
             @if (session('userDlt'))
-                <p class="alert alert-success alert-dismissible fade show" role="alert">{{ session('userDlt') }}
+                <p class="alert alert-success alert-dismissible mt-2 fade show" role="alert">{{ session('userDlt') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </p>
+            @endif 
+            @if (session('collabmodified'))
+                <p class="alert alert-success alert-dismissible mt-2 fade show" role="alert">{{ session('collabmodified') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </p>
             @endif
-            <div class="d-flex justify-content-between align-items-center bg-white shadow rounded p-3 mt-3 mb-3" style="position: sticky;top:18%;z-index:1">
+            <div class="d-flex justify-content-between align-items-center bg-white shadow rounded p-3 mt-3 mb-3">
                 <h3 class="m-0">
-                    Votre Collaborateurs 
+                    Les Collaborateurs 
                     <span class="bg-info rounded p-3 pt-1 pb-1 fs-4">{{count($users)}}</span>
                 </h3>
+                <a href="{{route('users.showTable')}}" class="btn btn-dark" style="font-size: 12px">Sous form d'un tableau</a>
                 <p class="m-0">Données de l'année {{Date('Y')}}</p>
             </div>
             <div class="d-flex">
-                <div class="w-50">
+                <div class="w-75 detailCont">
                     @foreach ($users as $user)
                         <details class="m-4 mt-0 mb-0">
                             <summary class="bg-body-secondary mb-2 rounded p-2 d-flex justify-content-between align-items-center">
                                 <span>
                                     {{$user->name}}
+                                    <span class="bg-info p-1 fw-bold rounded" style="font-size: 12px">{{$user->role}}</span>
+                                    <span class="bg-secondary text-light p-1 fw-bold rounded" style="font-size: 12px">{{count($user->clients)}}</span>
                                 </span>
-                                <span>
-                                    <a 
-                                        class="btn btn-danger" 
-                                        style="font-size: 13px" 
-                                        href="{{route('user.delete' , $user)}}" 
-                                        onclick="confirm('Est-ce-que vous etes sure de supprimer ce collaborateur? Tous les données associer à ce collaborateur va etre supprimer!')"
-                                    >
-                                        Supprimer
-                                    </a>
-                                </span>
+                                <div>
+                                    @if (count($user->clients) > 0)
+                                        <span>
+                                            <button
+                                                class="btn btn-success p-0"
+                                            >
+                                                <a class="btn btn-success" style="font-size: 13px"
+                                                 href="{{route('users.show' , ['user_id' => $user->id])}}">
+                                                    Attribuer ses clients à un autre collaborateur 
+                                                </a>
+                                            </button>
+                                        </span>
+                                    @endif
+
+                                    <span>
+                                        <button class="btn btn-danger p-0"
+                                            @if( count($user->clients) > 0 ) 
+                                                    disabled
+                                            @endif
+                                        >
+                                            <a 
+                                                class="btn btn-danger"
+                                                style="font-size: 13px" 
+                                                href="{{route('user.delete' , $user)}}" 
+                                                onclick="return confirm('Est-ce-que vous etes sure de supprimer ce collaborateur? Tous les données associer à ce collaborateur va etre supprimer!')"
+                                            >
+                                                Supprimer
+                                            </a>
+                                        </button>
+                                    </span>
+                                </div>
                             </summary>
                             <div style="height: 200px; overflow-y:scroll;">
                                 @foreach ($clients as $client)
@@ -66,7 +102,6 @@
                     <div>
                         <ul style="position: sticky; top:30%">
                             <li style="list-style-type: none" class="mb-2 fw-bold">{{$selectedClient->nom}}</li>
-                            {{-- <hr> --}}
                             <li>
                                 <span style="vertical-align: middle; width:150px;display:inline-block">Cnss </span>
                                 @if (count($Cnss) > 0)
@@ -172,6 +207,29 @@
                             
                         </ul>
                     </div>
+                @endif
+
+                @if(request()->has('user_id'))
+                    <form action="{{route('users.modHisClients'  , request('user_id'))}}" method="POST" class="w-25">
+                        @csrf
+                        <label for="">
+                            Attribuer les docciers de 
+                            <span class="fw-bold">
+                                {{$users->where('id' , request('user_id') )->value('name')}} 
+                            </span>
+                            à un autre collaborateur:
+                        </label>
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                            <select name="user" id="" class="pt-1 pb-1" required>
+                                <option value=""></option>
+                                @foreach ($users as $user)
+                                    <option value="{{$user->id}}">{{$user->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <button class="btn btn-success">Changer</button>
+                        <a class="btn btn-danger" href="{{route('users.show')}}">Fermer</a>
+                    </form>
                 @endif
             </div>
         </div>

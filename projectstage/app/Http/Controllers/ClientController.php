@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Client;
+use App\Models\History;
 use App\Models\User;
 use Auth;
+use DB;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 
 class ClientController extends Controller
@@ -17,24 +20,39 @@ class ClientController extends Controller
     public function index(Request $request)
     {
         $code = $request->input('code');
+        $annee = $request->input('annee');
+        $mois = $request->input('mois');
+
+        $clients = Client::query();
 
         if(Auth::user()->role == 'Admin'){
-            $clients = Client::all();
+            $clients->select('*')->orderBy('created_at' , 'desc');
 
             $userId = $request->input('name');
-            $users = User::where('role' , 'responsable')->get();
+            $users = User::all();
             if ($request->input('name')) {
-            
-                $clients = Client::where('users_id', '=', $userId)->get();
+                $clients->where('users_id', '=', $userId);
             }
         }
         else{
-            $clients = Client::where('users_id' , Auth::user()->id)->get();
+            $clients->where('users_id' , Auth::user()->id)->orderBy('created_at' , 'desc')->get();
         }
         
         if($code){
-            $clients = Client::where('code' , $code)->get();
+            $clients->where('code' , $code);
         }
+
+        if($annee){
+            $clients->whereYear('created_at' , $annee);
+
+            if($mois){
+                $clients->whereYear('created_at' , $annee)
+                ->whereMonth('created_at' , $mois);
+            }
+        }
+
+        $clients = $clients->get();
+        
         
         return view('clients', compact('clients' )  + ['users' => $users ?? null]);
     }
@@ -57,6 +75,13 @@ class ClientController extends Controller
             'code' => 'unique:clients'
         ]);
 
+        if($request->input('users_id')){
+            $collab = $request->input('users_id');
+        }
+        else{
+            $collab = Auth::user()->id;
+        }
+
         // Create a client record for each row
         Client::create([
             'code' => $request->input('code'),
@@ -70,7 +95,8 @@ class ClientController extends Controller
             'RC' => $request->input('RC'),
             'debut_activite' => $request->input('debut_activite'),
             'activite' => $request->input('activite'),
-            'users_id' => $request->input('users_id'),
+            'ville' => $request->input('ville'),
+            'users_id' => $collab
         ]);
 
         return back()->with('add' , "Nouvel client a été inserer!");
@@ -79,9 +105,79 @@ class ClientController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Client $client)
+    public function show()
     {
-        //
+        $deletedClients = Client::onlyTrashed()->get();
+        $users = User::all();
+
+        return view('deletedClients' , compact('deletedClients')+['users'=>$users]);
+    
+    
+    }
+
+    public function showTable()
+    {
+        $deletedClients = Client::onlyTrashed()->get();
+
+        return view('deletedClientsTable' , compact('deletedClients'));
+    
+    }
+
+    public function newClients(Request $request){
+
+        $annee = $request->input('annee');
+        $mois = $request->input('mois');
+
+        // Start with an empty collection
+        $clients = collect();
+
+        if ($annee) {
+            // Build the query only if $annee is provided
+            $clients = Client::query()->whereYear('created_at', $annee);
+
+            if ($mois) {
+                $clients->whereMonth('created_at', $mois);
+            }
+
+            // Execute the query to get results
+            $clients = $clients->get();
+        }
+
+        return view('newClients', compact('clients'));
+
+    }
+
+    public function restore($id)
+    {
+        $client = Client::onlyTrashed()->find($id);
+        $client->deletetype = null;
+        $client->motif = null;
+        $client->motifdoc = null;
+
+        $client->restore();
+
+        return redirect()->route('clients.index')->with('restored' , 'Le client a été restorer');
+    }
+
+    public function history(Request $request)
+    {
+
+        $history = History::select('*')->orderBy('updated_at' , 'desc')->get();
+
+        $clientsInHistory = History::select('clients_id', DB::raw('MIN(users_id) as min_users_id'))
+        ->groupBy('clients_id')
+        ->orderBy('min_users_id' , 'desc');
+
+        if($request->input('clients_id')){
+            $clientsInHistory->where('clients_id' , $request->input('clients_id'));
+        }
+
+        $clientsInHistory = $clientsInHistory->get();
+
+        $users = User::all();
+
+        return view('history' , compact('history' , 'clientsInHistory')+['users'=>$users]);
+        
     }
 
     /**
@@ -108,6 +204,13 @@ class ClientController extends Controller
                 'code' => 'unique:clients'
             ]);
         }
+
+        if($request->input('users_id')){
+            $collab = $request->input('users_id');
+        }
+        else{
+            $collab = Auth::user()->id;
+        }
         
         $client->update([
             'code' => $request->input('code'),
@@ -121,7 +224,8 @@ class ClientController extends Controller
             'RC' => $request->input('RC'),
             'debut_activite' => $request->input('debut_activite'),
             'activite' => $request->input('activite'),
-            'users_id' => $request->input('users_id'),
+            'ville' => $request->input('ville'),
+            'users_id' => $collab,
         ]);
 
         return back()->with('mod' , "Modification reussite!");
@@ -130,11 +234,39 @@ class ClientController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Client $client)
+    public function destroy(Client $client , $deletetype)
     {
+
+        $client->deletetype = $deletetype;
+        $client->save();
+
         $client->delete();
 
-        return back()->with('success' ,  'Supprission réussite!');
+        return back()->with('success' ,  "Le client est en ".$deletetype."!");
+    }
+
+    public function storeMotif(Request $request , $id)
+    {
+
+        $trachedClient = Client::onlyTrashed()->findOrFail($id);
+
+        $request->validate([
+            'motifdoc' => 'file|mimes:pdf,doc,docx|max:2048',
+        ]);
+
+        if ($request->hasFile('motifdoc')) {
+            $motifDocPath = $request->file('motifdoc')->store('documents' , 'public');
+        }
+        else{
+            $motifDocPath = null;
+        }
+
+        $trachedClient->update([
+            'motif' => $request->input('motif'),
+            'motifdoc' => $motifDocPath
+        ]);
+        
+        return back()->with('success' ,  "Le motif a été sauvegarder !");
     }
 
     public function import(Request $request)
@@ -168,7 +300,7 @@ class ClientController extends Controller
                 $dateActivite = null; // If the date field is empty, set it to null
             }
 
-            $collabId = User::where('name' , $row[11])->value('id');
+            $collabId = User::where('name' , $row[12])->value('id');
 
             // Create a client record for each row
             Client::create([
@@ -183,6 +315,7 @@ class ClientController extends Controller
                 'RC' => $row[8],
                 'debut_activite' => $dateActivite,
                 'activite' => $row[10],
+                'ville' => $row[11],
                 'users_id' => $collabId,
             ]);
         }
@@ -190,6 +323,6 @@ class ClientController extends Controller
         // Close the file handler
         fclose($handle);
 
-        return back()->with('success', 'Clients imported successfully!');
+        return back()->with('success', 'Clients data importées avec succée!');
     }
 }

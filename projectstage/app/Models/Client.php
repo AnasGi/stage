@@ -2,12 +2,19 @@
 
 namespace App\Models;
 
+use DB;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Client extends Model
 {
     use HasFactory;
+
+    use SoftDeletes;
+    
+    // Specify the deleted_at column
+    protected $dates = ['deleted_at'];
 
     protected $fillable = [
         'id',
@@ -22,7 +29,11 @@ class Client extends Model
         'RC',
         'debut_activite',
         'activite',
+        'ville',
         'users_id',
+        'deletetype',
+        'motif',
+        'motifdoc'
     ];
 
     public function users()
@@ -90,6 +101,26 @@ class Client extends Model
         return $this->hasMany(Irprof::class, 'clients_id'); 
     }
 
+    public function history()
+    {
+        return $this->hasMany(History::class, 'clients_id'); 
+    }
+    
+
+    protected static function booted()
+    {
+        static::updating(function ($client) {
+            // Get the original data before the update
+            $originalData = $client->getOriginal();
+
+            // Log old data, you can save it to a separate table or a file
+            DB::table('client_collabs_history')->insert([
+                'clients_id' => $originalData['id'],
+                'users_id' => $originalData['users_id'],
+                'updated_at' => now(),
+            ]);
+        });
+    }
 
     protected static function boot()
     {
@@ -108,6 +139,7 @@ class Client extends Model
             $client->droittimbers()->delete();
             $client->etats()->delete();
             $client->tps()->delete();
+            $client->history()->delete();
         });
     }
 }

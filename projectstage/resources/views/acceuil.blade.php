@@ -22,226 +22,285 @@
             </p>
     @endif
 
-    <x-menu></x-menu>
+    <x-menu :users="$users"></x-menu>
 
-    <div class="d-flex justify-content-center mt-3">
-        <form action="{{route('main.index')}}" class="d-flex justify-content-center gap-2 align-items-center">
-            <div>
-                <input list="clients-list" name="code" id="code" value="{{request('code')}}" placeholder="Choisir un client">
-                <datalist id="clients-list">
-                    @foreach ($clients as $item)
-                        <option value="{{$item->code}}">{{$item->nom}}</option>
-                    @endforeach
-                </datalist> 
+    @if (auth()->user()->role == "Admin")
+        <div class="d-flex justify-content-around mt-3 align-items-center">
+            <h2 class="fw-bold">Notifications</h2>
+            <form action="{{route('main.index')}}">
+                <div class="d-flex justify-content-center gap-2 align-items-center">
+                    <select name="users_id" id="users_id" style="height: 30px">
+                        <option value="">Choisir un collaborateur</option>
+                        @foreach ($users as $user)
+                            @if (request('users_id') == $user->id)
+                                <option selected value="{{$user->id}}">{{$user->name}}</option>
+                            @else
+                                <option value="{{$user->id}}">{{$user->name}}</option>
+                            @endif
+                        @endforeach
+                    </select>
+                    <button class="btn btn-dark">Filtrer</button>
+                    <a href="{{route('main.index')}}" class="btn btn-danger">Initialiser filtrage</a>
+                </div>
+            </form>
+        </div>
+        <div class="d-flex justify-content-between mt-3 align-items-center">
+            <x-notification page='cnss' :activeData="$CnssAll"></x-notification>
+            <hr style="border:2px solid black">
+            <x-notification page='tvam' :activeData="$TvamAll"></x-notification>
+            <hr style="border:2px solid black">
+            <x-notification page='ir' :activeData="$IrAll"></x-notification>
+            <hr style="border:2px solid black">
+            <x-notification page='droittimbre' :activeData="$DroittimberAll"></x-notification>
+            <hr style="border:2px solid black">
+            <x-notification page='tvat' :activeData="$TvatAll"></x-notification>
+            <hr style="border:2px solid black">
+            <x-notification page='acompte' :activeData="$AcompteAll"></x-notification>
+            <hr style="border:2px solid black">
+            <x-notification page='etat' :activeData="$EtatAll"></x-notification>
+            <hr style="border:2px solid black">
+            <x-notification page='bilan' :activeData="$BilanAll"></x-notification>
+            <hr style="border:2px solid black">
+            <x-notification page='cm' :activeData="$CmAll"></x-notification>
+            <hr style="border:2px solid black">
+            <x-notification page='tp' :activeData="$TpAll"></x-notification>
+            <hr style="border:2px solid black">
+            <x-notification page='irprof' :activeData="$IrprofAll"></x-notification>
+            <hr style="border:2px solid black">
+            <x-notification page='pv' :activeData="$PvAll"></x-notification>
+        </div>
+        <hr>
+    @endif
+
+    <div class="d-flex justify-content-around mt-3 align-items-center">
+        <h2 class="fw-bold">Suivi Client</h2>
+        <form action="{{route('main.index')}}">
+            <div class="d-flex justify-content-center gap-2 align-items-center">
+                <div>
+                    <input list="clients-list" name="code" id="code" value="{{request('code')}}" placeholder="Choisir un client">
+                    <datalist id="clients-list">
+                        @foreach ($clients as $item)
+                            <option value="{{$item->code}}">{{$item->nom}}</option>
+                        @endforeach
+                    </datalist> 
+                </div>
+                <div>
+                    <input type="text" name="annee" placeholder="Année" value="{{request('annee')}}">
+                </div>
             </div>
-            <div>
-                <input type="text" name="annee" placeholder="Année" value="{{request('annee')}}">
+            <div class="mt-2">
+                <button class="btn btn-dark">Importer les données</button>
+                <a href="{{route('main.index')}}" class="btn btn-danger">Initialiser filtrage</a>
             </div>
-            <button class="btn btn-dark">Importer les données</button>
         </form>
     </div>
 
-    <hr/>
+    <hr>
 
     @if ($clientToFind !== null)
-        @if (auth()->user()->role == "Admin")
-            <h3 class="mb-4 bg-body-secondary p-2 rounded w-50">Collaborateur: {{$userName}}</h3>
-        @endif
-        <details open>
-            <summary class="fw-bold fs-4">Déclaration mensuelle</summary>
-            <table class="table table-bordered table-hover text-center">
-                <tr>
-                    <th></th>
-                    <th  colspan="2">Tva mensuelle</th>
-                    <th>Cnss</th>
-                    <th colspan="2">Ir</th>
-                    <th colspan="2">Droit de timbre</th>
-                </tr>
-                <tr>
-                    <th></th>
-                    <th>Date de depot</th>
-                    <th>numero de depot</th>
-
-                    <th>Date de depot</th>
-
-                    <th>Date de depot</th>
-                    <th>numero de depot</th>
-
-                    <th>Date de depot</th>
-                    <th>numero de depot</th>
-                </tr>
-                @for ($i = 1; $i < 13; $i++)
+        <details class="mt-4">
+            <summary class="fw-bold fs-4 mb-2">
+                Tous les Déclarations de {{$clientNameToFind}} de l'année {{request('annee') ?? Date('Y')}}
+            </summary>
+            @if (auth()->user()->role == "Admin")
+                <h3 class="mb-3 mt-4 bg-body-secondary p-2 rounded w-50">Collaborateur: {{$userName}}</h3>
+            @endif
+            <details open>
+                <summary class="fw-bold fs-4">Déclaration mensuelle</summary>
+                <table class="table table-bordered table-hover text-center border-dark">
                     <tr>
-                       <th>Mois {{$i}}</th>
-
-                       @if ($Tvam == null)
-                            <td></td>
-                            <td></td>
-                        @else
-                            <td>{{ $Tvam->{'date_depot_'.$i} }}</td>
-                            <td>{{ $Tvam->{'num_depot_'.$i} }}</td>
-                       @endif
-                       
-                       @if ($Cnss == null)
-                            <td></td>
-                        @else
-                            <td>{{ $Cnss->{'date_depot_'.$i} }}</td>
-                       @endif
-
-                       @if ($Ir == null)
-                            <td></td>
-                            <td></td>
-                        @else
-                            <td>{{ $Ir->{'date_depot_'.$i} }}</td>
-                            <td>{{ $Ir->{'num_depot_'.$i} }}</td>
-                       @endif
-
-                       @if ($Droittimber == null)
-                            <td></td>
-                            <td></td>
-                        @else
-                            <td>{{ $Droittimber->{'date_depot_'.$i} }}</td>
-                            <td>{{ $Droittimber->{'num_depot_'.$i} }}</td>
-                       @endif
-
+                        <th></th>
+                        <th  colspan="2">Tva mensuelle</th>
+                        <th>Cnss</th>
+                        <th colspan="2">Ir</th>
+                        <th colspan="2">Droit de timbre</th>
                     </tr>
-                @endfor
-            </table>
-        </details>  
-
-        <details open>
-            <summary class="fw-bold fs-4">Déclaration trimistrielle</summary>
-            <table class="table table-bordered table-hover text-center">
-                <tr>
-                    <th></th>
-                    <th colspan="2">Acompte</th>
-                    <th colspan="2">Tva trimistrielle</th>
-                </tr>
-                <tr>
-                    <th></th>
-                    <th>Date de depot</th>
-                    <th>numero de depot</th>
-
-                    <th>Date de depot</th>
-                    <th>numero de depot</th>
-                </tr>
-                @for ($i = 0; $i < 5; $i++)
                     <tr>
-                        @if ($i==0)
-                            <th>Regularisation</th>
-                            @if ($Acompte == null)
+                        <th></th>
+                        <th>Date de depot</th>
+                        <th>numero de depot</th>
+    
+                        <th>Date de depot</th>
+    
+                        <th>Date de depot</th>
+                        <th>numero de depot</th>
+    
+                        <th>Date de depot</th>
+                        <th>numero de depot</th>
+                    </tr>
+                    @for ($i = 1; $i < 13; $i++)
+                        <tr>
+                           <th>Mois {{$i}}</th>
+    
+                           @if ($Tvam == null)
                                 <td></td>
                                 <td></td>
                             @else
-                                <td>{{ $Acompte->{'date_depot_'.$i} }}</td>
-                                <td>{{ $Acompte->{'num_depot_'.$i} }}</td>
-                            @endif
-                            @php
-                                continue;
-                            @endphp
-                        @endif
-
-                       <th>Trimestre {{$i}}</th>
-
-                        @if ($Acompte == null)
+                                <td>{{ $Tvam->{'date_depot_'.$i} }}</td>
+                                <td>{{ $Tvam->{'num_depot_'.$i} }}</td>
+                           @endif
+                           
+                           @if ($Cnss == null)
+                                <td></td>
+                            @else
+                                <td>{{ $Cnss->{'date_depot_'.$i} }}</td>
+                           @endif
+    
+                           @if ($Ir == null)
                                 <td></td>
                                 <td></td>
-                        @else
-                                <td>{{ $Acompte->{'date_depot_'.$i} }}</td>
-                                <td>{{ $Acompte->{'num_depot_'.$i} }}</td>
-                        @endif
-
-                        @if ($Tvat == null)
+                            @else
+                                <td>{{ $Ir->{'date_depot_'.$i} }}</td>
+                                <td>{{ $Ir->{'num_depot_'.$i} }}</td>
+                           @endif
+    
+                           @if ($Droittimber == null)
                                 <td></td>
                                 <td></td>
-                        @else
-                                <td>{{ $Tvat->{'date_depot_'.$i} }}</td>
-                                <td>{{ $Tvat->{'num_depot_'.$i} }}</td>
-                        @endif
-                    
-
+                            @else
+                                <td>{{ $Droittimber->{'date_depot_'.$i} }}</td>
+                                <td>{{ $Droittimber->{'num_depot_'.$i} }}</td>
+                           @endif
+    
+                        </tr>
+                    @endfor
+                </table>
+            </details>  
+    
+            <details open>
+                <summary class="fw-bold fs-4">Déclaration trimistrielle</summary>
+                <table class="table table-bordered table-hover text-center border-dark">
+                    <tr>
+                        <th></th>
+                        <th colspan="2">Acompte</th>
+                        <th colspan="2">Tva trimistrielle</th>
                     </tr>
-                @endfor
-            </table>
-        </details>  
-
-        <details open>
-            <summary class="fw-bold fs-4">Déclaration Annuelle</summary>
-            <table class="table table-bordered table-hover text-center">
-                <tr>
-                    <th></th>
-                    <th>Etat 9421</th>
-                    <th>Bilan</th>
-                    <th>Tp</th>
-                    <th>Cm</th>
-                    <th>Ir Prof Agricole</th>
-                </tr>
-                <tr>
-                    <th>Date de depot</th>
-
-                    @if ($Etat == null)
-                        <td></td>
-                    @else
-                        <td>{{ $Etat->date_depot }}</td>
-                    @endif
-                    @if ($Bilan == null)
-                        <td></td>
-                    @else
-                        <td>{{ $Bilan->date_depot }}</td>
-                    @endif
-                    @if ($Tp == null)
-                        <td></td>
-                    @else
-                        <td>{{ $Tp->date_depot }}</td>
-                    @endif
-                    @if ($Cm == null)
-                        <td></td>
-                    @else
-                        <td>{{ $Cm->date_depot }}</td>
-                    @endif
-                    @if ($Irprof == null)
-                        <td></td>
-                    @else
-                        <td>{{ $Irprof->date_depot }}</td>
-                    @endif
-                </tr>
-                <tr>
-                    <th>Numero de depot</th>
-
-                    @if ($Etat == null)
+                    <tr>
+                        <th></th>
+                        <th>Date de depot</th>
+                        <th>numero de depot</th>
+    
+                        <th>Date de depot</th>
+                        <th>numero de depot</th>
+                    </tr>
+                    @for ($i = 0; $i < 5; $i++)
+                        <tr>
+                            @if ($i==0)
+                                <th>Regularisation</th>
+                                @if ($Acompte == null)
+                                    <td></td>
+                                    <td></td>
+                                @else
+                                    <td>{{ $Acompte->{'date_depot_'.$i} }}</td>
+                                    <td>{{ $Acompte->{'num_depot_'.$i} }}</td>
+                                @endif
+                                @php
+                                    continue;
+                                @endphp
+                            @endif
+    
+                           <th>Trimestre {{$i}}</th>
+    
+                            @if ($Acompte == null)
+                                    <td></td>
+                                    <td></td>
+                            @else
+                                    <td>{{ $Acompte->{'date_depot_'.$i} }}</td>
+                                    <td>{{ $Acompte->{'num_depot_'.$i} }}</td>
+                            @endif
+    
+                            @if ($Tvat == null)
+                                    <td></td>
+                                    <td></td>
+                            @else
+                                    <td>{{ $Tvat->{'date_depot_'.$i} }}</td>
+                                    <td>{{ $Tvat->{'num_depot_'.$i} }}</td>
+                            @endif
+                        
+    
+                        </tr>
+                    @endfor
+                </table>
+            </details>  
+    
+            <details open>
+                <summary class="fw-bold fs-4">Déclaration Annuelle</summary>
+                <table class="table table-bordered table-hover text-center border-dark">
+                    <tr>
+                        <th></th>
+                        <th>Etat 9421</th>
+                        <th>Bilan</th>
+                        <th>Tp</th>
+                        <th>Cm</th>
+                        <th>Ir Prof Agricole</th>
+                    </tr>
+                    <tr>
+                        <th>Date de depot</th>
+    
+                        @if ($Etat == null)
                             <td></td>
-                    @else
-                        <td>{{ $Etat->num_depot }}</td>
-                    @endif
-
-                    @if ($Bilan == null)
+                        @else
+                            <td>{{ $Etat->date_depot }}</td>
+                        @endif
+                        @if ($Bilan == null)
                             <td></td>
-                    @else
-                        <td>{{ $Bilan->num_depot }}</td>
-                    @endif
-
-                    @if ($Tp == null)
-                        <td></td>
-                    @else
-                        <td>{{ $Tp->num_depot }}</td>
-                    @endif
-
-                    @if ($Cm == null)
-                        <td></td>
-                    @else
-                        <td>{{ $Cm->num_depot }}</td>
-                    @endif
-
-                    @if ($Irprof == null)
-                        <td></td>
-                    @else
-                        <td>{{ $Irprof->num_depot }}</td>
-                    @endif
-                </tr>
-            </table>
-        </details>  
+                        @else
+                            <td>{{ $Bilan->date_depot }}</td>
+                        @endif
+                        @if ($Tp == null)
+                            <td></td>
+                        @else
+                            <td>{{ $Tp->date_depot }}</td>
+                        @endif
+                        @if ($Cm == null)
+                            <td></td>
+                        @else
+                            <td>{{ $Cm->date_depot }}</td>
+                        @endif
+                        @if ($Irprof == null)
+                            <td></td>
+                        @else
+                            <td>{{ $Irprof->date_depot }}</td>
+                        @endif
+                    </tr>
+                    <tr>
+                        <th>Numero de depot</th>
+    
+                        @if ($Etat == null)
+                                <td></td>
+                        @else
+                            <td>{{ $Etat->num_depot }}</td>
+                        @endif
+    
+                        @if ($Bilan == null)
+                                <td></td>
+                        @else
+                            <td>{{ $Bilan->num_depot }}</td>
+                        @endif
+    
+                        @if ($Tp == null)
+                            <td></td>
+                        @else
+                            <td>{{ $Tp->num_depot }}</td>
+                        @endif
+    
+                        @if ($Cm == null)
+                            <td></td>
+                        @else
+                            <td>{{ $Cm->num_depot }}</td>
+                        @endif
+    
+                        @if ($Irprof == null)
+                            <td></td>
+                        @else
+                            <td>{{ $Irprof->num_depot }}</td>
+                        @endif
+                    </tr>
+                </table>
+            </details>  
+        </details>
+        <hr>
     @endif
-
 
 </body>
 </html>

@@ -16,6 +16,7 @@ class Irprof extends Model
         'clients_id',
         'date_depot',
         'num_depot',
+        'motif',
     'annee',
     ];
 

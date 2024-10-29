@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Client;
+use App\Models\History;
 use App\Models\Pv;
 use App\Models\User;
 use App\Models\Cnss;
@@ -31,9 +32,13 @@ class UserController extends Controller
     }
 
     public function login(Request $request){
-        if(Auth::attempt(['name'=>$request->collaborateur , 'password'=>$request->password])){
+        if(Auth::attempt(['name'=>$request->name , 'password'=>$request->password])){
+            $loggedUser = User::where('name' , Auth::user()->name);
+            $loggedUser->update([
+                'active'=>true,
+            ]);
             $request->session()->regenerate();
-            return redirect('/');
+            return redirect('/clients');
         }
         else{
             return back()->withErrors([
@@ -64,7 +69,7 @@ class UserController extends Controller
     }
 
     public function show(Request $request){
-        $users = User::where('role' , 'Responsable')->get();
+        $users = User::all();
 
         $clients = Client::all();
 
@@ -104,8 +109,34 @@ class UserController extends Controller
             'Cm'=>$Cm ?? null,
             'Pv'=>$Pv ?? null,
             'id'=>$request->query('id') ?? null,
-            'selectedClient'=>$selectedClient??null
+            'selectedClient'=>$selectedClient??null,
         ]);
+    }
+
+    public function modify(Request $request){
+
+        $userId = request('user_id');
+
+        $clients = Client::all();
+
+        foreach($clients as $client){
+            if($client->users_id == $userId){
+                $client->update([
+                    'users_id' => $request->input('user')
+                ]);
+            }
+        }
+
+        return redirect()->route('users.show')->with('collabmodified' , 'le collaborateur a été modifier!');
+    }
+
+    public function showTable(){
+        $clients = Client::all();
+        $users = User::all();
+
+        $lastUpdate = Client::select('updated_at')->orderBy('updated_at' , 'desc')->first()->value('updated_at');
+
+        return view('showUsersTable' , compact('clients' , 'users')+['lastUpdate'=>$lastUpdate??null]);
     }
 
     public function delete(User $user){

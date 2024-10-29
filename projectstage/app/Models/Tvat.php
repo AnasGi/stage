@@ -22,6 +22,10 @@ class Tvat extends Model
         'num_depot_3',
         'date_depot_4',
         'num_depot_4',
+        'motif_1',
+        'motif_2',
+        'motif_3',
+        'motif_4',
         'annee',
     ];
 

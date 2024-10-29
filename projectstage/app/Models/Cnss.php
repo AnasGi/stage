@@ -26,6 +26,18 @@ class Cnss extends Model
         'date_depot_10',
         'date_depot_11',
         'date_depot_12',
+        'motif_1',
+        'motif_2',
+        'motif_3',
+        'motif_4',
+        'motif_5',
+        'motif_6',
+        'motif_7',
+        'motif_8',
+        'motif_9',
+        'motif_10',
+        'motif_11',
+        'motif_12',
     'annee',
     ];
 

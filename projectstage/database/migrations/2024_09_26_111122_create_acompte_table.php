@@ -24,6 +24,11 @@ return new class extends Migration
             $table->string('num_depot_4')->nullable();
             $table->date('date_depot_5')->nullable();
             $table->string('num_depot_5')->nullable();
+            $table->string('motif_1')->nullable();
+            $table->string('motif_2')->nullable();
+            $table->string('motif_3')->nullable();
+            $table->string('motif_4')->nullable();
+            $table->string('motif_5')->nullable();
             $table->string('annee');
             $table->timestamps();
         });

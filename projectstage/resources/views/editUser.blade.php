@@ -42,7 +42,7 @@
     
                         <div class="d-grid gap-2">
                             <button type="submit" class="btn btn-primary">Modifier</button>
-                            <a href="/" class="btn btn-danger">Fermer</a>
+                            <a href="{{route('clients.index')}}" class="btn btn-danger">Fermer</a>
                         </div>
                     </form>
                 </div>

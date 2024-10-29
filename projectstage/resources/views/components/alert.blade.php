@@ -38,6 +38,7 @@
                     $DateDepot = new DateTime($activeData->{'date_depot_' . $i});
                     $curentDate = Datetime::createFromFormat('Y-m-d' , Date('Y-n-d'));
                     $thisMonthDateDepot = $activeData->{'date_depot_'.Date('n')};
+                    $thisTrimesterDateDepot = $activeData->{'date_depot_'.ceil(Date('n') / 3)};
 
                     $lastDayNextMonth = (new DateTime('last day of next month'));
 
@@ -48,28 +49,32 @@
                         $deadlineDate = $lastDayNextMonth->modify('-6 days');
                     }
                     elseif ($page === 'acompte') {
-                        if($lastMonthTrimester <= 12){
                             if($i==1){
                                 $year += 1;
                             }
-                            elseif ($i==2) {
+                            if ($i==2) {
+                                $year=Date('Y');
+                            }
+                            if ($i>2) {
+                                $year=Date('Y');
                                 $lastMonthTrimester+=3;
                             }
 
-                            $deadlineDate = (new DateTime("last day of {$year}-{$lastMonthTrimester}"))->modify('-3 days');
-                        }
+                            $deadlineDate = (new DateTime("last day of {$year}-{$lastMonthTrimester}"))->modify('-6 days');
+                        
                     }
                     elseif($page === 'tvat'){
+
+                        if ($i>=2) {
+                            $lastMonthTrimester +=3;
+                        }
                         if ($lastMonthTrimester > 12) {
                             $lastMonthTrimester = 1;
                             $year+=1;
                         }
-                        
-                        if ($i===2) {
-                            $lastMonthTrimester +=3;
-                        }
 
-                        $deadlineDate = (new DateTime("last day of {$year}-{$lastMonthTrimester}"))->modify('-3 days');
+
+                        $deadlineDate = (new DateTime("last day of {$year}-{$lastMonthTrimester}"))->modify('-6 days');
                     }
                     elseif ($page === 'etat') {
                         $year +=1;
@@ -98,10 +103,10 @@
                         $year +=1;
                         $month = 0;
 
-                        if (str_ends_with($activeData->clients->status , 'Morale')) {
+                        if ($activeData->clients->status == 'PM') {
                             $month = 3;    
                         }
-                        elseif (str_ends_with($activeData->clients->status , 'Physique')){
+                        elseif ($activeData->clients->status == 'PP' || str_starts_with($activeData->clients->status , 'SARL')){
                             $month = 4;
                         }
                         $deadlineDate = (new DateTime("last day of {$year}-{$month}"))->modify('-6 days');
@@ -117,16 +122,30 @@
                             @endphp
                         @endif  
 
-                @elseif($page === 'acompte' || $page === 'tvat')
-                        @if ($thisMonthDateDepot == null && ($curentDate >= $deadlineDate) && (Date('n') > $lastMonthTrimester && Date('n') < $lastMonthTrimester+3))
+                @elseif($page === 'tvat')
+                        @if ($thisTrimesterDateDepot == null && ($curentDate >= $deadlineDate) && (ceil(Date('n')/3) == $i))
                             @php
                                 $alertsNumber += 1;
                                 $trimestre = $i;
                             @endphp
                         @endif  
-
+                @elseif($page === 'acompte')
+                    @php
+                        if($i == 1){
+                            $nb = 1;
+                        }
+                        else{
+                            $nb = ceil(Date('n') / 3)+1;
+                        }
+                    @endphp
+                    @if ($activeData->{'date_depot_'.$nb} == null && ($curentDate >= $deadlineDate) && ($nb == $i))
+                        @php
+                            $alertsNumber += 1;
+                            $trimestre = $i;
+                        @endphp
+                    @endif  
                 @else
-                        @if($thisMonthDateDepot == null && ($curentDate >= $deadlineDate))
+                        @if($activeData->{'date_depot'} == null && ($curentDate >= $deadlineDate))
                             @php
                                 $alertsNumber += 1;
                             @endphp
@@ -140,7 +159,7 @@
 
 
 @if($alertsNumber != 0)
-    <p class="alert alert-warning fw-bold ">
+    <div class="alert alert-warning fw-bold d-flex align-items-center gap-2 mt-2">
 
         @if(!empty($mois))
             If faut saisir la date de depot du mois {{$mois}}! 
@@ -151,6 +170,11 @@
         @endif
 
         <span class="bg-secondary p-2 pt-0 pb-0 text-white rounded"> {{$alertsNumber}} </span>
-    </p>
+
+        <form action="{{route($page.'.index')}}">
+            <input type="text" name="alertFilter" id="" value="true" hidden>
+            <button class="btn btn-warning pt-0 pb-0 p-2 fw-bold" >Afficher</button>
+        </form>
+    </div>
 @endif
 

@@ -21,7 +21,7 @@ class CmController extends Controller
 
     // For the Admin role
     if (Auth::user()->role == 'Admin') {
-        $users = User::where('role', 'responsable')->get();
+        $users = User::all();
 
         // Filter by selected user if provided
         if ($request->input('name')) {
@@ -63,6 +63,10 @@ class CmController extends Controller
     } else {
         // If no year is provided, default to the current year
         $cmData->where('annee', Date('Y'));
+    }
+
+    if(request('alertFilter')){
+        $cmData->where('date_depot' , null);
     }
 
     // Finally, get the filtered data (only call `get()` once)
@@ -128,6 +132,7 @@ class CmController extends Controller
             'date_depot' => $request->input('date_depot'),
             'num_depot' => $request->input('num_depot'),
             'montant' => $request->input('montant'),
+            'motif' => $request->input('motif'),
         ]);
 
         return back()->with('mod' , "Modification reussite!");
@@ -143,74 +148,4 @@ class CmController extends Controller
         return back()->with('success' ,  'Supprission réussite!');
     }
 
-    public function import(Request $request)
-    {
-        // Validate the uploaded file
-        $request->validate([
-            'file' => 'required|mimes:csv,txt',
-        ]);
-
-        
-        // Open and read the file
-        $handle = fopen($request->file('file')->getRealPath(), 'r');
-
-        // Skip the first line
-        for ($i = 0; $i < 1; $i++) {
-            fgetcsv($handle, 1000, ',');
-        }
-
-        $dateDepot = [];
-        while (($row = fgetcsv($handle, 1000, ',')) !== false) {
-            if(!empty($row[3])){
-                try{
-                    array_push($dateDepot, Carbon::createFromFormat('d/m/Y', $row[3])->format('Y'));
-                }
-                catch(\Exception $e){
-                    continue;
-                }
-            }
-
-        }  
-        $minYear = min($dateDepot);
-
-        rewind($handle);
-        
-        // Loop through each row of the CSV
-        while (($row = fgetcsv($handle, 1000, ',')) !== false) {
-
-            if (!empty($row[3])) {
-                try {
-                    // Convert the date (adjust the format according to your CSV)
-                    $row[3] = Carbon::createFromFormat('d/m/Y', $row[3])->format('Y-m-d');
-                } catch (\Exception $e) {
-                    // Handle invalid date format
-                    $row[3] = null; // Set it to null or handle the error as needed
-                }
-            } else {
-                $row[3] = null; // If the date field is empty, set it to null
-            }
-
-            $clientId = Client::where('code' , $row[0])->value('id');
-
-            // Create a client record for each row
-
-            if(!is_null($clientId)){
-                Cm::create([
-                        "clients_id"=> $clientId,
-                        'date_depot' => $row[3],
-                        'num_depot' => $row[4],
-                        'montant' => $row[5],
-                'annee' => $minYear
-                ]);
-
-            }
-
-            
-        }
-
-        // Close the file handler
-        fclose($handle);
-
-        return back()->with('success', 'Cm data imported successfully!');
-    }
 }

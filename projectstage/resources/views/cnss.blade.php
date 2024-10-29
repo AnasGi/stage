@@ -14,7 +14,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </p>
     @endif
-    <x-menu></x-menu>
+    <x-menu :users="$users"></x-menu>
     @php
         $empty = false;
     @endphp
@@ -24,128 +24,85 @@
 
     <x-alert :activeData="$cnssData" page='cnss'></x-alert>
 
-    <table class="table table-bordered table-hover text-center overflow-scroll" style="width :200%">
-        <tr>
-            @if(auth()->user()->role == 'Admin')
-                <td colspan="3"></td>
-            @else
-                <td colspan="2"></td>
-            @endif
-            <td class="fw-bold fs-3">
+    <div class="overflow-x-scroll">
+        <table class="table table-bordered table-hover text-center border-dark" style="width: 200%">
+            <tr>
+                @if(auth()->user()->role == 'Admin')
+                    <td colspan="3"></td>
+                @else
+                    <td colspan="2"></td>
+                @endif
+                <td class="fw-bold fs-3 {{Date('n') == 1 ? 'bg-info' : ''}}">
+                    
+                    Janvier</td>
+                <td class="fw-bold fs-3 {{Date('n') == 2 ? 'bg-info' : ''}}">
+                    
+                    Fevrier</td>
+                <td class="fw-bold fs-3 {{Date('n') == 3 ? 'bg-info' : ''}}">
+                    
+                    Mars</td>
+                <td class="fw-bold fs-3 {{Date('n') == 4 ? 'bg-info' : ''}}">
+                    
+                    Avril</td>
+                <td class="fw-bold fs-3 {{Date('n') == 5 ? 'bg-info' : ''}}">
+                    
+                    Mai</td>
+                <td class="fw-bold fs-3 {{Date('n') == 6 ? 'bg-info' : ''}}">
+                    
+                    Juin</td>
+                <td class="fw-bold fs-3 {{Date('n') == 7 ? 'bg-info' : ''}}">
+                    
+                    Julliet</td>
+                <td class="fw-bold fs-3 {{Date('n') == 8 ? 'bg-info' : ''}}">
+                    
+                    Aout</td>
+                <td class="fw-bold fs-3 {{Date('n') == 9 ? 'bg-info' : ''}}">
+                    
+                    Septembre</td>
+                <td class="fw-bold fs-3 {{Date('n') == 10 ? 'bg-info' : ''}}">
+                    
+                    Octobre</td>
+                <td class="fw-bold fs-3 {{Date('n') == 11 ? 'bg-info' : ''}}">
+                    
+                    Novembre</td>
+                <td class="fw-bold fs-3 {{Date('n') == 12 ? 'bg-info' : ''}}">
+                    
+                    Decembre</td>
+            </tr>
+            <tr>
+                <th>code client</th>
+                <th>entreprise</th>
+                @if(auth()->user()->role == 'Admin')
+                    <th>collaborateur</th>
+                @endif
+                @for($i = 0 ; $i < 12 ; $i++)
+                    <th>date de depot</th>
+                @endfor
+                
+            </tr>
+            @forelse ($cnssData as $cnss)
+            <tr>
+                <td>{{$cnss->clients->code}}</td>
+                <td>{{$cnss->clients->nom}}</td>
+                @if(auth()->user()->role == 'Admin')
+                    <td>{{$cnss->clients->users->name}}</td>
+                @endif
+                <x-monthcheck :activeData="$cnss" page='cnss'></x-monthcheck>
+                <td style="vertical-align: middle"><a href="{{route('cnss.destroy' , $cnss)}}" class="btn btn-danger" onclick="return confirm('Vous-etre sure de supprimer cette donnée?')">supprimer</a></td>
+                <td style="vertical-align: middle"><a href="{{route('cnss.update' , $cnss)}}" class="btn btn-primary">modifier</a></td>
+            </tr>
+            @empty
                 @php
-                    if(Date('n') == 1){
-                        echo "<span class=' bg-info rounded p-1 pt-0 pb-0 '</span>";
-                    } 
+                    $empty = true;
                 @endphp
-                Janvier</td>
-            <td class="fw-bold fs-3">
-                @php
-                    if(Date('n') == 2){
-                        echo "<span class=' bg-info rounded p-1 pt-0 pb-0 '</span>";
-                    } 
-                @endphp
-                Fevrier</td>
-            <td class="fw-bold fs-3">
-                @php
-                    if(Date('n') == 3){
-                        echo "<span class=' bg-info rounded p-1 pt-0 pb-0 '</span>";
-                    } 
-                @endphp
-                Mars</td>
-            <td class="fw-bold fs-3">
-                @php
-                    if(Date('n') == 4){
-                        echo "<span class=' bg-info rounded p-1 pt-0 pb-0 '</span>";
-                    } 
-                @endphp
-                Avril</td>
-            <td class="fw-bold fs-3">
-                @php
-                    if(Date('n') == 5){
-                        echo "<span class=' bg-info rounded p-1 pt-0 pb-0 '</span>";
-                    } 
-                @endphp
-                Mai</td>
-            <td class="fw-bold fs-3">
-                @php
-                    if(Date('n') == 6){
-                        echo "<span class=' bg-info rounded p-1 pt-0 pb-0 '</span>";
-                    } 
-                @endphp
-                Juin</td>
-            <td class="fw-bold fs-3">
-                @php
-                    if(Date('n') == 7){
-                        echo "<span class=' bg-info rounded p-1 pt-0 pb-0 '</span>";
-                    } 
-                @endphp
-                Julliet</td>
-            <td class="fw-bold fs-3">
-                @php
-                    if(Date('n') == 8){
-                        echo "<span class=' bg-info rounded p-1 pt-0 pb-0 '</span>";
-                    } 
-                @endphp
-                Aout</td>
-            <td class="fw-bold fs-3">
-                @php
-                    if(Date('n') == 9){
-                        echo "<span class=' bg-info rounded p-1 pt-0 pb-0 '</span>";
-                    } 
-                @endphp
-                September</td>
-            <td class="fw-bold fs-3">
-                @php
-                    if(Date('n') == 10){
-                        echo "<span class=' bg-info rounded p-1 pt-0 pb-0 '</span>";
-                    } 
-                @endphp
-                Octobre</td>
-            <td class="fw-bold fs-3">
-                @php
-                    if(Date('n') == 11){
-                        echo "<span class=' bg-info rounded p-1 pt-0 pb-0 '</span>";
-                    } 
-                @endphp
-                Novembre</td>
-            <td class="fw-bold fs-3">
-                @php
-                    if(Date('n') == 12){
-                        echo "<span class=' bg-info rounded p-1 pt-0 pb-0 '</span>";
-                    } 
-                @endphp
-                Decembre</td>
-        </tr>
-        <tr>
-            <th>code client</th>
-            <th>entreprise</th>
-            @if(auth()->user()->role == 'Admin')
-                <th>collaborateur</th>
-            @endif
-            @for($i = 0 ; $i < 12 ; $i++)
-                <th>date de depot</th>
-            @endfor
-            
-        </tr>
-        @forelse ($cnssData as $cnss)
-        <tr>
-            <td>{{$cnss->clients->code}}</td>
-            <td>{{$cnss->clients->nom}}</td>
-            @if(auth()->user()->role == 'Admin')
-                <td>{{$cnss->clients->users->name}}</td>
-            @endif
-            <x-monthcheck :activeData="$cnss" page='cnss'></x-monthcheck>
-            <td><a href="{{route('cnss.destroy' , $cnss)}}" class="btn btn-danger" onclick="confirm('Vous-etre sure de supprimer cette donnée?')">supprimer</a></td>
-            <td><a href="{{route('cnss.update' , $cnss)}}" class="btn btn-primary">modifier</a></td>
-        </tr>
-        @empty
-            @php
-                $empty = true;
-            @endphp
-        @endforelse
-    </table>
+            @endforelse
+        </table>
+    </div>
     @if ($empty)
-        <p class="text-center fw-bold fs-4 mt-5 text-danger">Aucune resultat !</p>
+        <div class="d-flex justify-content-center align-items-center gap-3  mt-4">
+            <img src="{{ asset('imgs/motif.png') }}" style="width:60px; height:60px;" alt="motif">
+            <p class="text-center fw-bold fs-4 m-0 text-danger">Pas de données {{request('annee') ?? Date('Y')}}</p>
+        </div>
     @endif
 </body>
 </html>

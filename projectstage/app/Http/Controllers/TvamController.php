@@ -20,7 +20,7 @@ class TvamController extends Controller
 
         if(Auth::user()->role == 'Admin'){
 
-            $users = User::where('role' , 'responsable')->get();
+            $users = User::all();
             if ($request->input('name')) {
                 $userId = $request->input('name');
                 $tvamData->whereHas('clients', function ($query) use ($userId) {
@@ -50,6 +50,10 @@ class TvamController extends Controller
             $tvamData->where('annee', $request->input('annee'));
         } else {
             $tvamData->where('annee', Date('Y'));
+        }
+
+        if(request('alertFilter')){
+            $tvamData->where('date_depot_'.Date('n') , null);
         }
 
         $tvamData = $tvamData->get();
@@ -153,6 +157,19 @@ class TvamController extends Controller
             'num_depot_11' => $request->input('num_depot_11'),
             'date_depot_12' => $request->input('date_depot_12'),
             'num_depot_12' => $request->input('num_depot_12'),
+
+            'motif_1' => $request->input('motif_1'),
+            'motif_2' => $request->input('motif_2'),
+            'motif_3' => $request->input('motif_3'),
+            'motif_4' => $request->input('motif_4'),
+            'motif_5' => $request->input('motif_5'),
+            'motif_6' => $request->input('motif_6'),
+            'motif_7' => $request->input('motif_7'),
+            'motif_8' => $request->input('motif_8'),
+            'motif_9' => $request->input('motif_9'),
+            'motif_10' => $request->input('motif_10'),
+            'motif_11' => $request->input('motif_11'),
+            'motif_12' => $request->input('motif_12'),
         ]);
 
         return back()->with('mod' , "Modification reussite!");
@@ -168,100 +185,4 @@ class TvamController extends Controller
         return back()->with('success' ,  'Supprission réussite!');
     }
 
-    public function import(Request $request)
-    {
-        // Validate the uploaded file
-        $request->validate([
-            'file' => 'required|mimes:csv,txt',
-        ]);
-
-        
-        // Open and read the file
-        $handle = fopen($request->file('file')->getRealPath(), 'r');
-
-        // Skip the first line
-        for ($i = 0; $i < 1; $i++) {
-            fgetcsv($handle, 1000, ',');
-        }
-
-        $dateDepot = [];
-        while (($row = fgetcsv($handle, 1000, ',')) !== false) {
-            if(!empty($row[3])){
-                try{
-                    array_push($dateDepot, Carbon::createFromFormat('d/m/Y', $row[3])->format('Y'));
-                }
-                catch(\Exception $e){
-                    continue;
-                }
-            }
-
-        }  
-        $minYear = min($dateDepot);
-
-        rewind($handle);
-        
-        // Loop through each row of the CSV
-        while (($row = fgetcsv($handle, 1000, ',')) !== false) {
-
-            for($i = 3 ; $i< 27 ; $i++){
-                if($i % 2 !== 0){
-                    if (!empty($row[$i])) {
-                        try {
-                            // Convert the date (adjust the format according to your CSV)
-                            $row[$i] = Carbon::createFromFormat('d/m/Y', $row[$i])->format('Y-m-d');
-                        } catch (\Exception $e) {
-                            // Handle invalid date format
-                            $row[$i] = null; // Set it to null or handle the error as needed
-                        }
-                    } else {
-                        $row[$i] = null; // If the date field is empty, set it to null
-                    }
-                }
-            }
-
-
-            $clientId = Client::where('code' , $row[0])->value('id');
-
-            // Create a client record for each row
-
-            if(!is_null($clientId)){
-                Tvam::create([
-                        "clients_id"=> $clientId,
-                        'date_depot_1' => $row[3],
-                        'num_depot_1' => $row[4],
-                        'date_depot_2' => $row[5],
-                        'num_depot_2' => $row[6],
-                        'date_depot_3' => $row[7],
-                        'num_depot_3' => $row[8],
-                        'date_depot_4' => $row[9],
-                        'num_depot_4' => $row[10],
-                        'date_depot_5' => $row[11],
-                        'num_depot_5' => $row[12],
-                        'date_depot_6' => $row[13],
-                        'num_depot_6' => $row[14],
-                        'date_depot_7' => $row[15],
-                        'num_depot_7' => $row[16],
-                        'date_depot_8' => $row[17],
-                        'num_depot_8' => $row[18],
-                        'date_depot_9' => $row[19],
-                        'num_depot_9' => $row[20],
-                        'date_depot_10' => $row[21],
-                        'num_depot_10' => $row[22],
-                        'date_depot_11' => $row[23],
-                        'num_depot_11' => $row[24],
-                        'date_depot_12' => $row[25],
-                        'num_depot_12' => $row[26],
-                'annee' => $minYear
-                ]);
-
-            }
-
-            
-        }
-
-        // Close the file handler
-        fclose($handle);
-
-        return back()->with('success', 'Tvam data imported successfully!');
-    }
 }

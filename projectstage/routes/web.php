@@ -34,10 +34,13 @@ Route::middleware(['auth'])->group(function () {
     
     //show users
     Route::get('/afficher-users' , [UserController::class , 'show'])->name('users.show');
+    Route::get('/afficher-users/table' , [UserController::class , 'showTable'])->name('users.showTable');
 
-    //delet users
+    //delete users
     Route::get('/delete-users/{user}' , [UserController::class , 'delete'])->name('user.delete');
 
+    //modClientsUser
+    Route::post('/afficher-users/modifier-client-user/{user_id}' , [UserController::class , 'modify'])->name('users.modHisClients');
 
     // signup
     Route::get('/nouvel-responsable' , [RegisterController::class , 'index'])->name('register.form');
@@ -50,9 +53,15 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/clients', [ClientController::class, 'index'])->name('clients.index');
     Route::post('/clients/import-clients', [ClientController::class, 'import'])->name('clients.import');
     Route::post('/clients/ajouter', [ClientController::class, 'store'])->name('clients.store');
-    Route::get('/clients/supprimer/{client}', [ClientController::class, 'destroy'])->name('clients.destroy');
+    Route::get('/clients/supprimer/{client}/{deletetype}', [ClientController::class, 'destroy'])->name('clients.destroy');
     Route::put('/clients/modifier/{client}', [ClientController::class, 'update'])->name('clients.update');
     Route::get('/clients/modifier/{client}', [ClientController::class, 'edit'])->name('clients.edit');
+    Route::get('/clients/deleted' , [ClientController::class , 'show'])->name('clients.deleted');
+    Route::post('/clients/deleted/{id}' , [ClientController::class , 'storeMotif'])->name('clients.motif');
+    Route::get('/clients/deleted/table' , [ClientController::class , 'showTable'])->name('clients.deletedTable');
+    Route::get('/clients/restore/{id}' , [ClientController::class , 'restore'])->name('clients.restore');
+    Route::get('/clients/history' , [ClientController::class , 'history'])->name('clients.history');
+    Route::get('/clients/new' , [ClientController::class , 'newClients'])->name('clients.new');
 
     // CNSS
     Route::get('/cnss', [CnssController::class, 'index'])->name('cnss.index');

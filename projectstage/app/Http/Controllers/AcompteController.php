@@ -21,7 +21,7 @@ class AcompteController extends Controller
 
     // For the Admin role
     if (Auth::user()->role == 'Admin') {
-        $users = User::where('role', 'responsable')->get();
+        $users = User::all();
 
         // Filter by selected user if provided
         if ($request->input('name')) {
@@ -58,6 +58,10 @@ class AcompteController extends Controller
     } else {
         // If no year is provided, default to the current year
         $acompteData->where('annee', Date('Y'));
+    }
+
+    if(request('alertFilter')){
+        $acompteData->where('date_depot_'.(ceil(Date('n')/3)+1) , null);
     }
 
     // Finally, get the filtered data (only call `get()` once)
@@ -138,6 +142,12 @@ class AcompteController extends Controller
             'num_depot_4' => $request->input('num_depot_4'),
             'date_depot_5' => $request->input('date_depot_5'),
             'num_depot_5' => $request->input('num_depot_5'),
+
+            'motif_1' => $request->input('motif_1'),
+            'motif_2' => $request->input('motif_2'),
+            'motif_3' => $request->input('motif_3'),
+            'motif_4' => $request->input('motif_4'),
+            'motif_5' => $request->input('motif_5'),
         ]);
 
         return back()->with('mod' , "Modification reussite!");
@@ -153,85 +163,4 @@ class AcompteController extends Controller
         return back()->with('success' ,  'Supprission réussite!');
     }
 
-    public function import(Request $request)
-    {
-        // Validate the uploaded file
-        $request->validate([
-            'file' => 'required|mimes:csv,txt',
-        ]);
-
-        
-        // Open and read the file
-        $handle = fopen($request->file('file')->getRealPath(), 'r');
-
-        // Skip the first line
-        for ($i = 0; $i < 1; $i++) {
-            fgetcsv($handle, 1000, ',');
-        }
-
-        $dateDepot = [];
-        while (($row = fgetcsv($handle, 1000, ',')) !== false) {
-            if(!empty($row[3])){
-                try{
-                    array_push($dateDepot, Carbon::createFromFormat('d/m/Y', $row[3])->format('Y'));
-                }
-                catch(\Exception $e){
-                    continue;
-                }
-            }
-
-        }  
-        $minYear = min($dateDepot);
-
-        rewind($handle);
-        
-        // Loop through each row of the CSV
-        while (($row = fgetcsv($handle, 1000, ',')) !== false) {
-
-            for($i = 3 ; $i< 14 ; $i++){
-                if($i % 2 !== 0){
-                    if (!empty($row[$i])) {
-                        try {
-                            // Convert the date (adjust the format according to your CSV)
-                            $row[$i] = Carbon::createFromFormat('d/m/Y', $row[$i])->format('Y-m-d');
-                        } catch (\Exception $e) {
-                            // Handle invalid date format
-                            $row[$i] = null; // Set it to null or handle the error as needed
-                        }
-                    } else {
-                        $row[$i] = null; // If the date field is empty, set it to null
-                    }
-                }
-            }
-
-
-            $clientId = Client::where('code' , $row[0])->value('id');
-
-            // Create a client record for each row
-
-            if(!is_null($clientId)){
-                Acompte::create([
-                        "clients_id"=> $clientId,
-                        'date_depot_1' => $row[3],
-                        'num_depot_1' => $row[4],
-                        'date_depot_2' => $row[5],
-                        'num_depot_2' => $row[6],
-                        'date_depot_3' => $row[7],
-                        'num_depot_3' => $row[8],
-                        'date_depot_4' => $row[9],
-                        'num_depot_4' => $row[10],
-                        'date_depot_5' => $row[11],
-                        'num_depot_5' => $row[12],
-                        'annee'=>$minYear
-                ]);
-            }
-
-            
-        }
-
-        // Close the file handler
-        fclose($handle);
-
-        return back()->with('success', 'Acompte data imported successfully!');
-    }
 }

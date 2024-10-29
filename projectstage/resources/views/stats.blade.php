@@ -10,10 +10,20 @@
     <title>Statistiques</title>
 </head>
 <body class="p-2">
-    <x-menu></x-menu>
+    <x-menu :users="$users"></x-menu>
 
     <div class="d-flex justify-content-end mt-3">
         <form action="{{route('stats.index')}}" class="d-flex justify-content-center align-items-center gap-2">
+            <select name="userId" class="p-1">
+                <option value="">Choisir un collaborateur</option>
+                @foreach ($users as $item)
+                    @if (request('userId') == $item->id)
+                        <option value="{{$item->id}}" selected>{{$item->name}}</option>
+                    @else
+                        <option value="{{$item->id}}">{{$item->name}}</option>
+                    @endif
+                @endforeach
+            </select>
             <input type="text" name="annee" id="" placeholder="Année" value="{{request('annee')}}">
             <button class="btn btn-dark">Appliquer</button>
         </form>

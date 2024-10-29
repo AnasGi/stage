@@ -14,7 +14,7 @@ use App\Models\Bilan;
 use App\Models\Cm;
 use App\Models\Pv;
 use App\Models\Tp;
-use Date;
+use App\Models\User;
 use DateTime;
 use Illuminate\Http\Request;
 
@@ -22,38 +22,127 @@ class StatsController extends Controller
 {
     public function index(Request $request){
 
+        $users = User::all();
+
         $annee = Date("Y");
         if($request->input('annee')){
             $annee = $request->input('annee');
         }
 
+        $userId = $request->input('userId', null); // Default to null if not provided
         $cnssTable = [];
-        $Cnss = Cnss::where('annee' , $annee)->get();
-        
         $tvamTable = [];
-        $Tvam = Tvam::where('annee' , $annee)->get();
-        
         $irTable = [];
-        $Ir = Ir::where('annee' , $annee)->get();
-        
         $droittimbreTable = [];
-        $Droittimber = Droittimber::where('annee' , $annee)->get();
-
         $acompteTable = [];
-        $Acompte = Acompte::where('annee' , $annee)->get();
-
         $tvatTable = [];
-        $Tvat = Tvat::where('annee' , $annee)->get();
-
         $bilanTable = [];
-        $Bilan = Bilan::where('annee' , $annee)->get();
-
         $others = [];
-        $Etat = Etat::where('annee' , $annee)->get();
-        $Cm = Cm::where('annee' , $annee)->get();
-        $Pv = Pv::where('annee' , $annee)->get();
-        $Irprof = Irprof::where('annee' , $annee)->get();
-        $Tp = Tp::where('annee' , $annee)->get();
+
+        // CNSS Query
+        $CnssQuery = Cnss::where('annee', $annee);
+        if ($userId) {
+            $CnssQuery->whereHas('clients', function ($query) use ($userId) {
+                $query->where('users_id', '=', $userId);
+            });
+        }
+        $Cnss = $CnssQuery->get();
+
+        // TVAM Query
+        $TvamQuery = Tvam::where('annee', $annee);
+        if ($userId) {
+            $TvamQuery->whereHas('clients', function ($query) use ($userId) {
+                $query->where('users_id', '=', $userId);
+            });
+        }
+        $Tvam = $TvamQuery->get();
+
+        // IR Query
+        $IrQuery = Ir::where('annee', $annee);
+        if ($userId) {
+            $IrQuery->whereHas('clients', function ($query) use ($userId) {
+                $query->where('users_id', '=', $userId);
+            });
+        }
+        $Ir = $IrQuery->get();
+
+        // Droittimbre Query
+        $DroittimberQuery = Droittimber::where('annee', $annee);
+        if ($userId) {
+            $DroittimberQuery->whereHas('clients', function ($query) use ($userId) {
+                $query->where('users_id', '=', $userId);
+            });
+        }
+        $Droittimber = $DroittimberQuery->get();
+
+        // Acompte Query
+        $AcompteQuery = Acompte::where('annee', $annee);
+        if ($userId) {
+            $AcompteQuery->whereHas('clients', function ($query) use ($userId) {
+                $query->where('users_id', '=', $userId);
+            });
+        }
+        $Acompte = $AcompteQuery->get();
+
+        // TVAT Query
+        $TvatQuery = Tvat::where('annee', $annee);
+        if ($userId) {
+            $TvatQuery->whereHas('clients', function ($query) use ($userId) {
+                $query->where('users_id', '=', $userId);
+            });
+        }
+        $Tvat = $TvatQuery->get();
+
+        // Bilan Query
+        $BilanQuery = Bilan::where('annee', $annee);
+        if ($userId) {
+            $BilanQuery->whereHas('clients', function ($query) use ($userId) {
+                $query->where('users_id', '=', $userId);
+            });
+        }
+        $Bilan = $BilanQuery->get();
+
+        // Others Queries
+        $EtatQuery = Etat::where('annee', $annee);
+        if ($userId) {
+            $EtatQuery->whereHas('clients', function ($query) use ($userId) {
+                $query->where('users_id', '=', $userId);
+            });
+        }
+        $Etat = $EtatQuery->get();
+
+        $CmQuery = Cm::where('annee', $annee);
+        if ($userId) {
+            $CmQuery->whereHas('clients', function ($query) use ($userId) {
+                $query->where('users_id', '=', $userId);
+            });
+        }
+        $Cm = $CmQuery->get();
+
+        $PvQuery = Pv::where('annee', $annee);
+        if ($userId) {
+            $PvQuery->whereHas('clients', function ($query) use ($userId) {
+                $query->where('users_id', '=', $userId);
+            });
+        }
+        $Pv = $PvQuery->get();
+
+        $IrprofQuery = Irprof::where('annee', $annee);
+        if ($userId) {
+            $IrprofQuery->whereHas('clients', function ($query) use ($userId) {
+                $query->where('users_id', '=', $userId);
+            });
+        }
+        $Irprof = $IrprofQuery->get();
+
+        $TpQuery = Tp::where('annee', $annee);
+        if ($userId) {
+            $TpQuery->whereHas('clients', function ($query) use ($userId) {
+                $query->where('users_id', '=', $userId);
+            });
+        }
+        $Tp = $TpQuery->get();
+
 
         //cnss
         if($Cnss->count() !== 0){
@@ -74,7 +163,7 @@ class StatsController extends Controller
                 foreach ($Cnss as $cnss) { 
     
                     $dateDepot = new DateTime($cnss->{ "date_depot_" .$i });
-                    if( $cnss->{ "date_depot_" .$i } != null && ($dateDepot < $compDate) ){
+                    if( $cnss->{ "date_depot_" .$i } != null && ($dateDepot <= $compDate) ){
                         $nbre+=1;
                     } 
                 }
@@ -105,7 +194,7 @@ class StatsController extends Controller
                 foreach ($Tvam as $tvam) { 
 
                     $dateDepot = new DateTime($tvam->{ "date_depot_" .$i });
-                    if( $tvam->{ "date_depot_" .$i } != null && ($dateDepot < $compDate)  ){
+                    if( $tvam->{ "date_depot_" .$i } != null && ($dateDepot <= $compDate)  ){
                         $nbre+=1;
                     } 
                 }
@@ -132,7 +221,7 @@ class StatsController extends Controller
                 foreach ($Ir as $ir) { 
     
                     $dateDepot = new DateTime($ir->{ "date_depot_" .$i });
-                    if( $ir->{ "date_depot_" .$i } != null && ($dateDepot < $compDate)  ){
+                    if( $ir->{ "date_depot_" .$i } != null && ($dateDepot <= $compDate)  ){
                         $nbre+=1;
                     } 
                 }
@@ -159,7 +248,7 @@ class StatsController extends Controller
                 foreach ($Droittimber as $dt) { 
     
                     $dateDepot = new DateTime($dt->{ "date_depot_" .$i });
-                    if( $dt->{ "date_depot_" .$i } != null && ($dateDepot < $compDate)  ){
+                    if( $dt->{ "date_depot_" .$i } != null && ($dateDepot <= $compDate)  ){
                         $nbre+=1;
                     } 
                 }
@@ -192,7 +281,7 @@ class StatsController extends Controller
                 foreach ($Acompte as $acompte) { 
     
                     $dateDepot = new DateTime($acompte->{ "date_depot_" .$i });
-                    if( $acompte->{ "date_depot_" .$i } != null && ($dateDepot < $compDate)  ){
+                    if( $acompte->{ "date_depot_" .$i } != null && ($dateDepot <= $compDate)  ){
                         $nbre+=1;
                     } 
                 }
@@ -225,7 +314,7 @@ class StatsController extends Controller
                 foreach ($Tvat as $tvat) { 
     
                     $dateDepot = new DateTime($tvat->{ "date_depot_" .$i });
-                    if( $tvat->{ "date_depot_" .$i } != null && ($dateDepot < $compDate)  ){
+                    if( $tvat->{ "date_depot_" .$i } != null && ($dateDepot <= $compDate)  ){
                         $nbre+=1;
                     } 
                 }
@@ -241,35 +330,50 @@ class StatsController extends Controller
             $compDate = (new DateTime("last day of {$year}-{$month}"))->modify('-3 days');
             foreach($Etat as $etat){
                 $dateDepot = new DateTime($etat->date_depot);
-                if($etat->date_depot != null && ($dateDepot < $compDate)){
+                if($etat->date_depot != null && ($dateDepot <= $compDate)){
                     $nbre+=1;
                 }
             }
             $pourcentage = number_format((($nbre/$Etat->count())*100) , 2);
             array_push($others , $pourcentage);
         }
-        if($Tp->count() !== 0 || $Cm->count() !== 0){
+        else{
+            array_push($others , null);
+        }
+        if($Tp->count() !== 0){
             $nbre = 0;
             $month = 1;
             $compDate = (new DateTime("last day of {$year}-{$month}"))->modify('-3 days');
 
             foreach($Tp as $tp){
                 $dateDepot = new DateTime($tp->date_depot);
-                if($tp->date_depot != null && ($dateDepot < $compDate)){
+                if($tp->date_depot != null && ($dateDepot <= $compDate)){
                     $nbre+=1;
                 }
             }
             $pourcentage = number_format((($nbre/$Tp->count())*100) , 2);
             array_push($others , $pourcentage);
 
+        }
+        else{
+            array_push($others , null);
+        }
+        if($Cm->count() !== 0){
+            $nbre = 0;
+            $month = 1;
+            $compDate = (new DateTime("last day of {$year}-{$month}"))->modify('-3 days');
+
             foreach($Cm as $cm){
                 $dateDepot = new DateTime($cm->date_depot);
-                if($tp->date_depot != null && ($dateDepot < $compDate)){
+                if($cm->date_depot != null && ($dateDepot <= $compDate)){
                     $nbre+=1;
                 }
             }
             $pourcentage = number_format((($nbre/$Cm->count())*100) , 2);
             array_push($others , $pourcentage);
+        }
+        else{
+            array_push($others , null);
         }
         if($Irprof->count() !== 0){
             $nbre = 0;
@@ -277,12 +381,15 @@ class StatsController extends Controller
             $compDate = (new DateTime("last day of {$year}-{$month}"))->modify('-3 days');
             foreach($Irprof as $irprof){
                 $dateDepot = new DateTime($irprof->date_depot);
-                if($irprof->date_depot != null && ($dateDepot < $compDate)){
+                if($irprof->date_depot != null && ($dateDepot <= $compDate)){
                     $nbre+=1;
                 }
             }
             $pourcentage = number_format((($nbre/$Irprof->count())*100) , 2);
             array_push($others , $pourcentage);
+        }
+        else{
+            array_push($others , null);
         }
         if($Pv->count() !== 0){
             $nbre = 0;
@@ -290,12 +397,15 @@ class StatsController extends Controller
             $compDate = (new DateTime("last day of {$year}-{$month}"))->modify('-3 days');
             foreach($Pv as $pv){
                 $dateDepot = new DateTime($pv->date_depot);
-                if($pv->date_depot != null && ($dateDepot < $compDate)){
+                if($pv->date_depot != null && ($dateDepot <= $compDate)){
                     $nbre+=1;
                 }
             }
             $pourcentage = number_format((($nbre/$Pv->count())*100) , 2);
             array_push($others , $pourcentage);
+        }
+        else{
+            array_push($others , null);
         }
         if($Bilan->count() !== 0){
             $nbreP = 0;
@@ -304,10 +414,10 @@ class StatsController extends Controller
             $totalM = 0;
 
             foreach($Bilan as $bilan){
-                if (str_ends_with($bilan->clients->status , 'Morale')) {
+                if ($bilan->clients->status == 'PM') {
                     $month = 3;    
                 }
-                elseif (str_ends_with($bilan->clients->status , 'Physique')){
+                elseif ($bilan->clients->status == 'PP' || str_starts_with($bilan->clients->status , 'SARL')){
                     $month = 4;
                 }
                 $compDate = (new DateTime("last day of {$year}-{$month}"))->modify('-3 days');
@@ -316,13 +426,13 @@ class StatsController extends Controller
                 if($bilan->date_depot != null){
                     if($month == 3){
                         $totalM+=1;
-                        if(($dateDepot < $compDate)){
+                        if(($dateDepot <= $compDate)){
                             $nbreM+=1;
                         }
                     }
-                    else {
+                    elseif($month == 4) {
                         $totalP+=1;
-                        if(($dateDepot < $compDate)){
+                        if(($dateDepot <= $compDate)){
                             $nbreP+=1;
                         }
                     }
@@ -341,6 +451,9 @@ class StatsController extends Controller
 
             array_push($bilanTable , $pourcentageP , $pourcentageM);
         }
+        else{
+            array_push($others , null);
+        }
 
 
 
@@ -353,6 +466,7 @@ class StatsController extends Controller
             'Tvat'=>$tvatTable ?? null,
             'others'=>$others??null,
             'Bilan'=>$bilanTable ?? null,
+            'users'=>$users
         ]);
     }
 }
