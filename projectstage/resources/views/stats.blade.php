@@ -12,7 +12,10 @@
 <body class="p-2">
     <x-menu :users="$users"></x-menu>
 
-    <div class="d-flex justify-content-end mt-3">
+    <div class="d-flex justify-content-around mt-3 mb-5">
+        <h3 class="fw-bold">
+            <img src="{{asset("imgs/stats.png")}}" alt="statistiques" width="30">
+            Taux de respect de délais interne</h3>
         <form action="{{route('stats.index')}}" class="d-flex justify-content-center align-items-center gap-2">
             <select name="userId" class="p-1">
                 <option value="">Choisir un collaborateur</option>
@@ -29,9 +32,8 @@
         </form>
     </div>
 
-    <h3 class="text-center">Taux de respect de délais interne</h3>
 
-    <details>
+    <details open>
         <summary class="fw-bold fs-3">
            Déclarations mensuelle:
         </summary>
@@ -146,7 +148,7 @@
 
     <hr>
 
-    <details>
+    <details open>
         <summary class="fw-bold fs-3">
            Déclarations trimistrielle:
         </summary>
@@ -209,14 +211,14 @@
 
     <hr>
 
-    <details>
+    <details open>
         <summary class="fw-bold fs-3">
            Déclarations Annuelle:
         </summary>
         <div class="d-flex justify-content-center align-items-center gap-3 mt-3 flex-wrap">
             
             <div style="width: 45%">
-                <h4>Etat/IRPROF/CM/PV/TP</h4>
+                <h4>Etat/TP/CM/IRPROF/PV</h4>
                 <div id="chart7"></div>
                 <script>
                     var options = {

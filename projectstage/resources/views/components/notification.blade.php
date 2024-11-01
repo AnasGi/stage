@@ -156,7 +156,7 @@
             @endfor
         @endif
     @endforeach
-    <div class="d-flex align-items-center justify-content-center gap-2">
+    <div class="d-flex align-items-center justify-content-center gap-1">
         <span class="fw-bold" style="text-transform: capitalize">
             @if ($alertsNumber>0)
                 <a href="{{route($page.'.index')}}">

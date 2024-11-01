@@ -1,43 +1,69 @@
 @props(['page' , 'activeData' , 'users' , 'clients'])
 
 <style>
-    
 
+    .addCont {
+        position: fixed;
+        bottom: 10%;
+        right: 10%;
+        z-index: 1;
+    }
+
+    .addbtn {
+        border-radius: 50%;
+        width: 60px;
+        cursor: pointer;
+        box-shadow: 3px 3px 5px #818181;
+    }
+
+    .addmsg {
+        order: -1;
+        opacity: 0;
+        transition: .3s linear;
+        font-weight: bold;
+        background-color: #3422a6;
+        color: white;              
+        padding: 10px 15px;        
+        border-radius: 15px;       
+        font-size: 14px;
+    }
+    .addbtn:hover+.addmsg {
+       opacity: 1;
+    }
+
+    #addForm {
+        position: fixed;
+        top: .5rem;
+        width: 100%;
+        height: 98%;
+        z-index: 100;
+        display: none;
+        backdrop-filter: blur(3px);
+    }
+    #addForm form {
+        overflow-y: scroll;
+        width: 50%;
+        height: 100%;
+        padding: 15px;
+        background-color: white;
+    }
     #addForm input , #addForm textarea , #addForm select{
         margin: 10px 0px;
         outline: 1px solid black;
         border-radius: 0%;
     }
-
     #addForm label {
         font-weight: bold;
         display: inline-block;
         width: 250px
     }
-
-    #addForm {
-        padding: 10px 20px;
-    }
-
-    .addFormDetail {
-        padding: 10px ;
-        background-color: #D0ECE7;
-        width: 40%;
-        border-radius: 8px;
-    }
-
-    .addFormDetail summary {
-        font-weight: bold;
-        font-size: 18px
-    }
-
     .form-group {
         display: flex;
         align-items: center
     }
 
     @media screen and (max-width: 1100px) {
-        .addFormDetail {
+        #addForm form {
             width:60% !important;
         }
 
@@ -45,13 +71,30 @@
     }
 </style>
 
+<script>
+    function showAddForm() {
+        document.getElementById('addForm').style.display = 'flex';
+        document.body.style.overflow = "hidden";
+    }
+
+    function closeAddForm(){
+        document.getElementById('addForm').style.display = 'none';
+        document.body.style.overflow = "auto";
+    }
+</script>
+
 @error('code')
-    <span class="alert alert-danger fw-bold">Le code client doit etre unique!</span>
+    <p class="alert alert-danger fw-bold w-50">Le code client doit etre unique!</p>
 @enderror
 
-<details class="addFormDetail mb-2 mt-2">
-    <summary>Ajouter nouveaux données {{$page}}</summary>
-    <form id="addForm" action="{{route($page.'.store')}}" method="POST">
+<div class="addCont d-flex justify-content-center align-items-center gap-2">
+    <img src="{{asset ('imgs/add.png')}}" class="addbtn" alt="Ajouter" onclick="showAddForm()">
+    <span class="addmsg shadow">Ajouter nouveaux données {{$page=='droittimbre' ? 'droit de timbre' : $page }}</span>
+</div>
+
+
+<div id="addForm">
+    <form action="{{route($page.'.store')}}" method="POST" class="rounded shadow">
         @csrf    
         @if ($page != 'clients')
             <div class="form-group">
@@ -119,7 +162,7 @@
         @else
             <div class="form-group">
                 <label for="">Code de client: </label>
-                <input type="text" name="code" class="form-control" placeholder="Saisir un code supérieur a {{count($activeData)}}" required>
+                <input type="text" name="code" class="form-control" placeholder="Saisir le code client" required>
             </div>
             <div class="form-group">
                 <label for="">Nom de l'entreprise: </label>
@@ -165,15 +208,13 @@
             @endif
         @endif
     
-        <button type="submit" class="btn btn-success mt-2 w-100">Ajouter</button>
+        <div class="mt-2">
+            <button type="submit" class="btn btn-success w-50 fw-bold">Ajouter</button>
+            <button type="button" class="btn btn-danger fw-bold" onclick="closeAddForm()">Fermer</button>
+        </div>
     </form>
-</details>
+</div>
 
-@if(session('add'))
-    <p class="alert fw-bold fs-5 alert-success alert-dismissible fade show" role="alert">{{ session('add') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </p>
-@endif
 
 @if ($page != 'clients')
     <p class="m-0 mt-4 fw-bold">Nombre des données: {{count($activeData)}}</p>

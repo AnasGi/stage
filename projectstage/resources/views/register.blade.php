@@ -19,7 +19,7 @@
                     <form action="{{route('register')}}" method="POST">
                         @csrf
                         @if (session('newUser'))
-                            <p class="alert alert-success alert-dismissible fade show" role="alert">{{ session('newUser') }}
+                            <p class="alert fw-bold alert-success alert-dismissible fade show" role="alert">{{ session('newUser') }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </p>
                         @endif

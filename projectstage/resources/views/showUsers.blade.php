@@ -21,19 +21,19 @@
     <div class="d-flex justify-content-center ">
         <div class="w-75 detailCont">
             @if (session('userDlt'))
-                <p class="alert alert-success alert-dismissible mt-2 fade show" role="alert">{{ session('userDlt') }}
+                <p class="alert fw-bold alert-success alert-dismissible mt-2 fade show" role="alert">{{ session('userDlt') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </p>
             @endif 
             @if (session('collabmodified'))
-                <p class="alert alert-success alert-dismissible mt-2 fade show" role="alert">{{ session('collabmodified') }}
+                <p class="alert fw-bold alert-success alert-dismissible mt-2 fade show" role="alert">{{ session('collabmodified') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </p>
             @endif
             <div class="d-flex justify-content-between align-items-center bg-white shadow rounded p-3 mt-3 mb-3">
-                <h3 class="m-0">
+                <h3 class="m-0" >
                     Les Collaborateurs 
-                    <span class="bg-info rounded p-3 pt-1 pb-1 fs-4">{{count($users)}}</span>
+                    <span class="bg-info fs-6 fw-bold" style="border-radius: 50% ; padding:4px 7px ; vertical-align:super">{{count($users)}}</span>
                 </h3>
                 <a href="{{route('users.showTable')}}" class="btn btn-dark" style="font-size: 12px">Sous form d'un tableau</a>
                 <p class="m-0">Données de l'année {{Date('Y')}}</p>

@@ -35,7 +35,9 @@
 
 <div class="d-flex gap-2 align-items-start mt-3 mb-2">
     <details class="tools" style="width: 70%" open>
-        <summary>Rechercher par</summary>    
+        <summary style="text-transform: uppercase">
+            <img src="{{asset('imgs/filter.png')}}" alt="Rechercher" width="20">
+            Recherche par</summary>    
         <form action="{{route($page.'.index')}}" class="pb-0">
             <div class="searchForm d-flex gap-2 flex-wrap" style="margin-bottom: 11px">
                 <div>
@@ -93,7 +95,7 @@
 
     @if (auth()->user()->role == 'Admin' && $page == 'clients')
         <details class="tools" style="width: 30%" open>
-            <summary>Importer des données Excel</summary>    
+            <summary style="text-transform: uppercase">Importer des données Excel</summary>    
             <form action="{{ route($page.'.import') }}" method="POST" enctype="multipart/form-data" id="ImportForm" >
                 @csrf
                 <div class="d-flex align-items-center flex-wrap">

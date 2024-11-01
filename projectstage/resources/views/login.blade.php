@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="{{ asset( 'css/bootstrap.min.css' ) }}"> 
     <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
-    <title>Log in</title>
+    <title>Authentifier</title>
 </head>
 <body class="bg-light">
     
@@ -24,7 +24,7 @@
                         @csrf
                         <div class="form-group mb-3">
                             <label for="name" class="form-label">Nom d'utilisateur</label>
-                            <input type="text" class="form-control" id="name" name="name" value="{{old('name')}}" placeholder="Saisir votre username" required>
+                            <input type="text" class="form-control" id="name" name="name" value="{{old('name')}}" placeholder="Saisir votre Nom d'utilisateur" required>
                         </div>
                         <div class="form-group mb-3">
                             <label for="password" class="form-label">Mot de passe</label>
@@ -32,7 +32,7 @@
                         </div>
                         
                         <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary">Log In</button>
+                            <button type="submit" class="btn btn-primary fw-bold">Authentifier</button>
                         </div>
                     </form>
                 </div>

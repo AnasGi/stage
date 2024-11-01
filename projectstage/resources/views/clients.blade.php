@@ -8,25 +8,31 @@
     <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
     <title>Liste des clients</title>
     <style>
-        td{
+        td , th{
             vertical-align: middle;
+            text-transform: capitalize
         }
     </style>
 </head>
 <body class="p-2">
+    <x-menu :users="$users"></x-menu>
+    @if(session('add'))
+        <p class="alert w-50 fw-bold alert-success mt-3 alert-dismissible fade show" role="alert">{{ session('add') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </p>
+    @endif    
     @if(session('success'))
-        <p class="alert fw-bold fs-5 alert-success alert-dismissible fade show" role="alert">{{ session('success') }}
+        <p class="alert w-50 fw-bold mt-3 alert-success alert-dismissible fade show" role="alert">{{ session('success') }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </p>
     @endif
     @if(session('restored'))
-        <p class="alert fw-bold fs-5 alert-success alert-dismissible fade show" role="alert">{{ session('restored') }}
+        <p class="alert w-50 fw-bold mt-3 alert-success alert-dismissible fade show" role="alert">{{ session('restored') }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </p>
     @endif
-    <x-menu :users="$users"></x-menu>
     @if(count($clients)<=0)
-        <p class="alert alert-danger m-2 mt-3 fw-bold">Il faut inserer des clients pour assurer la bonne fonctionnement du logiciel!</p>
+        <p class="alert w-50 alert-danger m-2 mt-3 fw-bold">Il faut inserer des clients pour assurer la bonne fonctionnement du logiciel!</p>
     @endif
     @php
         $empty = false;

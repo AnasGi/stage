@@ -16,35 +16,14 @@
 </head>
 <body class="p-2">
 
-    @if(session('newUser'))
-        <p class="alert fw-bold fs-5 alert-success alert-dismissible fade show" role="alert">{{ session('newUser') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </p>
-    @endif
-
     <x-menu :users="$users"></x-menu>
 
     @if (auth()->user()->role == "Admin")
-        <div class="d-flex justify-content-around mt-3 align-items-center">
-            <h2 class="fw-bold">Notifications</h2>
-            <form action="{{route('main.index')}}">
-                <div class="d-flex justify-content-center gap-2 align-items-center">
-                    <select name="users_id" id="users_id" style="height: 30px">
-                        <option value="">Choisir un collaborateur</option>
-                        @foreach ($users as $user)
-                            @if (request('users_id') == $user->id)
-                                <option selected value="{{$user->id}}">{{$user->name}}</option>
-                            @else
-                                <option value="{{$user->id}}">{{$user->name}}</option>
-                            @endif
-                        @endforeach
-                    </select>
-                    <button class="btn btn-dark">Filtrer</button>
-                    <a href="{{route('main.index')}}" class="btn btn-danger">Initialiser filtrage</a>
-                </div>
-            </form>
+        <div class="mt-3 mb-1 d-flex gap-1 align-items-center">
+            <img src="{{asset('imgs/alert.png')}}" alt="alerts" style="width: 20px">
+            <h6 class="fw-bold m-0 p-0">Notifications </h6>
         </div>
-        <div class="d-flex justify-content-between mt-3 align-items-center">
+        <div class="d-flex justify-content-between align-items-center p-1 bg-body-secondary rounded">
             <x-notification page='cnss' :activeData="$CnssAll"></x-notification>
             <hr style="border:2px solid black">
             <x-notification page='tvam' :activeData="$TvamAll"></x-notification>
@@ -69,10 +48,29 @@
             <hr style="border:2px solid black">
             <x-notification page='pv' :activeData="$PvAll"></x-notification>
         </div>
+        <div class="d-flex justify-content-end mt-3 align-items-center">
+            <form action="{{route('main.index')}}">
+                <div class="d-flex justify-content-center gap-2 align-items-center">
+                    <select name="users_id" id="users_id" style="height: 30px">
+                        <option value="">Choisir un collaborateur</option>
+                        @foreach ($users as $user)
+                            @if (request('users_id') == $user->id)
+                                <option selected value="{{$user->id}}">{{$user->name}}</option>
+                            @else
+                                <option value="{{$user->id}}">{{$user->name}}</option>
+                            @endif
+                        @endforeach
+                    </select>
+                    <button class="btn btn-warning">Afficher les notifications</button>
+                    <a href="{{route('main.index')}}" class="btn btn-danger">Initialiser filtrage</a>
+                </div>
+            </form>
+        </div>
+        
         <hr>
     @endif
 
-    <div class="d-flex justify-content-around mt-3 align-items-center">
+    <div class="d-flex justify-content-between mt-3 align-items-center">
         <h2 class="fw-bold">Suivi Client</h2>
         <form action="{{route('main.index')}}">
             <div class="d-flex justify-content-center gap-2 align-items-center">
@@ -87,8 +85,6 @@
                 <div>
                     <input type="text" name="annee" placeholder="Année" value="{{request('annee')}}">
                 </div>
-            </div>
-            <div class="mt-2">
                 <button class="btn btn-dark">Importer les données</button>
                 <a href="{{route('main.index')}}" class="btn btn-danger">Initialiser filtrage</a>
             </div>

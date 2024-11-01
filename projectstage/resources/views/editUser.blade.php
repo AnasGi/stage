@@ -19,17 +19,17 @@
                         @method('put')
 
                         @if (session('userMod'))
-                            <p class="alert alert-success alert-dismissible fade show" role="alert">{{ session('userMod') }}
+                            <p class="alert fw-bold alert-success alert-dismissible fade show" role="alert">{{ session('userMod') }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </p>
                         @endif
     
                         <div class="form-group mb-3">
                             <label for="username" class="form-label">Nom d'utilisateur</label>
-                            <input type="text" class="form-control" id="username" name="name" placeholder="Entrez le nom d'utilisateur" value="{{ $user->name }}" required>
+                            <input type="text" class="form-control" id="username" name="name" placeholder="Entrez le nom d'utilisateur" value="{{ $user->name }}">
                         </div>
                         @error('name')
-                            <p class="text-danger fs-6">Le nom d'utilisateur doit etre entre 3 et 30 caractéres</p>
+                            <p class="text-danger fs-6">Le nom d'utilisateur doit etre entre 4 et 30 caractéres</p>
                         @enderror
     
                         <div class="form-group mb-3">
@@ -37,7 +37,7 @@
                             <input type="password" class="form-control" id="password" name="password" placeholder="Entrez un nouveau mot de passe">
                         </div>
                         @error('password')
-                            <p class="text-danger fs-6">Le mot de passe doit etre entre 3 et 30 caractéres</p>
+                            <p class="text-danger fs-6">Le mot de passe doit etre entre 4 et 30 caractéres</p>
                         @enderror
     
                         <div class="d-grid gap-2">

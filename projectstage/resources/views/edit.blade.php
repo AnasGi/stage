@@ -10,7 +10,7 @@
 </head>
 <body>
     @error('code')
-        <span class="text-danger text-center fw-bold fs-5">Le code client doit etre unique!</span>
+        <p class="text-danger text-center fw-bold fs-5">Le code client doit etre unique!</p>
     @enderror
 
     @if($page == 'clients')

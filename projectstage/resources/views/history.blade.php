@@ -31,13 +31,18 @@
     <x-menu :users="$users"></x-menu>
     <div class="d-flex justify-content-center ">
         @if (count($clientsInHistory)==0)
-            <p class="mt-5 fw-bold text-danger fs-4">Historique est vide!</p>
+            <div class="d-block mt-4">
+                <div class="d-flex justify-content-center">
+                    <img src="{{ asset('imgs/motif.png') }}" style="width:60px; height:60px;" alt="motif">
+                </div>
+                <p class="fw-bold text-danger fs-4">Historique est vide!</p>
+            </div>
         @else
             <div class="w-75">
                 <div class="d-flex justify-content-between align-items-center bg-white shadow rounded p-3 mt-3 mb-3">
                     <h3 class="m-0">
                         L'historique des clients  
-                        <span class="bg-info rounded p-3 pt-1 pb-1 fs-4">{{count($clientsInHistory)}}</span>
+                        <span class="bg-info fs-6 fw-bold" style="border-radius: 50% ; padding:4px 7px ; vertical-align:super">{{count($clientsInHistory)}}</span>
                     </h3>
                     <form action="{{route('clients.history')}}" method="GET" class="d-flex gap-3 align-items-center">
                         <input list="clients-list" name="clients_id" id="clients_id" value="{{request('clients_id')}}" class="p-1" placeholder="Choisir un client">

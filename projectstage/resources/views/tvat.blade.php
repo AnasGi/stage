@@ -9,12 +9,16 @@
     <title>Tva trimistrielle</title>
 </head>
 <body class="p-2">
-    @if(session('success'))
-        <p class="alert fw-bold fs-5 alert-success alert-dismissible fade show" role="alert">{{ session('success') }}
+<x-menu :users="$users"></x-menu>
+    @if(session('add'))
+        <p class="alert w-50 fw-bold alert-success mt-3 alert-dismissible fade show" role="alert">{{ session('add') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </p>
+    @endif        @if(session('success'))
+        <p class="alert w-50 fw-bold alert-success alert-dismissible fade show" role="alert">{{ session('success') }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </p>
     @endif
-    <x-menu :users="$users"></x-menu>
     @php
         $empty = false;
     @endphp

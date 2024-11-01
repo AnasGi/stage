@@ -1,5 +1,12 @@
 @props(['activeData' , 'page'])
 
+<style>
+    td , th {
+        vertical-align: middle;
+        text-transform: capitalize
+    }
+</style>
+
 @php
     $nbreCells = 0;
     $alertsNumber = 0;

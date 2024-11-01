@@ -54,16 +54,16 @@ class UserController extends Controller
 
     public function update(Request $request , User $user){
 
-        $valid = $request->validate([
-            "name"=>'min:4|max:30',
-            "password"=>'min:4|max:30',
+        $validated = $request->validate([
+            "name" => 'min:4|max:30',
+            "password" => 'nullable|min:4|max:30',
         ]);
-
+        
         $user->update([
-            'name'=>$request->input('name'),
-            'password'=>Hash::make($request->input('password'))
+            'name' => $validated['name'],
+            'password' => $validated['password'] ? Hash::make($validated['password']) : $user->password
         ]);
-
+        
         return back()->with('userMod' , 'Votre coordonnées a été modifier');
 
     }

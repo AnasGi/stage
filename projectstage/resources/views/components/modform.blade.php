@@ -27,10 +27,10 @@
             <div class="row">
                 <div class="col-12">
                     <div class="d-flex gap-2">
-                        <a href="{{ route($page.'.index') }}" class="btn btn-danger mb-2">Fermer</a>
+                        <a href="{{ route($page.'.index') }}" class="btn btn-danger mb-2 fw-bold">Fermer</a>
                     </div>
                     @if(session('mod'))
-                        <p class="alert fw-bold fs-5 alert-success alert-dismissible fade show" role="alert">{{ session('mod') }}
+                        <p class="alert fw-bold alert-success alert-dismissible fade show" role="alert">{{ session('mod') }}
                                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                 </p>
                     @endif
@@ -193,8 +193,7 @@
             </div>
     
             <div class="d-flex gap-2">
-                <button type="submit" class="btn btn-success mt-2">Sauvegarder</button>
-                {{-- <a href="{{ route($page.'.index') }}" class="btn btn-danger mt-2">Fermer</a> --}}
+                <button type="submit" class="btn btn-success mt-2 fw-bold">Sauvegarder</button>
             </div>
         </div>
     </form>
