@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="{{ asset( 'css/bootstrap.min.css' ) }}"> 
+    <link rel="icon" href="{{ asset('imgs/logo.png') }}" type="image/x-icon"> 
     <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('js/apexcharts.min.js') }}"></script>
     <title>Accueil</title>
@@ -51,7 +52,7 @@
         <div class="d-flex justify-content-end mt-3 align-items-center">
             <form action="{{route('main.index')}}">
                 <div class="d-flex justify-content-center gap-2 align-items-center">
-                    <select name="users_id" id="users_id" style="height: 30px">
+                    <select name="users_id" id="users_id" class="form-control" style="width: 200px">
                         <option value="">Choisir un collaborateur</option>
                         @foreach ($users as $user)
                             @if (request('users_id') == $user->id)
@@ -62,7 +63,6 @@
                         @endforeach
                     </select>
                     <button class="btn btn-warning">Afficher les notifications</button>
-                    <a href="{{route('main.index')}}" class="btn btn-danger">Initialiser filtrage</a>
                 </div>
             </form>
         </div>
@@ -75,15 +75,15 @@
         <form action="{{route('main.index')}}">
             <div class="d-flex justify-content-center gap-2 align-items-center">
                 <div>
-                    <input list="clients-list" name="code" id="code" value="{{request('code')}}" placeholder="Choisir un client">
-                    <datalist id="clients-list">
+                    <input list="clients-list" class="form-control" name="code" id="code" value="{{request('code')}}" placeholder="Choisir un client">
+                    <datalist id="clients-list" >
                         @foreach ($clients as $item)
                             <option value="{{$item->code}}">{{$item->nom}}</option>
                         @endforeach
                     </datalist> 
                 </div>
                 <div>
-                    <input type="text" name="annee" placeholder="Année" value="{{request('annee')}}">
+                    <input type="text" name="annee" placeholder="Année" class="form-control" value="{{request('annee')}}">
                 </div>
                 <button class="btn btn-dark">Importer les données</button>
                 <a href="{{route('main.index')}}" class="btn btn-danger">Initialiser filtrage</a>

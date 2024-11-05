@@ -29,6 +29,7 @@ return new class extends Migration
             $table->string('deletetype')->nullable();
             $table->string('motif')->nullable();
             $table->string('motifdoc')->nullable();
+            $table->string('newCltMotif')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

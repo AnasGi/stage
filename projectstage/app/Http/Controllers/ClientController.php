@@ -105,9 +105,19 @@ class ClientController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show()
+    public function show(Request $request)
     {
-        $deletedClients = Client::onlyTrashed()->get();
+        $deletedClients = Client::onlyTrashed();
+
+        if($request->input('typeDlt') == 'dech'){
+            $deletedClients->where('deletetype' , 'decharge');
+        }
+        elseif($request->input('typeDlt') == 'liq'){
+            $deletedClients->where('deletetype' , 'liquidation');
+        }
+
+        $deletedClients = $deletedClients->get();
+
         $users = User::all();
 
         return view('deletedClients' , compact('deletedClients')+['users'=>$users]);
@@ -115,9 +125,18 @@ class ClientController extends Controller
     
     }
 
-    public function showTable()
+    public function showTable(Request $request)
     {
-        $deletedClients = Client::onlyTrashed()->get();
+        $deletedClients = Client::onlyTrashed();
+
+        if($request->input('typeDlt') == 'dech'){
+            $deletedClients->where('deletetype' , 'decharge');
+        }
+        elseif($request->input('typeDlt') == 'liq'){
+            $deletedClients->where('deletetype' , 'liquidation');
+        }
+
+        $deletedClients = $deletedClients->get();
 
         return view('deletedClientsTable' , compact('deletedClients'));
     
@@ -267,6 +286,18 @@ class ClientController extends Controller
         ]);
         
         return back()->with('success' ,  "Le motif a été sauvegarder !");
+    }
+
+    public function storeNewCltMotif(Request $request , $id)
+    {
+
+        $newClient = Client::find($id);
+
+        $newClient->update([
+            'newCltMotif' => $request->input('newCltMotif'),
+        ]);
+        
+        return back();
     }
 
     public function import(Request $request)

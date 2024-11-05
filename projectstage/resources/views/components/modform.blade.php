@@ -43,7 +43,7 @@
                         @if ($page == 'acompte')
                             @for ($i = 1; $i < 6; $i++)
                                 <div class="form-group mb-3">
-                                    <label for="">{{ $i == 1 ? 'Regularisation' : 'Trimestre ' . ($i - 1) }}</label>
+                                    <label>{{ $i == 1 ? 'Regularisation' : 'Trimestre ' . ($i - 1) }}</label>
                                     <div class="input-group">
                                         <input type="date" name="{{ 'date_depot_' . $i }}" class="form-control" placeholder="Date de dépôt" value="{{ $activeData->{'date_depot_'.$i} }}">
                                         <input type="text" name="{{ 'num_depot_' . $i }}" class="form-control" placeholder="Numéro de dépôt" value="{{ $activeData->{'num_depot_'.$i} }}">
@@ -55,7 +55,7 @@
                         @elseif($page == 'tvat')
                             @for ($i = 1; $i < 5; $i++)
                                 <div class="form-group mb-3">
-                                    <label for="">Trimestre {{ $i }}</label>
+                                    <label>Trimestre {{ $i }}</label>
                                     <div class="input-group">
                                         <input type="date" name="{{ 'date_depot_' . $i }}" class="form-control" placeholder="Date de dépôt" value="{{ $activeData->{'date_depot_'.$i} }}">
                                         <input type="text" name="{{ 'num_depot_' . $i }}" class="form-control" placeholder="Numéro de dépôt" value="{{ $activeData->{'num_depot_'.$i} }}">
@@ -91,7 +91,7 @@
                         @else
                             @for ($i = 1; $i < 13; $i++)
                                 <div class="form-group mb-3">
-                                    <label for="">Mois {{ $i }}</label>
+                                    <label>Mois {{ $i }}</label>
                                     <div class="input-group">
                                         <input type="date" name="{{ 'date_depot_' . $i }}" class="form-control" placeholder="Date de dépôt" value="{{ $activeData->{'date_depot_'.$i} }}">
                                         @if ($page != 'cnss')
@@ -175,6 +175,11 @@
                         <div class="form-group mb-3">
                             <label for="activite" class="form-label">Activité</label>
                             <textarea name="activite" cols="30" rows="5" class="form-control" placeholder="Activité">{{ $activeData->activite }}</textarea>
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <label for="activite" class="form-label">Ville</label>
+                            <input type="text" name="ville"  class="form-control" placeholder="ville" value="{{$activeData->ville}}">
                         </div>
                         
                         @if (auth()->user()->role == 'Admin')

@@ -5,6 +5,7 @@
 
     .tools {
         padding: 10px;
+        height: 100%;
         background-color: #D0ECE7;
         border-radius: 8px;
     }
@@ -18,17 +19,9 @@
         padding: 10px 0px;
     }
 
-    .searchForm input , .searchForm select {
-        height: 30px;
-        padding: 0px 5px
-    }
-
     @media screen and (max-width: 1100px) {
-        .tools:first-child {
-            width: 60% !important;
-        }
-        .tools:last-child {
-            width: 39% !important;
+        .tools {
+            width: 100% !important;
         }
     }
 </style>
@@ -41,17 +34,17 @@
         <form action="{{route($page.'.index')}}" class="pb-0">
             <div class="searchForm d-flex gap-2 flex-wrap" style="margin-bottom: 11px">
                 <div>
-                    <input type="text" name="annee" id="" value="{{ request('annee') }}" placeholder="Année">
+                    <input type="text" name="annee" class="form-control" id="" value="{{ request('annee') }}" placeholder="Année">
                 </div>
 
                 @if($page == 'clients')
                     <div>
-                        <input type="text" name="mois" id="" value="{{ request('mois') }}" placeholder="Mois">
+                        <input type="text" name="mois" class="form-control" id="" value="{{ request('mois') }}" placeholder="Mois">
                     </div>
                 @endif
 
                 <div>
-                    <input list="liste-clients-1" name="code" value="{{ request('code') }}" placeholder="Code de client:">
+                    <input list="liste-clients-1" name="code" class="form-control" value="{{ request('code') }}" placeholder="Code de client:">
                     <datalist id="liste-clients-1">
                         @if($page == 'clients')
                             @foreach ($activeData as $data)
@@ -63,13 +56,13 @@
 
                 @if ($page == 'etat' || $page == 'bilan' || $page == 'cm' || $page == 'tp' || $page == 'irprof' || $page == 'pv')
                     <div>
-                        <input type="date" name="date" id="" value="{{ request('date') }}" placeholder="Date de depot"/>
+                        <input type="date" name="date" class="form-control" id="" value="{{ request('date') }}" placeholder="Date de depot"/>
                     </div>
                 @endif
 
                 @if (auth()->user()->role == 'Admin')
                     <div>
-                        <select name="name" id="">
+                        <select name="name" id="" class="form-control">
                             <option value="">Collaborateur</option>
                             @foreach ($users as $user)
                                 @if($user->id == request('name'))
@@ -82,7 +75,7 @@
                     </div>
                 @endif
             </div>
-            <div class="d-flex gap-2 align-items-start">
+            <div class="d-flex gap-2 align-items-start mb-1">
                 <div>
                     <button style="padding: 3px 10px" class="btn btn-primary p-3 pt-1 pb-1" >Filtrer</button>
                 </div>
@@ -99,46 +92,30 @@
             <form action="{{ route($page.'.import') }}" method="POST" enctype="multipart/form-data" id="ImportForm" >
                 @csrf
                 <div class="d-flex align-items-center flex-wrap">
-                    <input class="w-75" type="file" name="file" id="file" accept=".csv">
+                    <input class="w-75" type="file" name="file" id="file" accept=".csv"  class="form-control">
                     <button type="submit" class="btn btn-dark w-25" style="padding: 3px 10px">Importer</button>
                 </div>
             </form>
-            <p id="ImportError" class="alert alert-danger m-0 p-1">Choisir un fichier nomé: 
+            <p id="ImportError" class="alert alert-danger mb-1 p-2">Choisir un fichier avec éxtension: 
                 <span class="fw-bold">
-                    {{$page}}.csv
+                    .csv
                 </span>
             </p>
             <script>
                 document.getElementById('ImportForm').addEventListener('submit', function(event) {
                     let fileInput = document.getElementById('file');
-                    let errorMessage = document.getElementById('ImportError');
 
                     // Confirm before submitting
                     let confirmed = confirm('Vous etes sure que vous voulez importer ces données?');
                     
-                    if (!confirmed) {
+                    if (!confirmed || fileInput.files.length <= 0) {
                         event.preventDefault(); // Stop form submission if Cancel is clicked
                         return; // Exit the function if Cancel is clicked
                     }
 
-                    // Safely pass PHP variable to JavaScript
-                    let page = <?php echo json_encode($page); ?>;
-
                     if (fileInput.files.length > 0) {
                         let fileName = fileInput.files[0].name;
                         let fileNameWithoutExtension = fileName.split('.').slice(0, -1).join('.').toLowerCase();
-
-                        console.log(fileName);
-                        console.log(fileNameWithoutExtension);
-                        console.log(page);
-
-                        // Check if the file name (without extension) matches the expected page name
-                        if (fileNameWithoutExtension !== page) {
-                            event.preventDefault();  // Prevent form submission if the file name is incorrect
-                            errorMessage.textContent = 'Le nom du fichier doit être ' + page + ".csv";
-                        } else {
-                            errorMessage.textContent = ''; // Clear any previous error message
-                        }
                     }
                 });
 

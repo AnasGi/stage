@@ -33,7 +33,8 @@ class Client extends Model
         'users_id',
         'deletetype',
         'motif',
-        'motifdoc'
+        'motifdoc',
+        'newCltMotif'
     ];
 
     public function users()
@@ -110,15 +111,17 @@ class Client extends Model
     protected static function booted()
     {
         static::updating(function ($client) {
-            // Get the original data before the update
-            $originalData = $client->getOriginal();
-
-            // Log old data, you can save it to a separate table or a file
-            DB::table('client_collabs_history')->insert([
-                'clients_id' => $originalData['id'],
-                'users_id' => $originalData['users_id'],
-                'updated_at' => now(),
-            ]);
+            if ($client->isDirty('users_id')) {
+                // Get the original data before the update
+                $originalData = $client->getOriginal();
+    
+                // Log old data, saving it to client_collabs_history
+                DB::table('client_collabs_history')->insert([
+                    'clients_id' => $originalData['id'],
+                    'users_id' => $originalData['users_id'],
+                    'updated_at' => now(),
+                ]);
+            }
         });
     }
 

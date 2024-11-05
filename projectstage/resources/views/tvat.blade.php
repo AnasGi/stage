@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta httvat-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="{{ asset( 'css/bootstrap.min.css' ) }}"> 
+    <link rel="icon" href="{{ asset('imgs/logo.png') }}" type="image/x-icon"> 
     <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
     <title>Tva trimistrielle</title>
 </head>
@@ -59,8 +60,8 @@
                     <td>{{$tvat->clients->users->name}}</td>
                 @endif
                 <x-monthcheck :activeData="$tvat"  page="tvat"></x-monthcheck>
-                <td style="vertical-align: middle"><a href="{{route('tvat.destroy' , $tvat)}}" class="btn btn-danger" onclick="return confirm('Vous-etre sure de supprimer cette donnée?')">supprimer</a></td>
-                <td style="vertical-align: middle"><a href="{{route('tvat.update' , $tvat)}}" class="btn btn-primary">modifier</a></td>
+                <td><a href="{{route('tvat.destroy' , $tvat)}}" class="btn btn-danger" onclick="return confirm('Vous-etre sure de supprimer cette donnée?')">supprimer</a></td>
+                <td><a href="{{route('tvat.update' , $tvat)}}" class="btn btn-primary">modifier</a></td>
             </tr>
             @empty
                 @php

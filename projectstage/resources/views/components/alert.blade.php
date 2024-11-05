@@ -44,16 +44,22 @@
                 @php
                     $DateDepot = new DateTime($activeData->{'date_depot_' . $i});
                     $curentDate = Datetime::createFromFormat('Y-m-d' , Date('Y-n-d'));
-                    $thisMonthDateDepot = $activeData->{'date_depot_'.Date('n')};
                     $thisTrimesterDateDepot = $activeData->{'date_depot_'.ceil(Date('n') / 3)};
 
-                    $lastDayNextMonth = (new DateTime('last day of next month'));
+                    $ans = Date('Y');
+                    if(Date('n') == 1){
+                        $mois = 12;
+                    }
+                    else{
+                        $mois = Date('n')-1;
+                    }
+                    $thisMonthDateDepot = $activeData->{'date_depot_'.$mois};
 
                     if ($page === "cnss") {
-                        $deadlineDate = $lastDayNextMonth->modify('-26 days');  
+                        $deadlineDate = (new DateTime("last day of {$ans}-{$mois}"));  
                     }
                     elseif ($page === 'tvam' || $page === 'ir' || $page === 'droittimbre') {
-                        $deadlineDate = $lastDayNextMonth->modify('-6 days');
+                        $deadlineDate = (new DateTime("last day of {$ans}-{$mois}"))->modify('+20 days');
                     }
                     elseif ($page === 'acompte') {
                             if($i==1){
@@ -122,7 +128,7 @@
                 @endphp
 
                 @if($page === 'tvam' || $page === 'ir' || $page === 'droittimber' || $page === 'cnss')
-                        @if ($thisMonthDateDepot == null && ($curentDate >= $deadlineDate) && Date('n') == $i)
+                        @if ($thisMonthDateDepot == null && ($curentDate >= $deadlineDate) && Date('n')-1 == $i)
                             @php
                                 $alertsNumber += 1;
                                 $mois = $i;

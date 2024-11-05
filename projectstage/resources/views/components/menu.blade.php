@@ -54,7 +54,7 @@
         
         .linksCont {
             overflow-x: auto !important;
-            height: 70px;
+            height: 50px;
         }
         .links {
             width: 150%;
@@ -148,7 +148,7 @@
                 <a class="btn btn-light {{ Route::is('pv.index') ? 'active-link' : '' }}" href="{{ route('pv.index') }}">PV de l'AGO</a>
                 @if (auth()->user()->role != 'Admin')
                     <hr class="hr">
-                    <a href="{{ route('users.showTable') }}" class="btn btn-dark {{ Route::is('users.showTable') ? 'active-link' : '' }}">Liste des collaborateurs</a>
+                    <a href="{{ route('users.showTable') }}" class="btn btn-dark {{ Route::is('users.showTable') ? 'active-link' : '' }}">Liste des docciers clients</a>
                 @endif
                 
             </div>

@@ -98,7 +98,7 @@
         @csrf    
         @if ($page != 'clients')
             <div class="form-group">
-                <label for="">Code client</label>
+                <label>Code client</label>
                 <input list="client-liste" name="code" class="form-control" placeholder="Choisir un client" required>
                 <datalist id="client-liste">
                     @foreach ($clients as $client)
@@ -110,7 +110,7 @@
             @if ($page == 'acompte')
                 @for ($i = 1; $i < 6; $i++)
                     <div class="form-group">
-                        <label for="">{{ $i == 1 ? 'Regularisation' : 'Trimestre '.$i-1 }}</label>
+                        <label>{{ $i == 1 ? 'Regularisation' : 'Trimestre '.$i-1 }}</label>
                         <div class="input-group">
                             <input type="date" name="{{'date_depot_'.$i}}" class="form-control" placeholder="date_depot" />
                             <input type="text" name="{{'num_depot_'.$i}}" class="form-control" placeholder="numero_depot" />
@@ -121,7 +121,7 @@
             @elseif($page == 'tvat')
                 @for ($i = 1; $i < 5; $i++)
                     <div class="form-group">
-                        <label for="">Trimestre {{$i}}</label>
+                        <label>Trimestre {{$i}}</label>
                         <div class="input-group">
                             <input type="date" name="{{'date_depot_'.$i}}" class="form-control" placeholder="date_depot" />
                             <input type="text" name="{{'num_depot_'.$i}}" class="form-control" placeholder="numero_depot" />
@@ -148,7 +148,7 @@
             @else
                 @for ($i = 1; $i < 13; $i++)
                     <div class="form-group">
-                        <label for="">Mois {{$i}}</label>
+                        <label>Mois {{$i}}</label>
                         <div class="input-group">
                             <input type="date" name="{{'date_depot_'.$i}}" class="form-control" placeholder="date_depot"/>
                             @if ($page != 'cnss')
@@ -161,15 +161,15 @@
     
         @else
             <div class="form-group">
-                <label for="">Code de client: </label>
+                <label>Code de client: </label>
                 <input type="text" name="code" class="form-control" placeholder="Saisir le code client" required>
             </div>
             <div class="form-group">
-                <label for="">Nom de l'entreprise: </label>
+                <label>Nom de l'entreprise: </label>
                 <input type="text" name="nom" class="form-control" required>
             </div>
             <div class="form-group">
-                <label for="">Adresse: </label>
+                <label>Adresse: </label>
                 <input type="text" name="adresse" class="form-control" required>
             </div>
             <div class="form-group">
@@ -190,11 +190,14 @@
                 <input type="text" name="RC" class="form-control" placeholder="RC">
             </div>
             <div class="form-group">
-                <label for="">Date début d'activité</label>
+                <label>Date début d'activité</label>
                 <input type="date" name="debut_activite" class="form-control">
             </div>
             <div class="form-group">
                 <textarea name="activite" cols="30" rows="2" class="form-control" placeholder="Activité"></textarea>
+            </div>
+            <div class="form-group">
+                <input type="text" name="ville" id="" placeholder="ville"  class="form-control">
             </div>
             @if (auth()->user()->role == 'Admin')
                 <div class="form-group">

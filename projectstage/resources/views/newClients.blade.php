@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="{{ asset( 'css/bootstrap.min.css' ) }}"> 
+    <link rel="icon" href="{{ asset('imgs/logo.png') }}" type="image/x-icon"> 
     <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
     <title>Clients nouvellement créer</title>
     <style>
@@ -16,10 +17,10 @@
     </style>
 </head>
 <body>
-    <div id="noPrint" class="d-flex gap-2 align-items-center justify-content-around">
+    <div id="noPrint" class="d-flex gap-2 align-items-center justify-content-between m-2">
         <div>
-            <a href="{{route('clients.index')}}" class="m-2 btn btn-danger">Retour</a>
-            <button class="m-2 btn btn-dark" onclick="window.print()">Imprimer PDF</button>
+            <a href="{{route('clients.index')}}" class="btn btn-danger">Retour</a>
+            <button class="btn btn-dark" onclick="window.print()">Imprimer PDF</button>
         </div>
         <div class="d-flex justify-content-center">
             <form action="{{route('clients.new')}}" class="d-flex gap-2 align-items-center">
@@ -30,29 +31,35 @@
             </form>
         </div>
     </div>
-    <div class="mt-2">
-        <h4 class="text-center">Liste des clients nouvellement créer</h4>
+    <div class="mt-3">
+        <h4 class="text-center fw-bold mb-4">Liste des clients nouvellement créer</h4>
 
         <table class="table table-bordered border-dark text-center" style="font-size: 13px">
             <tr>
                 <th>code client</th>
                 <th>entreprise</th>
-                <th>PM/PP</th>
-                <th>adresse</th>
-                <th>date debut d'activite</th>
-                <th>activite</th>
                 <th>collaborateur</th>
+                <th>Date de création</th>
+                <th>Motif</th>
             </tr>
             @foreach ($clients as $client)
                 <tr>
                     <td>{{$client->code}}</td>
                     <td>{{$client->nom}}</td>
-                    <td>{{$client->status}}</td>
-                    <td>{{$client->adresse}}</td>
-                    <td>{{$client->debut_activite}}</td>
-                    <td>{{$client->activite}}</td>
-                    <td>{{$client->activite}}</td>
                     <td>{{$client->users->name}}</td>
+                    <td>{{$client->created_at->format('d/n/Y')}}</td>
+                    <td>
+                        @if ($client->newCltMotif)
+                            {{$client->newCltMotif}}
+                        @else
+                            <form action="{{route('clients.newCltMotif' , $client->id)}}" method="POST">
+                                @csrf
+                                <input type="text" name="newCltMotif" required>
+                                <button>Affecter</button>
+                            </form>                       
+                        @endif
+                    </td>
+                        
                 </tr>
             @endforeach
         </table>

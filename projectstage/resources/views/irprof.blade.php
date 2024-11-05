@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta htirptof-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="{{ asset( 'css/bootstrap.min.css' ) }}"> 
+    <link rel="icon" href="{{ asset('imgs/logo.png') }}" type="image/x-icon"> 
     <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
     <title>Ir PROF globale</title>
     <style>
@@ -115,8 +116,8 @@
                 @endif
             @endif
                 <td>{{$irprof->num_depot}}</td>
-                <td style="vertical-align: middle"><a href="{{route('irprof.destroy', $irprof)}}" class="btn btn-danger" onclick="return confirm('Vous-etre sure de supprimer cette donnée?')">supprimer</a></td>
-            <td style="vertical-align: middle"><a href="{{route('irprof.update' , $irprof)}}" class="btn btn-primary">modifier</a></td>
+                <td><a href="{{route('irprof.destroy', $irprof)}}" class="btn btn-danger" onclick="return confirm('Vous-etre sure de supprimer cette donnée?')">supprimer</a></td>
+            <td><a href="{{route('irprof.update' , $irprof)}}" class="btn btn-primary">modifier</a></td>
             </tr>
         @empty
             @php

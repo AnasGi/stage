@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="{{ asset( 'css/bootstrap.min.css' ) }}"> 
+    <link rel="icon" href="{{ asset('imgs/logo.png') }}" type="image/x-icon"> 
     <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
     <title>Clients supprimés</title>
     <style>
@@ -29,9 +30,18 @@
             <div class="w-75 detailCont">
                 <div class="d-flex justify-content-between align-items-center bg-white shadow rounded p-3 mt-3 mb-3">
                     <h3 class="m-0">
-                        Les clients supprimés 
-                        <span class="bg-info fs-6 fw-bold" style="border-radius: 50% ; padding:4px 7px ; vertical-align:super">{{count($deletedClients)}}</span>
+                        Les clients liquidés/déchargés 
+                        <span class="bg-info fs-6 fw-bold" style="border-radius: 100% ; padding:4px 10px ; vertical-align:super">{{count($deletedClients)}}</span>
                     </h3>
+                    <form action="{{route('clients.deleted')}}" class="d-flex justify-content-center gap-2 fw-bold align-items-center">
+                        Tous <input type="radio" name="typeDlt" value="all" {{request("typeDlt") == "all" || !request("typeDlt") ? 'checked' : ''}}>
+                        <hr style="width: 10px">
+                        Décharger <input type="radio" name="typeDlt" value="dech" {{request("typeDlt") == "dech" ? 'checked' : ''}}>
+                        <hr style="width: 10px">
+                        Liquider <input type="radio" name="typeDlt" value="liq" {{request("typeDlt") == 'liq' ? 'checked' : ''}}>
+                        <hr style="width: 10px">
+                        <button>Filtrer</button>
+                    </form>
                     <a href="{{route('clients.deletedTable')}}" class="btn btn-dark" style="font-size: 12px">Sous form d'un tableau</a>
                 </div>
                 @if(session('success'))

@@ -135,16 +135,24 @@
     @else
         @if($activeData->annee == Date('Y'))
             @php
+
                 $curentDate = Datetime::createFromFormat('Y-m-d' , Date('Y-n-d'));
-                $thisMonthDateDepot = $activeData->{'date_depot_'.Date('n')};
                 $thisTrimesterDateDepot = $activeData->{'date_depot_'.ceil(Date('n') / 3)};
 
+                $ans = Date('Y');
+                if(Date('n') == 1){
+                    $mois = 12;
+                }
+                else{
+                    $mois = Date('n')-1;
+                }
+                $thisMonthDateDepot = $activeData->{'date_depot_'.$mois};
 
                 if ($page === "cnss") {
-                    $deadlineDate = (new DateTime('first day of next month'))->modify('+4 days');  
+                    $deadlineDate = (new DateTime("last day of {$ans}-{$mois}"));  
                 }
                 elseif ($page === 'tvam' || $page === 'ir' || $page === 'droittimbre') {
-                    $deadlineDate = (new DateTime('last day of next month'))->modify('-6 days');
+                    $deadlineDate = (new DateTime("last day of {$ans}-{$mois}"))->modify('+20 days');
                 }
                 elseif ($page === 'acompte') {
 
@@ -181,7 +189,7 @@
 
             @if($page === 'tvam' || $page === 'ir' || $page === 'droittimbre' || $page === 'cnss')
 
-                @if ($thisMonthDateDepot == null && ($curentDate >= $deadlineDate) && Date('n') == $i)
+                @if ($thisMonthDateDepot == null && ($curentDate >= $deadlineDate) && Date('n')-1 == $i)
                     <td class="bg-warning"></td>
                 @else
                     <td class="bg-body-secondary custom-title">

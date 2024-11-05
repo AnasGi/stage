@@ -62,6 +62,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/clients/restore/{id}' , [ClientController::class , 'restore'])->name('clients.restore');
     Route::get('/clients/history' , [ClientController::class , 'history'])->name('clients.history');
     Route::get('/clients/new' , [ClientController::class , 'newClients'])->name('clients.new');
+    Route::post('/clients/new/motif/{id}' , [ClientController::class , 'storeNewCltMotif'])->name('clients.newCltMotif');
 
     // CNSS
     Route::get('/cnss', [CnssController::class, 'index'])->name('cnss.index');

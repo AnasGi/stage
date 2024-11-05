@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="{{ asset( 'css/bootstrap.min.css' ) }}"> 
+    <link rel="icon" href="{{ asset('imgs/logo.png') }}" type="image/x-icon">
     <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
     <title>Liste des clients</title>
     <style>
@@ -80,7 +81,7 @@
                     <td>{{$client->ville}}</td>
                     @if(auth()->user()->role == 'Admin')
                         <td>{{$client->users->name}}</td>
-                        <td style="vertical-align: middle">
+                        <td>
                             <div class="dropdown">
                                 <button class="btn btn-danger dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 supprimer
@@ -110,7 +111,7 @@
                                 </ul>
                             </div>
                         </td>
-                        <td style="vertical-align: middle"><a href="{{route('clients.update' , $client)}}" class="btn btn-primary">modifier</a></td>
+                        <td><a href="{{route('clients.update' , $client)}}" class="btn btn-primary">modifier</a></td>
                     @endif
                 </tr>
                 @empty
