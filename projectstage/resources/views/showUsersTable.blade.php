@@ -11,28 +11,31 @@
     <style>
         @media print {
             #noPrint{
-                visibility: hidden
+                visibility: hidden;
+            }
+            #print {
+                font-size: 8px !important
             }
         }
     </style>
 </head>
 <body>
-    <div id="noPrint">
+    <div id="noPrint" class="m-2">
         @if (auth()->user()->role=="Admin")
-            <a href="{{route('users.show')}}" class="m-2 btn btn-danger">Retour</a>
+            <a href="{{route('users.show')}}" class="btn btn-danger">Retour</a>
         @else
-            <a href="{{route('clients.index')}}" class="m-2 btn btn-danger">Retour</a>
+            <a href="{{route('clients.index')}}" class="btn btn-danger">Retour</a>
         @endif
-        <button class="m-2 btn btn-dark" onclick="window.print()">Imprimer PDF</button>
+        <button class="btn btn-dark" onclick="window.print()">Imprimer PDF</button>
     </div>
     <div>
         <div class="d-flex justify-content-between align-items-center p-2 mt-3">
             <img src="{{asset('imgs/logo.png')}}" alt="logo" width="150">
-            <h3 class="text-center fw-bold">Liste des docciers clients (Comptabilité)</h3>
+            <h3 class="text-center fw-bold">Liste des dossiers clients (Comptabilité)</h3>
             <div>
-                <p class="m-0">F01 / FTC / TC</p>
-                <p class="m-0">Version: 01/SD</p>
-                <p class="m-0">03/09/2019</p>
+                <p class="m-0">F01 / PTC / TC</p>
+                <p class="m-0">Version: 02/SD</p>
+                <p class="m-0">15/06/2024</p>
             </div>
         </div>
         <hr>
@@ -46,11 +49,14 @@
                 <p class="m-0 fw-bold" style="font-size: 13px">Nombre totale des collaborateurs : {{count($users)}}</p>
             </div>
         </div>
-        <table class="table table-bordered border-dark text-center" style="font-size: 13px">
+        <table class="table table-bordered border-dark text-center" style="font-size: 13px" id="print">
             <tr>
                 @foreach ($users as $user)
                     <th>
                         {{$user->name}} 
+                        <p class="m-0 border border-1 mt-1">
+                            {{count($user->clients)}}
+                        </p>
                     </th>
                 @endforeach
             </tr>

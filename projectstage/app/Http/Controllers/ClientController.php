@@ -146,6 +146,8 @@ class ClientController extends Controller
 
         $annee = $request->input('annee');
         $mois = $request->input('mois');
+        $day = $request->input('day');
+        $code = $request->input('code');
 
         // Start with an empty collection
         $clients = collect();
@@ -156,6 +158,16 @@ class ClientController extends Controller
 
             if ($mois) {
                 $clients->whereMonth('created_at', $mois);
+
+                if ($day) {
+                    $clients->whereDay('created_at', $day);
+                }
+
+                
+            }
+
+            if($code){
+                $clients->where('code', $code);
             }
 
             // Execute the query to get results

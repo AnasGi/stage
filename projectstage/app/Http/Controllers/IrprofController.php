@@ -67,6 +67,18 @@ class IrprofController extends Controller
 
     if(request('alertFilter')){
         $irprofData->where('date_depot' , null);
+
+        if (Auth::user()->role == 'Admin') {    
+
+            if ($request->input('namecollab')) {
+                $userId = $request->input('namecollab');
+                $irprofData->whereHas('clients', function ($query) use ($userId) {
+                    $query->where('users_id', '=', $userId);
+                });
+    
+            }
+    
+        } 
     }
 
     // Finally, get the filtered data (only call `get()` once)
@@ -119,7 +131,7 @@ class IrprofController extends Controller
     public function edit(Irprof $Irprof)
     {
         $activeData = $Irprof;
-        $page = 'Irprof';
+        $page = 'irprof';
         return view('edit' , compact('activeData' , 'page'));
     }
 

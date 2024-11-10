@@ -56,7 +56,25 @@ class IrController extends Controller
     }
 
     if(request('alertFilter')){
-        $irData->where('date_depot_'.Date('n') , null);
+        if(Date('n') == 1){
+            $index = 12;
+        }
+        else{
+            $index = Date('n')-1;
+        }
+        $irData->where('date_depot_'.$index , null);
+
+        if (Auth::user()->role == 'Admin') {    
+
+            if ($request->input('namecollab')) {
+                $userId = $request->input('namecollab');
+                $irData->whereHas('clients', function ($query) use ($userId) {
+                    $query->where('users_id', '=', $userId);
+                });
+    
+            }
+    
+        } 
     }
     
     // Execute the query and get the results

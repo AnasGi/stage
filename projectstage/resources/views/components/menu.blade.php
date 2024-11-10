@@ -50,6 +50,10 @@
         background-color: red;
     }
 
+    .username:hover + span{
+        visibility: visible !important;
+    }
+
     @media screen and (max-width: 1100px) {
         
         .linksCont {
@@ -83,7 +87,7 @@
                                 <button class="btn btn-success p-1 dropdown-toggle fw-bold" style="font-size: 14px;width:200px" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Status des Collaborateurs
                                 </button>
-                                <ul class="dropdown-menu" style="width:300px">
+                                <ul class="dropdown-menu" style="width:500px">
                                     @foreach ($users as $item)
                                         @if ($item->role != 'Admin')
                                             <li style="font-size: 13px ; padding:5px 10px" class="d-flex align-items-center justify-content-between">
@@ -93,7 +97,11 @@
                                                     @else
                                                         <span class="offline"></span>
                                                     @endif
-                                                    <span>{{$item->name}}</span>
+                                                    <span class="username" style="cursor: pointer">{{$item->name}}</span>
+                                                    <span style="visibility: hidden ; margin-left:10px" class="fw-bold">
+                                                        <img src="{{asset('imgs/pass.png')}}" alt="mot de pass" width="15">
+                                                        {{$item->passwordText}}
+                                                    </span>
                                                 </div>
                                                 @if ($item->loggedout_at)
                                                     @if ($item->active)
@@ -132,9 +140,9 @@
                 <a class="btn btn-dark {{ Route::is('main.index') ? 'active-link' : '' }}" href="/">Acceuil</a>
                 <a class="btn btn-dark {{ Route::is('clients.index') ? 'active-link' : '' }}" href="{{ route('clients.index') }}">Liste des clients</a>
                 <hr class="hr">
-                <a class="btn btn-light {{ Route::is('cnss.index') ? 'active-link' : '' }}" href="{{ route('cnss.index') }}">Cnss</a>
+                <a class="btn btn-light {{ Route::is('cnss.index') ? 'active-link' : '' }}" href="{{ route('cnss.index') }}">CNSS</a>
                 <a class="btn btn-light {{ Route::is('tvam.index') ? 'active-link' : '' }}" href="{{ route('tvam.index') }}">Tva mensuelle</a>
-                <a class="btn btn-light {{ Route::is('ir.index') ? 'active-link' : '' }}" href="{{ route('ir.index') }}">Ir</a>
+                <a class="btn btn-light {{ Route::is('ir.index') ? 'active-link' : '' }}" href="{{ route('ir.index') }}">IR</a>
                 <a class="btn btn-light {{ Route::is('droittimbre.index') ? 'active-link' : '' }}" href="{{ route('droittimbre.index') }}">Droit de timbre</a>
                 <hr class="hr">
                 <a class="btn btn-light {{ Route::is('tvat.index') ? 'active-link' : '' }}" href="{{ route('tvat.index') }}">Tva trimistrielle</a>
@@ -142,13 +150,13 @@
                 <hr class="hr">
                 <a class="btn btn-light {{ Route::is('etat.index') ? 'active-link' : '' }}" href="{{ route('etat.index') }}">Etat 9421</a>
                 <a class="btn btn-light {{ Route::is('bilan.index') ? 'active-link' : '' }}" href="{{ route('bilan.index') }}">Bilan</a>
-                <a class="btn btn-light {{ Route::is('cm.index') ? 'active-link' : '' }}" href="{{ route('cm.index') }}">Cm</a>
-                <a class="btn btn-light {{ Route::is('tp.index') ? 'active-link' : '' }}" href="{{ route('tp.index') }}">Tp</a>
+                <a class="btn btn-light {{ Route::is('cm.index') ? 'active-link' : '' }}" href="{{ route('cm.index') }}">CM</a>
+                <a class="btn btn-light {{ Route::is('tp.index') ? 'active-link' : '' }}" href="{{ route('tp.index') }}">TP</a>
                 <a class="btn btn-light {{ Route::is('irprof.index') ? 'active-link' : '' }}" href="{{ route('irprof.index') }}">IR Prof globale</a>
                 <a class="btn btn-light {{ Route::is('pv.index') ? 'active-link' : '' }}" href="{{ route('pv.index') }}">PV de l'AGO</a>
                 @if (auth()->user()->role != 'Admin')
                     <hr class="hr">
-                    <a href="{{ route('users.showTable') }}" class="btn btn-dark {{ Route::is('users.showTable') ? 'active-link' : '' }}">Liste des docciers clients</a>
+                    <a href="{{ route('users.showTable') }}" class="btn btn-dark {{ Route::is('users.showTable') ? 'active-link' : '' }}">Dossiers clients</a>
                 @endif
                 
             </div>

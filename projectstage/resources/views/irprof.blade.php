@@ -48,7 +48,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </p>
     @endif        @if(session('success'))
-        <p class="alert w-50 fw-bold alert-success alert-dismissible fade show" role="alert">{{ session('success') }}
+        <p class="alert w-50 fw-bold alert-success alert-dismissible mt-3 fade show" role="alert">{{ session('success') }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </p>
     @endif
@@ -79,7 +79,7 @@
                     <td>{{$irprof->clients->users->name}}</td>
                 @endif
                 @php
-                $year = Date('Y')+1;
+                $year = ($irprof->annee)+1;
                 $month = 4;
                 $an = $irprof->annee+1;
                 $deadlineDate = (new DateTime("last day of {$year}-{$month}"))->modify('-6 days');
@@ -116,8 +116,8 @@
                 @endif
             @endif
                 <td>{{$irprof->num_depot}}</td>
-                <td><a href="{{route('irprof.destroy', $irprof)}}" class="btn btn-danger" onclick="return confirm('Vous-etre sure de supprimer cette donnée?')">supprimer</a></td>
-            <td><a href="{{route('irprof.update' , $irprof)}}" class="btn btn-primary">modifier</a></td>
+                <td style="outline: none ; border:none;"><a href="{{route('irprof.destroy', $irprof)}}" class="btn btn-danger" onclick="return confirm('Vous-etre sure de supprimer cette donnée?')">supprimer</a></td>
+            <td style="outline: none ; border:none;"><a href="{{route('irprof.update' , $irprof)}}" class="btn btn-primary">modifier</a></td>
             </tr>
         @empty
             @php

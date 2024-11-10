@@ -62,6 +62,18 @@ class TvatController extends Controller
 
     if(request('alertFilter')){
         $tvatData->where('date_depot_'.(ceil(Date('n')/3)) , null);
+
+        if (Auth::user()->role == 'Admin') {    
+
+            if ($request->input('namecollab')) {
+                $userId = $request->input('namecollab');
+                $tvatData->whereHas('clients', function ($query) use ($userId) {
+                    $query->where('users_id', '=', $userId);
+                });
+    
+            }
+    
+        } 
     }
 
     // Finally, get the filtered data (only call `get()` once)

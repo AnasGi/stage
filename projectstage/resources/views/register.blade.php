@@ -16,7 +16,9 @@
             <div class="card shadow-sm">
                 <div class="card-body">
 
-                    <h3 class="text-center mb-4">Creer un utilisateur</h3>
+                    <h3 class="text-center mb-4 fw-bold">
+                        <img src="{{asset('imgs/newuser.png')}}" alt="" width="40">
+                        Creer un collaborateur</h3>
                     <form action="{{route('register')}}" method="POST">
                         @csrf
                         @if (session('newUser'))
@@ -26,23 +28,23 @@
                         @endif
                         <div class="form-group mb-3">
                             <label for="name" class="form-label">Nom</label>
-                            <input type="text" class="form-control" id="name" name="name" placeholder="Enter your name" required>
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Entrer le nom de collaborateur" required>
                         </div>
                         <div class="form-group mb-3">
                             <label for="password" class="form-label">Mot de passe</label>
-                            <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Entrer le mot de passe de collaborateur" required>
                         </div>
                         <div class="form-group mb-3">
                             <label for="role" class="form-label">Rôle</label>
                             <select class="form-control" id="role" name="role" required>
-                                <option value="">Choisir le role</option>
+                                <option value="">Choisir le role de collaborateur</option>
                                 <option value="responsable">Responsable</option>
                                 <option value="Admin">Admin</option>
                             </select>
                         </div>
                         <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-success">Créer</button>
-                            <a href="{{route('users.show')}}" class="btn btn-danger">Fermer</a>
+                            <button type="submit" class="btn btn-success fw-bold">Créer</button>
+                            <a href="{{route('users.show')}}" class="btn btn-danger fw-bold">Fermer</a>
                         </div>
                     </form>
                 </div>

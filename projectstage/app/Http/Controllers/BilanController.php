@@ -70,6 +70,17 @@ class BilanController extends Controller
 
     if(request('alertFilter')){
         $bilanData->where('date_depot' , null);
+        if (Auth::user()->role == 'Admin') {    
+
+            if ($request->input('namecollab')) {
+                $userId = $request->input('namecollab');
+                $bilanData->whereHas('clients', function ($query) use ($userId) {
+                    $query->where('users_id', '=', $userId);
+                });
+    
+            }
+    
+        } 
     }
 
     // Finally, get the filtered data (only call `get()` once)

@@ -30,13 +30,13 @@ class CnssController extends Controller
             $cnssData->whereHas('clients', function ($query) use ($userId) {
                 $query->where('users_id', '=', $userId);
             });
+
         }
         //for the addform component
         $clients = Client::all();
 
-        
-
-    } else {
+    } 
+    else {
         // For non-Admin users, restrict the query by logged-in user's ID
         $cnssData->whereHas('clients', function ($query) {
             $query->where('users_id', '=', Auth::user()->id);
@@ -68,7 +68,25 @@ class CnssController extends Controller
     }
 
     if(request('alertFilter')){
-        $cnssData->where('date_depot_'.Date('n') , null);
+        if(Date('n') == 1){
+            $index = 12;
+        }
+        else{
+            $index = Date('n')-1;
+        }
+        $cnssData->where('date_depot_'.$index , null);
+
+        if (Auth::user()->role == 'Admin') {    
+
+            if ($request->input('namecollab')) {
+                $userId = $request->input('namecollab');
+                $cnssData->whereHas('clients', function ($query) use ($userId) {
+                    $query->where('users_id', '=', $userId);
+                });
+    
+            }
+    
+        } 
     }
 
     // Finally, get the filtered data (only call `get()` once)

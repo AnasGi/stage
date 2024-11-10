@@ -71,8 +71,8 @@
                             </div>
     
                             <div class="form-group mb-3">
-                                <label for="num_depot" class="form-label">Numéro de dépôt</label>
-                                <input type="text" name="num_depot" class="form-control" placeholder="Numéro de dépôt" value="{{ $activeData->num_depot }}">
+                                <label for="num_depot" class="form-label">Numéro de {{$page == 'pv' ? 'RC' : 'dépôt'}}</label>
+                                <input type="text" name="num_depot" class="form-control" placeholder="" value="{{ $activeData->num_depot }}">
                             </div>
     
                             @if ($page == 'cm')

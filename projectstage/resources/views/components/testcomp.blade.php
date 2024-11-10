@@ -60,12 +60,9 @@
 
 @for($i = 1 ; $i <$nbreCells ; $i++)
 
-{{-- for dates that passe the deadline --}}
-    @php 
+    @if($activeData->{'date_depot_' . $i} != null)
+        @php 
             $DateDepot = new DateTime($activeData->{'date_depot_' . $i});
-            if ($activeData->{'date_depot_' . $i} == null) {
-                $DateDepot = null;
-            }
             $annee = $activeData->annee;
             $month = $i+1;
 
@@ -116,15 +113,37 @@
                 
                 $comparisonDate = (new DateTime("last day of {$annee}-{$tri}"))->modify('-3 days');
 
-                if($i == 4){
-                    $tri = 4;
+                if($i == 5){
+                    $tri = 3;
                 }
             }
             
-    @endphp
+        @endphp
 
-{{-- for alerts --}}
-    @php
+        @if($DateDepot >= $comparisonDate)
+            <td class="bg-danger custom-title">
+                {{ $activeData->{'date_depot_' . $i} }}
+                <div class="motif d-flex align-items-center gap-2">
+                    @if ($activeData->{'motif_' . $i})
+                        <img src="{{ asset('imgs/motif.png') }}" style="width:20px; height:20px;" alt="motif">
+                        {{ $activeData->{'motif_' . $i} }}
+                    @else
+                        Aucun motif
+                    @endif
+                </div>
+            </td>
+            @if($page != 'cnss')
+                <td>{{ $activeData->{'num_depot_' . $i} }}</td>
+            @endif
+        @else
+            <td>{{ $activeData->{'date_depot_' . $i} }}</td>
+            @if($page != 'cnss')
+                <td>{{ $activeData->{'num_depot_' . $i} }}</td>
+            @endif
+        @endif
+    @elseif($activeData->{'date_depot_' . $i} != null )
+
+            @php
 
                 $year = $activeData->annee;
                 $ans = $activeData->annee;
@@ -137,6 +156,7 @@
 
                 $thisMonthDateDepot = $activeData->{'date_depot_'.$mois};
                 $curentDate = Datetime::createFromFormat('Y-m-d' , Date('Y-m-d'));
+                // $thisTrimesterDateDepot = $activeData->{'date_depot_'.ceil(Date('n') / 3)};
 
                 if ($page === "cnss") {
                     $deadlineDate = (new DateTime("last day of {$ans}-{$mois}"));  
@@ -186,25 +206,11 @@
                     }
 
                 }
-    @endphp
+            @endphp
 
-    @if($page === 'tvam' || $page === 'ir' || $page === 'droittimbre' || $page === 'cnss')
+            @if($page === 'tvam' || $page === 'ir' || $page === 'droittimbre' || $page === 'cnss')
 
-                @if($DateDepot != null && $DateDepot >= $comparisonDate)
-                    <td class="bg-danger custom-title">
-                        {{ $activeData->{'date_depot_' . $i} }}
-                        <div class="motif d-flex align-items-center gap-2">
-                            @if ($activeData->{'motif_' . $i})
-                                <img src="{{ asset('imgs/motif.png') }}" style="width:20px; height:20px;" alt="motif">
-                                {{ $activeData->{'motif_' . $i} }}
-                            @else
-                                Aucun motif
-                            @endif
-                        </div>
-                    </td>
-                @elseif($DateDepot != null && $DateDepot < $comparisonDate)
-                    <td>{{ $activeData->{'date_depot_'.$i} }}</td>
-                @elseif ($thisMonthDateDepot == null && ($curentDate >= $deadlineDate) && Date('n')-1 == $i)
+                @if ($thisMonthDateDepot == null && ($curentDate >= $deadlineDate) && Date('n')-1 == $i)
                     <td class="bg-warning"></td>
                 @else
                     <td class="bg-body-secondary custom-title">
@@ -219,7 +225,7 @@
                     </td>
                 @endif
 
-    @elseif($page === 'tvat')
+            @elseif($page === 'tvat')
                 @php
                     if (Date('n')<=4) {
                         $nb = (int)ceil(Date('n')/4);
@@ -229,21 +235,7 @@
                     }
                 @endphp
 
-                @if($DateDepot != null && $DateDepot >= $comparisonDate)
-                    <td class="bg-danger custom-title">
-                        {{ $activeData->{'date_depot_' . $i} }}
-                        <div class="motif d-flex align-items-center gap-2">
-                            @if ($activeData->{'motif_' . $i})
-                                <img src="{{ asset('imgs/motif.png') }}" style="width:20px; height:20px;" alt="motif">
-                                {{ $activeData->{'motif_' . $i} }}
-                            @else
-                                Aucun motif
-                            @endif
-                        </div>
-                    </td>
-                @elseif($DateDepot != null && $DateDepot < $comparisonDate)
-                    <td>{{ $activeData->{'date_depot_'.$i} }}</td>
-                @elseif( $activeData->{'date_depot_'.$nb} == null && ($curentDate >= $deadlineDate) && ($nb == $i) ) 
+                @if( $activeData->{'date_depot_'.$nb} == null && ($curentDate >= $deadlineDate) && ($nb == $i) ) 
                     <td class="bg-warning"></td>
                 @else
                     <td class="bg-body-secondary custom-title">
@@ -258,32 +250,18 @@
                     </td>
                 @endif
             
-    @elseif($page === 'acompte')
-        @php
+            @elseif($page === 'acompte')
+                @php
                     if($i == 1){
                         $nb = 1;
                     }
                     else{
                         $nb = ceil(Date('n') / 3)+1;
                     }
-        @endphp
-        @if($DateDepot != null && $DateDepot >= $comparisonDate)
-                    <td class="bg-danger custom-title">
-                        {{ $activeData->{'date_depot_' . $i} }}
-                        <div class="motif d-flex align-items-center gap-2">
-                            @if ($activeData->{'motif_' . $i})
-                                <img src="{{ asset('imgs/motif.png') }}" style="width:20px; height:20px;" alt="motif">
-                                {{ $activeData->{'motif_' . $i} }}
-                            @else
-                                Aucun motif
-                            @endif
-                        </div>
-                    </td>
-        @elseif($DateDepot != null && $DateDepot < $comparisonDate)
-                    <td>{{ $activeData->{'date_depot_'.$i} }}</td>
-        @elseif( $activeData->{'date_depot_'.$nb} == null && (($curentDate >= $deadlineDate) && ($nb == $i)) )
+                @endphp
+                @if( $activeData->{'date_depot_'.$nb} == null && (($curentDate >= $deadlineDate) && ($nb == $i)) )
                     <td class="bg-warning"></td>
-        @else
+                @else
                     <td class="bg-body-secondary custom-title">
                         <div class="motif d-flex align-items-center gap-2">
                             @if ($activeData->{'motif_' . $i})
@@ -294,13 +272,28 @@
                             @endif
                         </div>
                     </td>
+                @endif
+
+            @else
+                @if($thisMonthDateDepot == null && ($curentDate >= $deadlineDate))
+                    <td class="bg-warning"></td>
+                @else
+                    <td class="bg-body-secondary custom-title">
+                        <div class="motif d-flex align-items-center gap-2">
+                            @if ($activeData->{'motif_' . $i})
+                                <img src="{{ asset('imgs/motif.png') }}" style="width:20px; height:20px;" alt="motif">
+                                {{ $activeData->{'motif_' . $i} }}
+                            @else
+                                Aucun motif
+                            @endif
+                        </div>
+                    </td>
+                @endif
+            @endif  
+
+        @if($page != 'cnss' && $activeData->{'num_depot_' . $i} == null)
+            <td></td>
         @endif
-
-            
-    @endif  
-
-    @if($page != 'cnss')
-        <td>{{ $activeData->{'num_depot_'.$i} }}</td>
     @endif
 @endfor
 

@@ -18,7 +18,7 @@
             <img src="{{asset("imgs/stats.png")}}" alt="statistiques" width="30">
             Taux de respect de délais interne</h3>
         <form action="{{route('stats.index')}}" class="d-flex justify-content-center align-items-center gap-2">
-            <select name="userId" class="p-1">
+            <select name="userId" class="p-1" style="height: 35px">
                 <option value="">Choisir un collaborateur</option>
                 @foreach ($users as $item)
                     @if (request('userId') == $item->id)
@@ -28,7 +28,7 @@
                     @endif
                 @endforeach
             </select>
-            <input type="text" name="annee" id="" placeholder="Année" value="{{request('annee')}}">
+            <input type="text" name="annee" id="" placeholder="Année" style="height: 35px" value="{{request('annee')}}">
             <button class="btn btn-dark">Appliquer</button>
         </form>
     </div>

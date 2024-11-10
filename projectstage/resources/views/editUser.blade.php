@@ -14,7 +14,9 @@
         <div class="col-md-4">
             <div class="card shadow-sm">
                 <div class="card-body">
-                    <h3 class="text-center mb-4">Modifier l'utilisateur</h3>
+                    <h3 class="text-center mb-4 fw-bold">
+                        <img src="{{asset('imgs/useredit.png')}}" alt="" width="40">
+                        Modifier votre profile</h3>
                     <form action="{{ route('user.update', $user) }}" method="POST">
                         @csrf
                         @method('put')
@@ -42,8 +44,8 @@
                         @enderror
     
                         <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary">Modifier</button>
-                            <a href="{{route('clients.index')}}" class="btn btn-danger">Fermer</a>
+                            <button type="submit" class="btn btn-primary fw-bold">Modifier</button>
+                            <a href="{{route('clients.index')}}" class="btn btn-danger fw-bold">Fermer</a>
                         </div>
                     </form>
                 </div>

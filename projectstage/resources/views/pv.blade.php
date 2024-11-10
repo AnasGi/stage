@@ -48,7 +48,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </p>
     @endif        @if(session('success'))
-        <p class="alert w-50 fw-bold alert-success alert-dismissible fade show" role="alert">{{ session('success') }}
+        <p class="alert w-50 fw-bold alert-success alert-dismissible mt-3 fade show" role="alert">{{ session('success') }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </p>
     @endif
@@ -63,23 +63,24 @@
     <table class="table table-bordered table-hover text-center border-dark">
         <tr>
             <th>code client</th>
+            <th>numero de RC</th>
             <th style="width: 200px">entreprise</th>
             @if(auth()->user()->role == 'Admin')
                 <th>collaborateur</th>
             @endif
             <th>date de depot</th>
-            <th>numero de depot</th>
             
         </tr>
         @forelse ($pvData as $pv)
             <tr>
                 <td>{{$pv->clients->code}}</td>
+                <td>{{$pv->num_depot}}</td>
                 <td>{{$pv->clients->nom}}</td>
                 @if(auth()->user()->role == 'Admin')
                     <td>{{$pv->clients->users->name}}</td>
                 @endif
                 @php
-                    $year = Date('Y')+1;
+                    $year = ($pv->annee)+1;
                     $month = 7;
                     $an = $pv->annee+1;
                     $deadlineDate = (new DateTime("last day of {$year}-{$month}"))->modify('-6 days');
@@ -115,9 +116,8 @@
                         <td>{{$pv->date_depot}}</td>
                     @endif
                 @endif
-                <td>{{$pv->num_depot}}</td>
-                <td><a href="{{route('pv.destroy' , $pv)}}" class="btn btn-danger" onclick="return confirm('Vous-etre sure de supprimer cette donnée?')">supprimer</a></td>
-            <td><a href="{{route('pv.update' , $pv)}}" class="btn btn-primary">modifier</a></td>
+                <td style="outline: none ; border:none;"><a href="{{route('pv.destroy' , $pv)}}" class="btn btn-danger" onclick="return confirm('Vous-etre sure de supprimer cette donnée?')">supprimer</a></td>
+            <td style="outline: none ; border:none;"><a href="{{route('pv.update' , $pv)}}" class="btn btn-primary">modifier</a></td>
             </tr>
         @empty
             @php

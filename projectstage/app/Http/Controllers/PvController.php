@@ -65,8 +65,24 @@ class PvController extends Controller
         $pvData->where('annee', Date('Y'));
     }
 
+    if($request->input('rc')){
+        $pvData->where('num_depot', $request->input('rc'));
+    }
+
     if(request('alertFilter')){
         $pvData->where('date_depot' , null);
+
+        if (Auth::user()->role == 'Admin') {    
+
+            if ($request->input('namecollab')) {
+                $userId = $request->input('namecollab');
+                $pvData->whereHas('clients', function ($query) use ($userId) {
+                    $query->where('users_id', '=', $userId);
+                });
+    
+            }
+    
+        } 
     }
 
     // Finally, get the filtered data (only call `get()` once)
@@ -118,7 +134,7 @@ class PvController extends Controller
     public function edit(Pv $Pv)
     {
         $activeData = $Pv;
-        $page = 'Pv';
+        $page = 'pv';
         return view('edit' , compact('activeData' , 'page'));
     }
 

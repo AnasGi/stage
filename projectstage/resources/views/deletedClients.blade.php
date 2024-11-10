@@ -31,7 +31,7 @@
                 <div class="d-flex justify-content-between align-items-center bg-white shadow rounded p-3 mt-3 mb-3">
                     <h3 class="m-0">
                         Les clients liquidés/déchargés 
-                        <span class="bg-info fs-6 fw-bold" style="border-radius: 100% ; padding:4px 10px ; vertical-align:super">{{count($deletedClients)}}</span>
+                        <span class="bg-danger text-light fs-6" style="border-radius:20px ; padding:4px ; vertical-align:super">{{count($deletedClients)}}</span>
                     </h3>
                     <form action="{{route('clients.deleted')}}" class="d-flex justify-content-center gap-2 fw-bold align-items-center">
                         Tous <input type="radio" name="typeDlt" value="all" {{request("typeDlt") == "all" || !request("typeDlt") ? 'checked' : ''}}>
@@ -114,7 +114,7 @@
                                     <li class="fw-bold">Code: {{$client->code}}</li>
                                     <li class="fw-bold">Adresse: {{$client->adresse}}</li>
                                     <li class="fw-bold">Activite: {{$client->activite}}</li>
-                                    <li class="fw-bold">collaborateur: {{$client->users->name}}</li>
+                                    <li class="fw-bold">collaborateur: {{$client->users()->withTrashed()->value('name')}}</li>
                                 </ul>
                             </details>
                         @endforeach

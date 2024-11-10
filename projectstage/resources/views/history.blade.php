@@ -43,7 +43,7 @@
                 <div class="d-flex justify-content-between align-items-center bg-white shadow rounded p-3 mt-3 mb-3">
                     <h3 class="m-0">
                         L'historique des clients  
-                        <span class="bg-info fs-6 fw-bold" style="border-radius: 100% ; padding:4px 10px ; vertical-align:super">{{count($clientsInHistory)}}</span>
+                        <span class="bg-success text-light fs-6" style="border-radius:20px ; padding:4px ; vertical-align:super">{{count($clientsInHistory)}}</span>
                     </h3>
                     <form action="{{route('clients.history')}}" method="GET" class="d-flex gap-3 align-items-center">
                         <input list="clients-list" name="clients_id" id="clients_id" value="{{request('clients_id')}}" class="p-1" placeholder="Choisir un client">

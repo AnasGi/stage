@@ -34,7 +34,7 @@
             <div class="d-flex justify-content-between align-items-center bg-white shadow rounded p-3 mt-3 mb-3">
                 <h3 class="m-0" >
                     Les Collaborateurs 
-                    <span class="bg-info fs-6 fw-bold" style="border-radius:100% ; padding:4px 10px ; vertical-align:super">{{count($users)}}</span>
+                    <span class="bg-info fs-6" style="border-radius:20px ; padding:4px ; vertical-align:super">{{count($users)}}</span>
                 </h3>
                 <a href="{{route('users.showTable')}}" class="btn btn-dark" style="font-size: 12px">Sous form d'un tableau</a>
                 <p class="m-0">Données de l'année {{Date('Y')}}</p>
@@ -65,7 +65,7 @@
 
                                     <span>
                                         <button class="btn btn-danger p-0"
-                                            @if( count($user->clients) > 0 ) 
+                                            @if( count($user->clients) > 0 || $user->role == 'Admin') 
                                                     disabled
                                             @endif
                                         >

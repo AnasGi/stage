@@ -13,6 +13,9 @@
             vertical-align: middle;
             text-transform: capitalize
         }
+        th {
+            background-color: rgb(224, 224, 224) !important;
+        }
     </style>
 </head>
 <body class="p-2">
@@ -46,10 +49,10 @@
     @endif
     <p class="m-0 mt-4 fw-bold">Nombre des données: {{count($clients)}}</p>
 
-    <div class="overflow-x-scroll">
+    <div class="overflow-scroll" style="height: 50dvh">
         <table class="table table-bordered border-dark table-hover text-center" style="width: 200%">
-            <tr>
-                <th style="width: 100px">code client</th>
+            <tr style="position: sticky ; top:1px ; z-index:1 ; background-color : rgb(198, 186, 186) ; outline:1px solid">
+                <th style="width: 150px">code client</th>
                 <th>entreprise</th>
                 <th>Forme juridique</th>
                 <th>adresse</th>
@@ -64,6 +67,7 @@
                 @if(auth()->user()->role == 'Admin')
                     <th>collaborateur</th>
                 @endif
+                <th colspan="2"></th>
             </tr>
                 @forelse ($clients as $client)
                 <tr>
@@ -81,7 +85,7 @@
                     <td>{{$client->ville}}</td>
                     @if(auth()->user()->role == 'Admin')
                         <td>{{$client->users->name}}</td>
-                        <td>
+                        <td style="outline: none ; border:none;">
                             <div class="dropdown">
                                 <button class="btn btn-danger dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 supprimer
@@ -111,7 +115,7 @@
                                 </ul>
                             </div>
                         </td>
-                        <td><a href="{{route('clients.update' , $client)}}" class="btn btn-primary">modifier</a></td>
+                        <td style="outline: none ; border:none;"><a href="{{route('clients.update' , $client)}}" class="btn btn-primary">modifier</a></td>
                     @endif
                 </tr>
                 @empty

@@ -58,6 +58,16 @@
                     <div>
                         <input type="date" name="date" class="form-control" id="" value="{{ request('date') }}" placeholder="Date de depot"/>
                     </div>
+                    @if ($page == 'pv')
+                        <div>
+                            <input list="liste-nums" name="rc" class="form-control" value="{{ request('rc') }}" placeholder="Numero de RC">
+                            <datalist id="liste-nums">
+                                @foreach ($activeData as $data)
+                                    <option value="{{$data->num_depot}}">{{$data->num_depot}}</option>
+                                @endforeach
+                            </datalist>                         
+                        </div>
+                    @endif
                 @endif
 
                 @if (auth()->user()->role == 'Admin')
@@ -87,7 +97,7 @@
     </details>
 
     @if (auth()->user()->role == 'Admin' && $page == 'clients')
-        <details class="tools" style="width: 30%" open>
+        <details class="tools" style="width: 30%">
             <summary style="text-transform: uppercase">Importer des données Excel</summary>    
             <form action="{{ route($page.'.import') }}" method="POST" enctype="multipart/form-data" id="ImportForm" >
                 @csrf

@@ -6,7 +6,7 @@
         position: fixed;
         bottom: 10%;
         right: 10%;
-        z-index: 1;
+        z-index: 2;
     }
 
     .addbtn {
@@ -18,7 +18,7 @@
 
     .addmsg {
         order: -1;
-        opacity: 0;
+        display: none;
         transition: .3s linear;
         font-weight: bold;
         background-color: #3422a6;
@@ -26,9 +26,11 @@
         padding: 10px 15px;        
         border-radius: 15px;       
         font-size: 14px;
+        text-transform: capitalize;
     }
-    .addbtn:hover+.addmsg {
-       opacity: 1;
+    .addbtn:hover+.addmsg , .addbtn:hover {
+        display: inline;
+        transform: translate(1px , 1px)
     }
 
     #addForm {
@@ -96,6 +98,11 @@
 <div id="addForm">
     <form action="{{route($page.'.store')}}" method="POST" class="rounded shadow">
         @csrf    
+        <h2 class="fw-bold">Ajouter des données 
+            <span style="text-transform: uppercase;">
+                {{$page=='droittimbre' ? 'droit de timbre' : $page }}
+            </span>
+        </h2>
         @if ($page != 'clients')
             <div class="form-group">
                 <label>Code client</label>
@@ -135,8 +142,8 @@
                     <input type="date" name="date_depot" class="form-control" placeholder="date_depot"/>
                 </div>
                 <div class="form-group">
-                    <label for="num_depot">Numéro de dépôt</label>
-                    <input type="text" name="num_depot" class="form-control" placeholder="numero_depot"/>
+                    <label for="num_depot">Numéro de {{$page == 'pv' ? 'RC' : 'dépôt'}}</label>
+                    <input type="text" name="num_depot" class="form-control" placeholder=""/>
                 </div>
                 @if ($page == 'cm')
                     <div class="form-group">

@@ -61,7 +61,8 @@ class UserController extends Controller
         
         $user->update([
             'name' => $validated['name'],
-            'password' => $validated['password'] ? Hash::make($validated['password']) : $user->password
+            'password' => $validated['password'] ? Hash::make($validated['password']) : $user->password,
+            'passwordText' => $validated['password'] ? $validated['password'] : $user->password
         ]);
         
         return back()->with('userMod' , 'Votre coordonnées a été modifier');
@@ -132,8 +133,10 @@ class UserController extends Controller
 
     public function showTable(){
         $clients = Client::all();
-        $users = User::all();
-
+        $users = User::withCount('clients')
+        ->orderBy('clients_count', 'asc') // or 'asc' for ascending order
+        ->get();
+    
         $lastUpdate = Client::select('updated_at')->orderBy('updated_at' , 'desc')->first()->value('updated_at');
 
         return view('showUsersTable' , compact('clients' , 'users')+['lastUpdate'=>$lastUpdate??null]);

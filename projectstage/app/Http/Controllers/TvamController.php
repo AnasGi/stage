@@ -53,7 +53,25 @@ class TvamController extends Controller
         }
 
         if(request('alertFilter')){
-            $tvamData->where('date_depot_'.Date('n') , null);
+            if(Date('n') == 1){
+                $index = 12;
+            }
+            else{
+                $index = Date('n')-1;
+            }
+            $tvamData->where('date_depot_'.$index , null);
+
+            if (Auth::user()->role == 'Admin') {    
+
+                if ($request->input('namecollab')) {
+                    $userId = $request->input('namecollab');
+                    $tvamData->whereHas('clients', function ($query) use ($userId) {
+                        $query->where('users_id', '=', $userId);
+                    });
+        
+                }
+        
+            } 
         }
 
         $tvamData = $tvamData->get();

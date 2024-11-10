@@ -3,9 +3,6 @@
 @php
     $nbreCells = 0;
     $alertsNumber = 0;
-    $mois = "";
-    $trimestre = "";
-    $year = (int)Date('Y');
 
     if($page === 'acompte'){
         $lastMonthTrimester = 3;
@@ -31,15 +28,16 @@
 @endif
     
     @foreach ($activeData as $activeData)
-        @if ($activeData->annee == Date('Y'))
+        {{-- @if ($activeData->annee == $activeData->annee) --}}
             @for($i = 1 ; $i <$nbreCells ; $i++)
-                @if($activeData->{'date_depot_' . $i} == null)
+                {{-- @if($activeData->{'date_depot_' . $i} == null) --}}
                     @php
                         $DateDepot = new DateTime($activeData->{'date_depot_' . $i});
                         $curentDate = Datetime::createFromFormat('Y-m-d' , Date('Y-n-d'));
                         $thisTrimesterDateDepot = $activeData->{'date_depot_'.ceil(Date('n') / 3)};
 
-                        $ans = Date('Y');
+                        $ans = $activeData->annee;
+                        $year = $activeData->annee;
                         if(Date('n') == 1){
                             $mois = 12;
                         }
@@ -59,14 +57,21 @@
                                     $year += 1;
                                 }
                                 if ($i==2) {
-                                    $year=Date('Y');
+                                    $year=$activeData->annee;
                                 }
                                 if ($i>2) {
-                                    $year=Date('Y');
+                                    $year=$activeData->annee;
                                     $lastMonthTrimester+=3;
+                                }
+                                if($lastMonthTrimester > 12){
+                                    $lastMonthTrimester = 12;
                                 }
 
                                 $deadlineDate = (new DateTime("last day of {$year}-{$lastMonthTrimester}"))->modify('-6 days');
+                                
+                                if($i == 5){
+                                    $lastMonthTrimester = 3;
+                                }
                             
                         }
                         elseif($page === 'tvat'){
@@ -81,6 +86,10 @@
 
 
                             $deadlineDate = (new DateTime("last day of {$year}-{$lastMonthTrimester}"))->modify('-6 days');
+
+                            if($i == 4){
+                                $lastMonthTrimester = 4;
+                            }
                         }
                         elseif ($page === 'etat') {
                             $year +=1;
@@ -124,15 +133,21 @@
                             @if ($thisMonthDateDepot == null && ($curentDate >= $deadlineDate) && Date('n')-1 == $i)
                                 @php
                                     $alertsNumber += 1;
-                                    $mois = $i;
                                 @endphp
                             @endif  
 
                     @elseif($page === 'tvat')
-                            @if ($thisTrimesterDateDepot == null && ($curentDate >= $deadlineDate) && (ceil(Date('n')/3) == $i))
+                            @php
+                                if (Date('n')<=4) {
+                                    $nb = ceil(Date('n')/4);
+                                }
+                                else {
+                                    $nb = ceil(Date('n')/3);
+                                }
+                            @endphp
+                            @if ($thisTrimesterDateDepot == null && ($curentDate >= $deadlineDate) && ($nb == $i))
                                 @php
                                     $alertsNumber += 1;
-                                    $trimestre = $i;
                                 @endphp
                             @endif  
                     @elseif($page === 'acompte')
@@ -147,7 +162,6 @@
                         @if ($activeData->{'date_depot_'.$nb} == null && ($curentDate >= $deadlineDate) && ($nb == $i))
                             @php
                                 $alertsNumber += 1;
-                                $trimestre = $i;
                             @endphp
                         @endif  
                     @else
@@ -158,9 +172,9 @@
                             @endif
                     @endif
                     
-                @endif
+                {{-- @endif --}}
             @endfor
-        @endif
+        {{-- @endif --}}
     @endforeach
     <div class="d-flex align-items-center justify-content-center gap-1">
         <span class="fw-bold" style="text-transform: capitalize">

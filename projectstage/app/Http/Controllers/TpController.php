@@ -67,6 +67,18 @@ class TpController extends Controller
 
     if(request('alertFilter')){
         $tpData->where('date_depot' , null);
+
+        if (Auth::user()->role == 'Admin') {    
+
+            if ($request->input('namecollab')) {
+                $userId = $request->input('namecollab');
+                $tpData->whereHas('clients', function ($query) use ($userId) {
+                    $query->where('users_id', '=', $userId);
+                });
+    
+            }
+    
+        } 
     }
 
     // Finally, get the filtered data (only call `get()` once)
@@ -118,7 +130,7 @@ class TpController extends Controller
     public function edit(Tp $Tp)
     {
         $activeData = $Tp;
-        $page = 'Tp';
+        $page = 'tp';
         return view('edit' , compact('activeData' , 'page'));
     }
 
