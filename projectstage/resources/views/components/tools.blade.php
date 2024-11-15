@@ -73,12 +73,14 @@
                 @if (auth()->user()->role == 'Admin')
                     <div>
                         <select name="name" id="" class="form-control">
-                            <option value="">Collaborateur</option>
+                            <option value="{{auth()->user()->id}}">{{auth()->user()->name}}</option>
                             @foreach ($users as $user)
-                                @if($user->id == request('name'))
-                                    <option selected value="{{$user->id}}">{{$user->name}}</option>
-                                @else
-                                    <option value="{{$user->id}}">{{$user->name}}</option>
+                                @if ($user->role != "Admin")
+                                    @if($user->id == request('name'))
+                                        <option selected value="{{$user->id}}">{{$user->name}}</option>
+                                    @else
+                                        <option value="{{$user->id}}">{{$user->name}}</option>
+                                    @endif
                                 @endif
                             @endforeach
                         </select>

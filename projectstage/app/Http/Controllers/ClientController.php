@@ -286,15 +286,18 @@ class ClientController extends Controller
         ]);
 
         if ($request->hasFile('motifdoc')) {
-            $motifDocPath = $request->file('motifdoc')->store('documents' , 'public');
+            $motifDocPath = $request->file('motifdoc');
+            $filename = time() . '_' . $motifDocPath->getClientOriginalName(); // Unique filename
+            $motifDocPath->move(public_path(), $filename);  // Move the file to the public/documents folder
+            $motifdoc = $filename;
         }
         else{
-            $motifDocPath = null;
+            $motifdoc = null;
         }
 
         $trachedClient->update([
             'motif' => $request->input('motif'),
-            'motifdoc' => $motifDocPath
+            'motifdoc' => $motifdoc
         ]);
         
         return back()->with('success' ,  "Le motif a été sauvegarder !");

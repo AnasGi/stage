@@ -145,6 +145,7 @@ class BilanController extends Controller
         $Bilan->update([
             'date_depot' => $request->input('date_depot'),
             'num_depot' => $request->input('num_depot'),
+            'motif' => $request->input('motif'),
         ]);
 
         return back()->with('mod' , "Modification reussite!");

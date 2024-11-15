@@ -190,7 +190,7 @@
 
     @if($page === 'tvam' || $page === 'ir' || $page === 'droittimbre' || $page === 'cnss')
 
-                @if($DateDepot != null && $DateDepot >= $comparisonDate)
+                @if($DateDepot != null && $DateDepot > $comparisonDate)
                     <td class="bg-danger custom-title">
                         {{ $activeData->{'date_depot_' . $i} }}
                         <div class="motif d-flex align-items-center gap-2">
@@ -202,7 +202,7 @@
                             @endif
                         </div>
                     </td>
-                @elseif($DateDepot != null && $DateDepot < $comparisonDate)
+                @elseif($DateDepot != null && $DateDepot <= $comparisonDate)
                     <td>{{ $activeData->{'date_depot_'.$i} }}</td>
                 @elseif ($thisMonthDateDepot == null && ($curentDate >= $deadlineDate) && Date('n')-1 == $i)
                     <td class="bg-warning"></td>
@@ -229,7 +229,7 @@
                     }
                 @endphp
 
-                @if($DateDepot != null && $DateDepot >= $comparisonDate)
+                @if($DateDepot != null && $DateDepot > $comparisonDate)
                     <td class="bg-danger custom-title">
                         {{ $activeData->{'date_depot_' . $i} }}
                         <div class="motif d-flex align-items-center gap-2">
@@ -241,7 +241,7 @@
                             @endif
                         </div>
                     </td>
-                @elseif($DateDepot != null && $DateDepot < $comparisonDate)
+                @elseif($DateDepot != null && $DateDepot <= $comparisonDate)
                     <td>{{ $activeData->{'date_depot_'.$i} }}</td>
                 @elseif( $activeData->{'date_depot_'.$nb} == null && ($curentDate >= $deadlineDate) && ($nb == $i) ) 
                     <td class="bg-warning"></td>
@@ -267,7 +267,7 @@
                         $nb = ceil(Date('n') / 3)+1;
                     }
         @endphp
-        @if($DateDepot != null && $DateDepot >= $comparisonDate)
+        @if($DateDepot != null && $DateDepot > $comparisonDate)
                     <td class="bg-danger custom-title">
                         {{ $activeData->{'date_depot_' . $i} }}
                         <div class="motif d-flex align-items-center gap-2">
@@ -279,7 +279,7 @@
                             @endif
                         </div>
                     </td>
-        @elseif($DateDepot != null && $DateDepot < $comparisonDate)
+        @elseif($DateDepot != null && $DateDepot <= $comparisonDate)
                     <td>{{ $activeData->{'date_depot_'.$i} }}</td>
         @elseif( $activeData->{'date_depot_'.$nb} == null && (($curentDate >= $deadlineDate) && ($nb == $i)) )
                     <td class="bg-warning"></td>

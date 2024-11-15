@@ -154,13 +154,9 @@
                 <a class="btn btn-light {{ Route::is('tp.index') ? 'active-link' : '' }}" href="{{ route('tp.index') }}">TP</a>
                 <a class="btn btn-light {{ Route::is('irprof.index') ? 'active-link' : '' }}" href="{{ route('irprof.index') }}">IR Prof globale</a>
                 <a class="btn btn-light {{ Route::is('pv.index') ? 'active-link' : '' }}" href="{{ route('pv.index') }}">PV de l'AGO</a>
-                @if (auth()->user()->role != 'Admin')
-                    <hr class="hr">
-                    <a href="{{ route('users.showTable') }}" class="btn btn-dark {{ Route::is('users.showTable') ? 'active-link' : '' }}">Dossiers clients</a>
-                @endif
-                
             </div>
         </div>
+        
         @if (auth()->user()->role == 'Admin')
             <hr class="hr">
             <div class="dropdown">
@@ -191,7 +187,22 @@
                   </li>
                 </ul>
             </div>
-        
+        @else
+            <hr class="hr">
+            <div class="dropdown">
+                <button style="font-size: 13px" class="btn btn-dark fw-bold dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Autres options
+                </button>
+                <ul class="dropdown-menu" style="font-size: 13px">
+                    <li class="{{ Route::is('users.showTable') ? 'bg-body-secondary' : '' }}">
+                        <a class="dropdown-item" href="{{ route('users.showTable') }}">Dossiers clients</a>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li class="{{ Route::is('stats.index') ? 'bg-body-secondary' : '' }}">
+                        <a class="dropdown-item" href="{{route('stats.index')}}">Statistiques</a>
+                    </li>
+                </ul>
+            </div>
         @endif
     </div>
 </div>

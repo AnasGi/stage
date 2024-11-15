@@ -15,6 +15,7 @@ use App\Models\Cm;
 use App\Models\Pv;
 use App\Models\Tp;
 use App\Models\User;
+use Auth;
 use DateTime;
 use Illuminate\Http\Request;
 
@@ -29,7 +30,13 @@ class StatsController extends Controller
             $annee = $request->input('annee');
         }
 
-        $userId = $request->input('userId', null); // Default to null if not provided
+        if(Auth::user()->role == "Admin"){
+            $userId = $request->input('userId', null); // Default to null if not provided
+        }
+        else{
+            $userId = Auth::user()->id;
+        }
+
         $cnssTable = [];
         $tvamTable = [];
         $irTable = [];

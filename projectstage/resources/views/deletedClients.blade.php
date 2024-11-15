@@ -93,7 +93,7 @@
                                                 @endif
                                                 @if($client->motifdoc)
                                                     <span>
-                                                        <a href="{{ Storage::url($client->motifdoc) }}" download>Télécharger Document</a>
+                                                        <a href="{{ asset($client->motifdoc) }}" target="_blank">Afficher Document</a>
                                                     </span>
                                                 @endif
 
