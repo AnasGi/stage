@@ -94,15 +94,33 @@
     <hr>
 
     @if ($clientToFind !== null)
-        <details class="mt-4">
-            <summary class="fw-bold fs-4 mb-2">
-                Tous les Déclarations de {{$clientNameToFind}} de l'année {{request('annee') ?? Date('Y')}}
-            </summary>
-            @if (auth()->user()->role == "Admin")
-                <h3 class="mb-3 mt-4 bg-body-secondary p-2 rounded w-50">Collaborateur: {{$userName}}</h3>
-            @endif
-            <details open>
-                <summary class="fw-bold fs-4">Déclaration mensuelle</summary>
+        <div class="mt-4">
+            <div class="fw-bold mb-2">
+                <div class="m-3 bg-body-secondary p-2 rounded d-flex justify-content-center gap-5">
+                        @if (auth()->user()->role == "Admin")
+                            <span class="d-flex align-items-center gap-2">
+                                <img src="{{asset('imgs/collab.png')}}" alt="collaborateur" width="30" class="d-flex align-items-center gap-2">
+                                <span>
+                                    {{$userName}}
+                                </span>
+                            </span>
+                        @endif
+                        <span class="d-flex align-items-center gap-2">
+                            <img src="{{asset('imgs/client.png')}}" alt="collaborateur" width="30" class="d-flex align-items-center gap-2">
+                            <span>
+                                {{$clientNameToFind}}                            
+                            </span>
+                        </span>
+                        <span class="d-flex align-items-center gap-2">
+                            <img src="{{asset('imgs/date.png')}}" alt="collaborateur" width="30" >
+                            <span>
+                                {{request('annee') ?? Date('Y')}}
+                            </span>
+                        </span>
+                </div>
+            </div>
+            <details class="bg-body-secondary p-2 rounded m-3">
+                <summary class="fw-bold fs-5">Déclaration Mensuelle</summary>
                 <table class="table table-bordered table-hover text-center border-dark">
                     <tr>
                         <th></th>
@@ -163,8 +181,8 @@
                 </table>
             </details>  
     
-            <details open>
-                <summary class="fw-bold fs-4">Déclaration trimistrielle</summary>
+            <details class="bg-body-secondary p-2 rounded m-3">
+                <summary class="fw-bold fs-5">Déclaration Trimistrielle</summary>
                 <table class="table table-bordered table-hover text-center border-dark">
                     <tr>
                         <th></th>
@@ -219,8 +237,8 @@
                 </table>
             </details>  
     
-            <details open>
-                <summary class="fw-bold fs-4">Déclaration Annuelle</summary>
+            <details class="bg-body-secondary p-2 rounded m-3">
+                <summary class="fw-bold fs-5">Déclaration Annuelle</summary>
                 <table class="table table-bordered table-hover text-center border-dark">
                     <tr>
                         <th></th>
@@ -294,8 +312,7 @@
                     </tr>
                 </table>
             </details>  
-        </details>
-        <hr>
+        </div>
     @endif
 
 </body>

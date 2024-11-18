@@ -44,7 +44,7 @@
                 <input type="text" name="mois" id="" placeholder="Mois" value="{{request('mois')}}">
                 <input type="text" name="day" id="" placeholder="Jour" value="{{request('day')}}">
                 <button class="btn btn-primary p-3 pt-1 pb-1">Filtrer</button>
-                <a href="{{route('clients.new')}}" class="btn btn-danger p-3 pt-1 pb-1">Initialiser filtrage</a>
+                <a href="{{route('clients.new')}}" class="btn btn-danger p-3 pt-1 pb-1">Initialiser</a>
             </form>
         </div>
     </div>

@@ -64,20 +64,22 @@
                                     @endif
 
                                     <span>
-                                        <button class="btn btn-danger p-0"
-                                            @if( count($user->clients) > 0 || $user->role == 'Admin') 
-                                                    disabled
-                                            @endif
-                                        >
-                                            <a 
-                                                class="btn btn-danger"
-                                                style="font-size: 13px" 
-                                                href="{{route('user.delete' , $user)}}" 
-                                                onclick="return confirm('Est-ce-que vous etes sure de supprimer ce collaborateur? Tous les données associer à ce collaborateur va etre supprimer!')"
+                                        @if ($user->role != 'Admin')
+                                            <button class="btn btn-danger p-0"
+                                                @if( count($user->clients) > 0) 
+                                                        disabled
+                                                @endif
                                             >
-                                                Supprimer
-                                            </a>
-                                        </button>
+                                                <a 
+                                                    class="btn btn-danger"
+                                                    style="font-size: 13px" 
+                                                    href="{{route('user.delete' , $user)}}" 
+                                                    onclick="return confirm('Est-ce-que vous etes sure de supprimer ce collaborateur? Tous les données associer à ce collaborateur va etre supprimer!')"
+                                                >
+                                                    Supprimer
+                                                </a>
+                                            </button>
+                                        @endif
                                     </span>
                                 </div>
                             </summary>
@@ -102,11 +104,14 @@
                 @if (request()->has('id'))
                     <div>
                         <ul style="position: sticky; top:30%">
-                            <li style="list-style-type: none" class="mb-2 fw-bold">{{$selectedClient->nom}}</li>
+                            <div class="d-flex align-items-center gap-2">
+                                <img src="{{asset('imgs/client.png')}}" alt="" width="50">
+                                <span class="fw-bold">{{$selectedClient->nom}}</span>
+                            </div>
                             <li>
                                 <span style="vertical-align: middle; width:150px;display:inline-block">Cnss </span>
                                 @if (count($Cnss) > 0)
-                                    <span class="btn btn-success rounded p-2 pt-0 pb-0" style="font-size: 13px">Il ya des données</span>
+                                    <span class="btn btn-success rounded p-2 pt-0 pb-0" style="font-size: 13px">Existe</span>
                                 @else
                                     <span class="btn btn-danger rounded p-2 pt-0 pb-0" style="font-size: 13px">Vide</span>
                                 @endif
@@ -114,7 +119,7 @@
                             <li>
                                 <span style="vertical-align: middle; width:150px;display:inline-block">Tvam </span>
                                 @if (count($Tvam) > 0)
-                                    <span class="btn btn-success rounded p-2 pt-0 pb-0" style="font-size: 13px">Il ya des données</span>
+                                    <span class="btn btn-success rounded p-2 pt-0 pb-0" style="font-size: 13px">Existe</span>
                                 @else
                                     <span class="btn btn-danger rounded p-2 pt-0 pb-0" style="font-size: 13px">Vide</span>
                                 @endif
@@ -122,7 +127,7 @@
                             <li>
                                 <span style="vertical-align: middle; width:150px;display:inline-block">Ir </span>
                                 @if (count($Ir) > 0)
-                                    <span class="btn btn-success rounded p-2 pt-0 pb-0" style="font-size: 13px">Il ya des données</span>
+                                    <span class="btn btn-success rounded p-2 pt-0 pb-0" style="font-size: 13px">Existe</span>
                                 @else
                                     <span class="btn btn-danger rounded p-2 pt-0 pb-0" style="font-size: 13px">Vide</span>
                                 @endif
@@ -130,7 +135,7 @@
                             <li>
                                 <span style="vertical-align: middle; width:150px;display:inline-block">Droit de timbre </span>
                                 @if (count($Droittimber) > 0)
-                                    <span class="btn btn-success rounded p-2 pt-0 pb-0" style="font-size: 13px">Il ya des données</span>
+                                    <span class="btn btn-success rounded p-2 pt-0 pb-0" style="font-size: 13px">Existe</span>
                                 @else
                                     <span class="btn btn-danger rounded p-2 pt-0 pb-0" style="font-size: 13px">Vide</span>
                                 @endif
@@ -141,7 +146,7 @@
                             <li>
                                 <span style="vertical-align: middle; width:150px;display:inline-block">Tvat </span>
                                 @if (count($Tvat) > 0)
-                                    <span class="btn btn-success rounded p-2 pt-0 pb-0" style="font-size: 13px">Il ya des données</span>
+                                    <span class="btn btn-success rounded p-2 pt-0 pb-0" style="font-size: 13px">Existe</span>
                                 @else
                                     <span class="btn btn-danger rounded p-2 pt-0 pb-0" style="font-size: 13px">Vide</span>
                                 @endif
@@ -149,7 +154,7 @@
                             <li>
                                 <span style="vertical-align: middle; width:150px;display:inline-block">Acompte </span>
                                 @if (count($Acompte) > 0)
-                                    <span class="btn btn-success rounded p-2 pt-0 pb-0" style="font-size: 13px">Il ya des données</span>
+                                    <span class="btn btn-success rounded p-2 pt-0 pb-0" style="font-size: 13px">Existe</span>
                                 @else
                                     <span class="btn btn-danger rounded p-2 pt-0 pb-0" style="font-size: 13px">Vide</span>
                                 @endif
@@ -160,7 +165,7 @@
                             <li>
                                 <span style="vertical-align: middle; width:150px;display:inline-block">Etat </span>
                                 @if (count($Etat) > 0)
-                                    <span class="btn btn-success rounded p-2 pt-0 pb-0" style="font-size: 13px">Il ya des données</span>
+                                    <span class="btn btn-success rounded p-2 pt-0 pb-0" style="font-size: 13px">Existe</span>
                                 @else
                                     <span class="btn btn-danger rounded p-2 pt-0 pb-0" style="font-size: 13px">Vide</span>
                                 @endif
@@ -168,7 +173,7 @@
                             <li>
                                 <span style="vertical-align: middle; width:150px;display:inline-block">Tp </span>
                                 @if (count($Tp) > 0)
-                                    <span class="btn btn-success rounded p-2 pt-0 pb-0" style="font-size: 13px">Il ya des données</span>
+                                    <span class="btn btn-success rounded p-2 pt-0 pb-0" style="font-size: 13px">Existe</span>
                                 @else
                                     <span class="btn btn-danger rounded p-2 pt-0 pb-0" style="font-size: 13px">Vide</span>
                                 @endif
@@ -176,7 +181,7 @@
                             <li>
                                 <span style="vertical-align: middle; width:150px;display:inline-block">Cm </span>
                                 @if (count($Cm) > 0)
-                                    <span class="btn btn-success rounded p-2 pt-0 pb-0" style="font-size: 13px">Il ya des données</span>
+                                    <span class="btn btn-success rounded p-2 pt-0 pb-0" style="font-size: 13px">Existe</span>
                                 @else
                                     <span class="btn btn-danger rounded p-2 pt-0 pb-0" style="font-size: 13px">Vide</span>
                                 @endif
@@ -184,7 +189,7 @@
                             <li>
                                 <span style="vertical-align: middle; width:150px;display:inline-block">Bilan </span>
                                 @if (count($Bilan) > 0)
-                                    <span class="btn btn-success rounded p-2 pt-0 pb-0" style="font-size: 13px">Il ya des données</span>
+                                    <span class="btn btn-success rounded p-2 pt-0 pb-0" style="font-size: 13px">Existe</span>
                                 @else
                                     <span class="btn btn-danger rounded p-2 pt-0 pb-0" style="font-size: 13px">Vide</span>
                                 @endif
@@ -192,7 +197,7 @@
                             <li>
                                 <span style="vertical-align: middle; width:150px;display:inline-block">Pv </span>
                                 @if (count($Pv) > 0)
-                                    <span class="btn btn-success rounded p-2 pt-0 pb-0" style="font-size: 13px">Il ya des données</span>
+                                    <span class="btn btn-success rounded p-2 pt-0 pb-0" style="font-size: 13px">Existe</span>
                                 @else
                                     <span class="btn btn-danger rounded p-2 pt-0 pb-0" style="font-size: 13px">Vide</span>
                                 @endif
@@ -200,7 +205,7 @@
                             <li>
                                 <span style="vertical-align: middle; width:150px;display:inline-block">Irprof </span>
                                 @if (count($Irprof) > 0)
-                                    <span class="btn btn-success rounded p-2 pt-0 pb-0" style="font-size: 13px">Il ya des données</span>
+                                    <span class="btn btn-success rounded p-2 pt-0 pb-0" style="font-size: 13px">Existe</span>
                                 @else
                                     <span class="btn btn-danger rounded p-2 pt-0 pb-0" style="font-size: 13px">Vide</span>
                                 @endif
@@ -222,9 +227,11 @@
                         </label>
                         <div class="d-flex align-items-center gap-2 mb-2">
                             <select name="user" id="" class="pt-1 pb-1" required>
-                                <option value=""></option>
+                                <option value="">Choisir un collaborateur</option>
                                 @foreach ($users as $user)
-                                    <option value="{{$user->id}}">{{$user->name}}</option>
+                                    @if ($user->id != request('user_id'))
+                                        <option value="{{$user->id}}">{{$user->name}}</option>
+                                    @endif
                                 @endforeach
                             </select>
                         </div>

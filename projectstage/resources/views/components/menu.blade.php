@@ -54,7 +54,7 @@
         visibility: visible !important;
     }
 
-    @media screen and (max-width: 1100px) {
+    @media screen and (max-width: 1200px) {
         
         .linksCont {
             overflow-x: auto !important;
@@ -70,7 +70,7 @@
 
 <div class="menu shadow " style="z-index: 100">
     
-    <div class="mb-3 d-flex justify-content-around align-items-center">
+    <div class="d-flex justify-content-around align-items-end">
         <div>
             <img style="width: 150px; height:100px" src="{{asset('imgs/logo.png')}}" alt="logo"/>
         </div>
@@ -78,18 +78,22 @@
             <div class="d-flex gap-3 align-items-center ">
                 <div style="margin-right: 10px">
                     <div class="d-flex gap-1 align-items-start justify-content-center">
+                        <img src="{{asset('imgs/collab.png')}}" alt="collaborateur" width="40">
                         <h2 class="fw-bold">{{auth()->user()->name}}</h2>
-                        <span class="bg-info p-1 fw-bold rounded" style="font-size: 14px ; text-transform:capitalize">{{auth()->user()->role}}</span>
+                        <span class="bg-warning p-2 pt-1 pb-1 rounded" style="font-size: 14px ; text-transform:capitalize">{{auth()->user()->role}}</span>
                     </div>
                     <div class="d-flex gap-3 align-items-center">
                         @if (auth()->user()->role == 'Admin')
                             <div class="dropdown">
-                                <button class="btn btn-success p-1 dropdown-toggle fw-bold" style="font-size: 14px;width:200px" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <button class="btn btn-light p-1 dropdown-toggle fw-bold" style="font-size: 14px;width:200px" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Status des Collaborateurs
                                 </button>
                                 <ul class="dropdown-menu" style="width:500px">
                                     @foreach ($users as $item)
                                         @if ($item->role != 'Admin')
+                                            @if ($item != $item->first())
+                                                <li><hr class="dropdown-divider"></li>
+                                            @endif
                                             <li style="font-size: 13px ; padding:5px 10px" class="d-flex align-items-center justify-content-between">
                                                 <div class="d-flex align-items-center gap-2">
                                                     @if ($item->active)
@@ -111,7 +115,6 @@
                                                     @endif
                                                 @endif
                                             </li>
-                                            <li><hr class="dropdown-divider"></li>
                                         @endif
                                     @endforeach
                                 
@@ -119,7 +122,7 @@
                             </div>
         
                         @endif
-                        <a class="btn btn-primary p-1 fw-bold" href="{{route('user.edit' , auth()->user())}}" style="font-size: 14px">Modifier profile</a>
+                        <a class="btn btn-light p-1 fw-bold" href="{{route('user.edit' , auth()->user())}}" style="font-size: 14px">Modifier profile</a>
                         @auth
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
@@ -134,11 +137,11 @@
 
     </div>
 
-    <div class="mt-2 d-flex justify-content-between gap-1" >
+    <div class="mt-3 d-flex justify-content-between gap-1" >
         <div class="linksCont" style='width :{{auth()->user()->role == "Admin" ? "90%" : "100%"}}'>
             <div class="links d-flex justify-content-between gap-1" >
-                <a class="btn btn-dark {{ Route::is('main.index') ? 'active-link' : '' }}" href="/">Acceuil</a>
-                <a class="btn btn-dark {{ Route::is('clients.index') ? 'active-link' : '' }}" href="{{ route('clients.index') }}">Liste des clients</a>
+                <a class="btn btn-light {{ Route::is('main.index') ? 'active-link' : '' }}" href="/">Acceuil</a>
+                <a class="btn btn-light {{ Route::is('clients.index') ? 'active-link' : '' }}" href="{{ route('clients.index') }}">Liste des clients</a>
                 <hr class="hr">
                 <a class="btn btn-light {{ Route::is('cnss.index') ? 'active-link' : '' }}" href="{{ route('cnss.index') }}">CNSS</a>
                 <a class="btn btn-light {{ Route::is('tvam.index') ? 'active-link' : '' }}" href="{{ route('tvam.index') }}">Tva mensuelle</a>

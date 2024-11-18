@@ -105,6 +105,10 @@ class CmController extends Controller
 
         $clientId = Client::where('code' , $request->input('code'))->value('id');
 
+        $request->validate([
+            'code' => 'exists:clients'
+        ]);
+
         Cm::create([
             "clients_id"=> $clientId,
             'date_depot' => $request->input('date_depot'),

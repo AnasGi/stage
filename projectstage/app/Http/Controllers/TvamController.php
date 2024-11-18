@@ -95,6 +95,10 @@ class TvamController extends Controller
 
         $clientId = Client::where('code' , $request->input('code'))->value('id');
 
+        $request->validate([
+            'code' => 'exists:clients'
+        ]);
+
         Tvam::create([
             "clients_id"=> $clientId,
             'date_depot_1' => $request->input('date_depot_1'),

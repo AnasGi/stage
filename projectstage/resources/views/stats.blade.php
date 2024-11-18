@@ -13,14 +13,14 @@
 <body class="p-2">
     <x-menu :users="$users"></x-menu>
 
-    <div class="d-flex justify-content-around mt-3 mb-5">
+    <div class="d-flex justify-content-around mt-5">
         <h3 class="fw-bold">
             <img src="{{asset("imgs/stats.png")}}" alt="statistiques" width="30">
             Taux de respect de délais interne
         </h3>
         <form action="{{route('stats.index')}}" class="d-flex justify-content-center align-items-center gap-2">
             @if (auth()->user()->role == "Admin")
-                <select name="userId" class="p-1" style="height: 35px">
+                <select name="userId" class="form-control" style="height: 35px">
                     <option value="">Choisir un collaborateur</option>
                     @foreach ($users as $item)
                         @if (request('userId') == $item->id)
@@ -31,14 +31,15 @@
                     @endforeach
                 </select>
             @endif
-            <input type="text" name="annee" id="" placeholder="Année" style="height: 35px" value="{{request('annee')}}">
+            <input type="text" name="annee" class="form-control" id="" placeholder="Année" style="height: 35px" value="{{request('annee')}}">
             <button class="btn btn-dark">Appliquer</button>
-            <a href="{{route('stats.index')}}" class="btn btn-danger">Initialiser filtrage</a>
+            <a href="{{route('stats.index')}}" class="btn btn-danger">Initialiser</a>
         </form>
     </div>
+    <hr>
 
-    <details open>
-        <summary class="fw-bold fs-3">
+    <details class="bg-body-secondary p-2 m-2 rounded">
+        <summary class="fw-bold fs-5">
            Déclarations mensuelle:
         </summary>
         <div class="d-flex justify-content-center align-items-center gap-3 mt-3 flex-wrap">
@@ -150,10 +151,8 @@
         </div>
     </details>
 
-    <hr>
-
-    <details open>
-        <summary class="fw-bold fs-3">
+    <details class="bg-body-secondary p-2 m-2 rounded">
+        <summary class="fw-bold fs-5">
            Déclarations trimistrielle:
         </summary>
         <div class="d-flex justify-content-center align-items-center gap-3 mt-3 flex-wrap">
@@ -213,10 +212,8 @@
         </div>
     </details>
 
-    <hr>
-
-    <details open>
-        <summary class="fw-bold fs-3">
+    <details class="bg-body-secondary p-2 m-2 rounded">
+        <summary class="fw-bold fs-5">
            Déclarations Annuelle:
         </summary>
         <div class="d-flex justify-content-center align-items-center gap-3 mt-3 flex-wrap">

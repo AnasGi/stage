@@ -29,7 +29,7 @@
 
     <x-alert :activeData="$cnssData" page='cnss'></x-alert>
 
-    <div class="overflow-scroll" style="height: 50dvh">
+    <div class="overflow-scroll" style="height: 60dvh">
         <table class="table table-bordered table-hover text-center border-dark" style="width: 200%">
             <tr style="position: sticky ; top:0 ; z-index:1 ; background-color : white ; outline:1px solid">
                 @if(auth()->user()->role == 'Admin')

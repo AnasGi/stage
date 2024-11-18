@@ -105,6 +105,10 @@ class TpController extends Controller
 
         $clientId = Client::where('code' , $request->input('code'))->value('id');
 
+        $request->validate([
+            'code' => 'exists:clients'
+        ]);
+
         Tp::create([
             "clients_id"=> $clientId,
             'date_depot' => $request->input('date_depot'),

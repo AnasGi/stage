@@ -38,6 +38,9 @@
     @if(count($clients)<=0)
         <p class="alert w-50 alert-danger m-2 mt-3 fw-bold">Il faut inserer des clients pour assurer la bonne fonctionnement du logiciel!</p>
     @endif
+    @error('code')
+        <p class="alert alert-danger fw-bold w-50 mt-3">Le code client doit etre unique!</p>
+    @enderror
     @php
         $empty = false;
     @endphp
@@ -49,7 +52,7 @@
     @endif
     <p class="m-0 mt-4 fw-bold">Nombre des données: {{count($clients)}}</p>
 
-    <div class="overflow-scroll" style="height: 50dvh">
+    <div class="overflow-scroll" style="height: 60dvh">
         <table class="table table-bordered border-dark table-hover text-center" style="width: 200%">
             <tr style="position: sticky ; top:1px ; z-index:1 ; background-color : rgb(198, 186, 186) ; outline:1px solid">
                 <th style="width: 150px">code client</th>
@@ -96,7 +99,7 @@
                                         <a 
                                         class="dropdown-item"
                                         href="{{route('clients.destroy' , ['client'=>$client , 'deletetype'=>'liquidation'])}}" 
-                                        onclick="return confirm('Vous-etre sure de supprimer ce client, tous les données associées vont etre supprimer?')"
+                                        onclick="return confirm('Vous-etre sure de liquider ce client, tous les données associées vont etre supprimer?')"
                                         >
                                         Liquidation
                                         </a>
@@ -106,7 +109,7 @@
                                         <a 
                                         class="dropdown-item"
                                         href="{{route('clients.destroy' , ['client'=>$client , 'deletetype'=>'decharge'])}}" 
-                                        onclick="return confirm('Vous-etre sure de supprimer ce client, tous les données associées vont etre supprimer?')"
+                                        onclick="return confirm('Vous-etre sure de décharger ce client, tous les données associées vont etre supprimer?')"
                                         >
                                         Décharge
                                         </a>

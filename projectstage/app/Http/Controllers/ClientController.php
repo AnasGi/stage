@@ -22,11 +22,12 @@ class ClientController extends Controller
         $code = $request->input('code');
         $annee = $request->input('annee');
         $mois = $request->input('mois');
+        $sort = $request->input('sort');
 
         $clients = Client::query();
 
         if(Auth::user()->role == 'Admin'){
-            $clients->select('*')->orderBy('created_at' , 'desc');
+            $clients->select('*');
 
             $userId = $request->input('name');
             $users = User::all();
@@ -35,11 +36,18 @@ class ClientController extends Controller
             }
         }
         else{
-            $clients->where('users_id' , Auth::user()->id)->orderBy('created_at' , 'desc')->get();
+            $clients->where('users_id' , Auth::user()->id);
         }
         
         if($code){
             $clients->where('code' , $code);
+        }
+
+        if($sort == 'CodeSort'){
+            $clients->orderBy('code' , 'asc');
+        }
+        elseif($sort == 'DateSort'){
+            $clients->orderBy('created_at' , 'desc');
         }
 
         if($annee){

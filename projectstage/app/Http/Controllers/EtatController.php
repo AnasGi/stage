@@ -105,6 +105,10 @@ class EtatController extends Controller
 
         $clientId = Client::where('code' , $request->input('code'))->value('id');
 
+        $request->validate([
+            'code' => 'exists:clients'
+        ]);
+
         Etat::create([
             "clients_id"=> $clientId,
             'date_depot' => $request->input('date_depot'),

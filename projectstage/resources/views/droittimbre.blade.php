@@ -27,7 +27,7 @@
     <x-addform page='droittimbre' :activeData="$droittimberData" :users="$users" :clients="$clients"></x-addform>
     <x-alert :activeData="$droittimberData" page='droittimbre'></x-alert>
 
-    <div class="overflow-scroll" style="height: 50dvh">
+    <div class="overflow-scroll" style="height: 60dvh">
         <table class="table table-bordered table-hover text-center border-dark" style="width :300%">
             <tr style="position: sticky ; top:0 ; z-index:1 ; background-color : white ; outline:1px solid">
                 @if(auth()->user()->role == 'Admin')

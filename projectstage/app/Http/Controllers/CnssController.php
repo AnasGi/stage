@@ -113,6 +113,14 @@ class CnssController extends Controller
 
         $clientId = Client::where('code' , $request->input('code'))->value('id');
 
+        $request->validate([
+            'code' => 'exists:clients'
+        ]);
+
+        $request->validate([
+            'code' => 'exists:clients'
+        ]);
+
         Cnss::create([
             "clients_id"=> $clientId,
             'date_depot_1' => $request->input('date_depot_1'),

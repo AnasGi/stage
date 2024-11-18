@@ -105,6 +105,10 @@ class IrprofController extends Controller
 
         $clientId = Client::where('code' , $request->input('code'))->value('id');
 
+        $request->validate([
+            'code' => 'exists:clients'
+        ]);
+
 
         Irprof::create([
             "clients_id"=> $clientId,

@@ -103,6 +103,10 @@ class DroittimberController extends Controller
 
         $clientId = Client::where('code' , $request->input('code'))->value('id');
 
+        $request->validate([
+            'code' => 'exists:clients'
+        ]);
+
 
         Droittimber::create([
             "clients_id"=> $clientId,

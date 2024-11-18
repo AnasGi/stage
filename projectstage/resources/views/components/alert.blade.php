@@ -204,7 +204,7 @@
 @endforeach
 
 @if($alertsNumber > 0)
-    <div class="alert alert-warning fw-bold d-flex align-items-center gap-2 mt-2">
+    <div class="alert alert-warning w-50 fw-bold d-flex align-items-center gap-2 mt-2">
 
         @if(!is_null($mois) && ($page === 'tvam' || $page === 'ir' || $page === 'droittimber' || $page === 'cnss'))
             If faut saisir la date de depot du mois {{$mois}}! 

@@ -100,6 +100,10 @@ class TvatController extends Controller
 
         $clientId = Client::where('code' , $request->input('code'))->value('id');
 
+        $request->validate([
+            'code' => 'exists:clients'
+        ]);
+
         Tvat::create([
             "clients_id"=> $clientId,
             'date_depot_1' => $request->input('date_depot_1'),

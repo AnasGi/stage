@@ -5,7 +5,7 @@
     .addCont {
         position: fixed;
         bottom: 10%;
-        right: 10%;
+        right: 12%;
         z-index: 2;
     }
 
@@ -84,10 +84,11 @@
         document.body.style.overflow = "auto";
     }
 </script>
-
-@error('code')
-    <p class="alert alert-danger fw-bold w-50">Le code client doit etre unique!</p>
-@enderror
+@if ($page != 'clients')
+    @error('code')
+        <p class="alert alert-danger fw-bold w-50 mt-3">Le code client que vous avez saisi n'existe pas!</p>
+    @enderror
+@endif
 
 <div class="addCont d-flex justify-content-center align-items-center gap-2">
     <img src="{{asset ('imgs/add.png')}}" class="addbtn" alt="Ajouter" onclick="showAddForm()">
@@ -105,7 +106,6 @@
         </h2>
         @if ($page != 'clients')
             <div class="form-group">
-                <label>Code client</label>
                 <input list="client-liste" name="code" class="form-control" placeholder="Choisir un client" required>
                 <datalist id="client-liste">
                     @foreach ($clients as $client)
@@ -168,16 +168,13 @@
     
         @else
             <div class="form-group">
-                <label>Code de client: </label>
-                <input type="text" name="code" class="form-control" placeholder="Saisir le code client" required>
+                <input type="text" name="code" class="form-control" placeholder="Saisir un code client" required>
             </div>
             <div class="form-group">
-                <label>Nom de l'entreprise: </label>
-                <input type="text" name="nom" class="form-control" required>
+                <input type="text" name="nom" class="form-control" placeholder="Nom de l'entreprise" required>
             </div>
             <div class="form-group">
-                <label>Adresse: </label>
-                <input type="text" name="adresse" class="form-control" required>
+                <input type="text" name="adresse" class="form-control" placeholder="Adresse" required>
             </div>
             <div class="form-group">
                 <select name="status" id="" class="form-control">
@@ -218,7 +215,7 @@
             @endif
         @endif
     
-        <div class="mt-2">
+        <div class="mt-2 p-2 shadow bg-light" style="position: sticky ; bottom:0" >
             <button type="submit" class="btn btn-success w-50 fw-bold">Ajouter</button>
             <button type="button" class="btn btn-danger fw-bold" onclick="closeAddForm()">Fermer</button>
         </div>
@@ -227,5 +224,5 @@
 
 
 @if ($page != 'clients')
-    <p class="m-0 mt-4 fw-bold">Nombre des données: {{count($activeData)}}</p>
+    <p class="m-0 mt-1 fw-bold">Nombre des données: {{count($activeData)}}</p>
 @endif

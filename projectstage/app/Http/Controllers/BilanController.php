@@ -107,6 +107,10 @@ class BilanController extends Controller
 
         $clientId = Client::where('code' , $request->input('code'))->value('id');
 
+        $request->validate([
+            'code' => 'exists:clients'
+        ]);
+
 
         Bilan::create([
             "clients_id"=> $clientId,
