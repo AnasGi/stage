@@ -170,7 +170,7 @@ class StatsController extends Controller
                 foreach ($Cnss as $cnss) { 
     
                     $dateDepot = new DateTime($cnss->{ "date_depot_" .$i });
-                    if( $cnss->{ "date_depot_" .$i } != null && ($dateDepot < $compDate) ){
+                    if( $cnss->{ "date_depot_" .$i } != null && ($dateDepot <= $compDate) ){
                         $nbre+=1;
                     } 
                 }
@@ -201,7 +201,7 @@ class StatsController extends Controller
                 foreach ($Tvam as $tvam) { 
 
                     $dateDepot = new DateTime($tvam->{ "date_depot_" .$i });
-                    if( $tvam->{ "date_depot_" .$i } != null && ($dateDepot < $compDate)  ){
+                    if( $tvam->{ "date_depot_" .$i } != null && ($dateDepot <= $compDate)  ){
                         $nbre+=1;
                     } 
                 }
@@ -228,7 +228,7 @@ class StatsController extends Controller
                 foreach ($Ir as $ir) { 
     
                     $dateDepot = new DateTime($ir->{ "date_depot_" .$i });
-                    if( $ir->{ "date_depot_" .$i } != null && ($dateDepot < $compDate)  ){
+                    if( $ir->{ "date_depot_" .$i } != null && ($dateDepot <= $compDate)  ){
                         $nbre+=1;
                     } 
                 }
@@ -255,7 +255,7 @@ class StatsController extends Controller
                 foreach ($Droittimber as $dt) { 
     
                     $dateDepot = new DateTime($dt->{ "date_depot_" .$i });
-                    if( $dt->{ "date_depot_" .$i } != null && ($dateDepot < $compDate)  ){
+                    if( $dt->{ "date_depot_" .$i } != null && ($dateDepot <= $compDate)  ){
                         $nbre+=1;
                     } 
                 }
@@ -288,7 +288,7 @@ class StatsController extends Controller
                 foreach ($Acompte as $acompte) { 
     
                     $dateDepot = new DateTime($acompte->{ "date_depot_" .$i });
-                    if( $acompte->{ "date_depot_" .$i } != null && ($dateDepot < $compDate)  ){
+                    if( $acompte->{ "date_depot_" .$i } != null && ($dateDepot <= $compDate)  ){
                         $nbre+=1;
                     } 
                 }
@@ -325,7 +325,7 @@ class StatsController extends Controller
                 foreach ($Tvat as $tvat) { 
     
                     $dateDepot = new DateTime($tvat->{ "date_depot_" .$i });
-                    if( $tvat->{ "date_depot_" .$i } != null && ($dateDepot < $compDate)  ){
+                    if( $tvat->{ "date_depot_" .$i } != null && ($dateDepot <= $compDate)  ){
                         $nbre+=1;
                     } 
                 }
@@ -345,7 +345,7 @@ class StatsController extends Controller
             $compDate = (new DateTime("last day of {$year}-{$month}"))->modify('-3 days');
             foreach($Etat as $etat){
                 $dateDepot = new DateTime($etat->date_depot);
-                if($etat->date_depot != null && ($dateDepot < $compDate)){
+                if($etat->date_depot != null && ($dateDepot <= $compDate)){
                     $nbre+=1;
                 }
             }
@@ -362,7 +362,7 @@ class StatsController extends Controller
 
             foreach($Tp as $tp){
                 $dateDepot = new DateTime($tp->date_depot);
-                if($tp->date_depot != null && ($dateDepot < $compDate)){
+                if($tp->date_depot != null && ($dateDepot <= $compDate)){
                     $nbre+=1;
                 }
             }
@@ -380,7 +380,7 @@ class StatsController extends Controller
 
             foreach($Cm as $cm){
                 $dateDepot = new DateTime($cm->date_depot);
-                if($cm->date_depot != null && ($dateDepot < $compDate)){
+                if($cm->date_depot != null && ($dateDepot <= $compDate)){
                     $nbre+=1;
                 }
             }
@@ -396,7 +396,7 @@ class StatsController extends Controller
             $compDate = (new DateTime("last day of {$year}-{$month}"))->modify('-3 days');
             foreach($Irprof as $irprof){
                 $dateDepot = new DateTime($irprof->date_depot);
-                if($irprof->date_depot != null && ($dateDepot < $compDate)){
+                if($irprof->date_depot != null && ($dateDepot <= $compDate)){
                     $nbre+=1;
                 }
             }
@@ -412,7 +412,7 @@ class StatsController extends Controller
             $compDate = (new DateTime("last day of {$year}-{$month}"))->modify('-3 days');
             foreach($Pv as $pv){
                 $dateDepot = new DateTime($pv->date_depot);
-                if($pv->date_depot != null && ($dateDepot < $compDate)){
+                if($pv->date_depot != null && ($dateDepot <= $compDate)){
                     $nbre+=1;
                 }
             }
@@ -429,10 +429,10 @@ class StatsController extends Controller
             $totalM = 0;
 
             foreach($Bilan as $bilan){
-                if ($bilan->clients->status == 'PM') {
+                if ($bilan->clients->status == 'PM' || str_starts_with($bilan->clients->status , 'SARL')) {
                     $month = 3;    
                 }
-                elseif ($bilan->clients->status == 'PP' || str_starts_with($bilan->clients->status , 'SARL')){
+                elseif ($bilan->clients->status == 'PP'){
                     $month = 4;
                 }
                 $compDate = (new DateTime("last day of {$year}-{$month}"))->modify('-3 days');
@@ -441,13 +441,13 @@ class StatsController extends Controller
                 if($bilan->date_depot != null){
                     if($month == 3){
                         $totalM+=1;
-                        if(($dateDepot < $compDate)){
+                        if(($dateDepot <= $compDate)){
                             $nbreM+=1;
                         }
                     }
                     elseif($month == 4) {
                         $totalP+=1;
-                        if(($dateDepot < $compDate)){
+                        if(($dateDepot <= $compDate)){
                             $nbreP+=1;
                         }
                     }

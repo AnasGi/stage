@@ -117,12 +117,12 @@
                         <div class="form-group mb-3">
                             <label for="status" class="form-label">Forme juridique</label>
                             <div class="d-flex">
-                                <input type="text" class="form-control w-25" style="border-radius:5px 0px 0px 5px" placeholder="PM/PP" readonly required value="{{ $activeData->status }}">
+                                <input type="text" class="form-control w-50" style="border-radius:5px 0px 0px 5px" readonly required value="{{ $activeData->status }}">
                                 <select name="status" id="" class="form-control" style="border-radius:0px 5px 5px 0px">
                                     <option value="">Modifier la Forme juridique</option>
                                     <option value="PM">PM</option>
                                     <option value="PP">PP</option>
-                                    <option value="SARLAU">SARLAU</option>
+                                    {{-- <option value="SARLAU">SARLAU</option> --}}
                                 </select>
                             </div>
                         </div>

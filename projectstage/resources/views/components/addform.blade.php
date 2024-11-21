@@ -106,12 +106,38 @@
         </h2>
         @if ($page != 'clients')
             <div class="form-group">
-                <input list="client-liste" name="code" class="form-control" placeholder="Choisir un client" required>
+                {{-- <input list="client-liste" name="code" class="form-control" placeholder="Choisir un client" required>
                 <datalist id="client-liste">
                     @foreach ($clients as $client)
                         <option value="{{$client->code}}">{{$client->nom}}</option>
                     @endforeach
-                </datalist> 
+                </datalist>  --}}
+                @if (auth()->user()->role == 'Admin')
+                    @php
+                        $AdminClients = $clients->where('users_id' , auth()->user()->id);
+                    @endphp
+                    <select name="code" id="adminSelect" class="form-control" required>
+                        <option value="">Choisir un de votre client</option>
+                        @foreach ($AdminClients as $client)
+                            <option value="{{$client->code}}">{{$client->code}} . {{$client->nom}}</option>
+                        @endforeach
+                    </select>
+                @endif
+                <select name="code" id="select" class="form-control" required>
+                    <option value="">{{auth()->user()->role == "Admin" ? 'Tous le clients' : 'Choisir un client'}}</option>
+                    @foreach ($clients as $client)
+                        <option value="{{$client->code}}">{{$client->code}} . {{$client->nom}}</option>
+                    @endforeach
+                </select>
+
+                <script>
+                    document.getElementById('select').addEventListener('change' , function(){
+                        document.getElementById('adminSelect').disabled = true
+                    })
+                    document.getElementById('adminSelect').addEventListener('change' , function(){
+                        document.getElementById('select').disabled = true
+                    })
+                </script>
             </div>
     
             @if ($page == 'acompte')
@@ -181,7 +207,7 @@
                     <option value="" required>Forme juridique</option>
                     <option value="PM">PM</option>
                     <option value="PP">PP</option>
-                    <option value="SARLAU}}">SARLAU</option>
+                    {{-- <option value="SARLAU}}">SARLAU</option> --}}
                 </select>
                 <input type="text" name="IF" class="form-control" placeholder="IF">
             </div>
