@@ -191,6 +191,12 @@
                     </div>
                 @endfor
             @endif
+            <div class="form-group">
+                <label>Année</label>
+                <div class="input-group">
+                    <input type="text" name="annee" class="form-control" placeholder="Année"/>
+                </div>
+            </div>
     
         @else
             <div class="form-group">

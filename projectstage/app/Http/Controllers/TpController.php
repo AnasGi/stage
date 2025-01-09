@@ -113,7 +113,7 @@ class TpController extends Controller
             "clients_id"=> $clientId,
             'date_depot' => $request->input('date_depot'),
             'num_depot' => $request->input('num_depot'),
-            'annee' => Date('Y')
+            'annee' => $request->input('annee') ?? Date('Y'),
         ]);
 
         return back()->with('add' , "Nouvelles données a été inserser!");
@@ -147,6 +147,7 @@ class TpController extends Controller
             'date_depot' => $request->input('date_depot'),
             'num_depot' => $request->input('num_depot'),
             'motif' => $request->input('motif'),
+            'annee' => $request->input('annee')
         ]);
 
         return back()->with('mod' , "Modification reussite!");

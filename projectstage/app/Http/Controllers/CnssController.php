@@ -117,10 +117,6 @@ class CnssController extends Controller
             'code' => 'exists:clients'
         ]);
 
-        $request->validate([
-            'code' => 'exists:clients'
-        ]);
-
         Cnss::create([
             "clients_id"=> $clientId,
             'date_depot_1' => $request->input('date_depot_1'),
@@ -135,7 +131,7 @@ class CnssController extends Controller
             'date_depot_10' => $request->input('date_depot_10'),
             'date_depot_11' => $request->input('date_depot_11'),
             'date_depot_12' => $request->input('date_depot_12'),
-            'annee' => Date('Y')
+            'annee' => $request->input('annee') ?? Date('Y')
         ]);
 
         return back()->with('add' , "Nouvelles données a été inserser!");
@@ -179,6 +175,7 @@ class CnssController extends Controller
             'date_depot_10' => $request->input('date_depot_10'),
             'date_depot_11' => $request->input('date_depot_11'),
             'date_depot_12' => $request->input('date_depot_12'),
+            'annee' => $request->input('annee'),
             
             'motif_1' => $request->input('motif_1'),
             'motif_2' => $request->input('motif_2'),

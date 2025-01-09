@@ -114,7 +114,7 @@ class TvatController extends Controller
             'num_depot_3' => $request->input('num_depot_3'),
             'date_depot_4' => $request->input('date_depot_4'),
             'num_depot_4' => $request->input('num_depot_4'),
-            'annee' => Date('Y')
+            'annee' => $request->input('annee') ?? Date('Y'),
         ]);
 
         return back()->with('add' , "Nouvelles données a été inserser!");
@@ -153,6 +153,7 @@ class TvatController extends Controller
             'num_depot_3' => $request->input('num_depot_3'),
             'date_depot_4' => $request->input('date_depot_4'),
             'num_depot_4' => $request->input('num_depot_4'),
+            'annee' => $request->input('annee'),
 
             'motif_1' => $request->input('motif_1'),
             'motif_2' => $request->input('motif_2'),

@@ -114,7 +114,7 @@ class CmController extends Controller
             'date_depot' => $request->input('date_depot'),
             'num_depot' => $request->input('num_depot'),
             'montant' => $request->input('montant'),
-            'annee' => Date('Y')
+            'annee' => $request->input('annee') ?? Date('Y'),
         ]);
 
         return back()->with('add' , "Nouvelles données a été inserser!");
@@ -149,6 +149,7 @@ class CmController extends Controller
             'num_depot' => $request->input('num_depot'),
             'montant' => $request->input('montant'),
             'motif' => $request->input('motif'),
+            
         ]);
 
         return back()->with('mod' , "Modification reussite!");

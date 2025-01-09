@@ -132,7 +132,7 @@ class IrController extends Controller
             'num_depot_11' => $request->input('num_depot_11'),
             'date_depot_12' => $request->input('date_depot_12'),
             'num_depot_12' => $request->input('num_depot_12'),
-            'annee' => Date('Y')
+            'annee' => $request->input('annee') ?? Date('Y'),
         ]);
 
         return back()->with('add' , "Nouvelles données a été inserser!");
@@ -187,6 +187,7 @@ class IrController extends Controller
             'num_depot_11' => $request->input('num_depot_11'),
             'date_depot_12' => $request->input('date_depot_12'),
             'num_depot_12' => $request->input('num_depot_12'),
+            'annee' => $request->input('annee'),
 
             'motif_1' => $request->input('motif_1'),
             'motif_2' => $request->input('motif_2'),
